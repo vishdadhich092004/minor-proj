@@ -72,6 +72,7 @@ router.delete('/:id', asyncHandler(async (req, res) => {
         if (products.length > 0) {
             return res.status(400).json({ success: false, message: "Cannot delete brand. Products are referencing it." });
         }
+        
 
         // If no products are referencing the brand, proceed with deletion
         const brand = await Brand.findByIdAndDelete(brandID);

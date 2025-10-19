@@ -42,6 +42,7 @@ app.get('/', asyncHandler(async (req, res) => {
 }));
 
 // Global error handler
+
 app.use((error, req, res, next) => {
     res.status(500).json({ success: false, message: error.message, data: null });
 });
