@@ -1,8 +1,6 @@
-import 'dart:ui';
 import '../provider/cart_provider.dart';
 import '../../../utility/extensions.dart';
 import '../../../widget/compleate_order_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../widget/applay_coupon_btn.dart';

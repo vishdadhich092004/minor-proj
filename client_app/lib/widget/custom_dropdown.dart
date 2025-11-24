@@ -47,7 +47,7 @@ class CustomDropdown<T> extends StatelessWidget {
             value: initialValue,
             onChanged: onChanged,
             buttonStyleData: ButtonStyleData(
-              padding: EdgeInsets.only(left: 16, right: 8),
+              padding: const EdgeInsets.only(left: 16, right: 8),
               height: 50,
               decoration: BoxDecoration(
                 color: bgColor ?? Colors.grey[200],
