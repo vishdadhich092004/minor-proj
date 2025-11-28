@@ -5,14 +5,18 @@ import '../../../models/coupon.dart';
 import '../../login_screen/provider/user_provider.dart';
 import '../../../services/http_services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_cart/flutter_cart.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../../models/api_response.dart';
 import '../../../utility/constants.dart';
 import '../../../utility/snack_bar_helper.dart';
+
+// Conditional import for web vs mobile
+import '../razorpay_web_helper.dart'
+    if (dart.library.io) 'razorpay_mobile_stub.dart';
 
 class CartProvider extends ChangeNotifier {
   HttpService service = HttpService();
@@ -37,11 +41,14 @@ class CartProvider extends ChangeNotifier {
   String selectedPaymentOption = 'prepaid';
 
   CartProvider(this._userProvider) {
-    // Initialize Razorpay event handlers
-    _setupRazorpayHandlers();
+    // Initialize Razorpay event handlers only for mobile platforms
+    if (!kIsWeb) {
+      _setupRazorpayHandlers();
+    }
   }
 
   void _setupRazorpayHandlers() {
+    if (kIsWeb) return; // Don't setup handlers on web
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
@@ -49,7 +56,7 @@ class CartProvider extends ChangeNotifier {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     log('Payment Success: ${response.paymentId}');
-    
+
     if (_pendingPaymentOperation != null && _pendingOrderId != null) {
       // Verify payment and complete order
       await _verifyAndCompletePayment(
@@ -59,7 +66,8 @@ class CartProvider extends ChangeNotifier {
         _pendingPaymentOperation!,
       );
     } else {
-      SnackBarHelper.showErrorSnackBar('Payment received but order context missing');
+      SnackBarHelper.showErrorSnackBar(
+          'Payment received but order context missing');
     }
   }
 
@@ -247,89 +255,6 @@ class CartProvider extends ChangeNotifier {
     countryController.text = box.read(COUNTRY_KEY) ?? '';
   }
 
-  Future<void> stripePayment({required void Function() operation}) async {
-    try {
-      Map<String, dynamic> paymentData = {
-        "email": _userProvider.getLoginUsr()?.name,
-        "name": _userProvider.getLoginUsr()?.name,
-        "address": {
-          "line1": streetController.text,
-          "city": cityController.text,
-          "state": stateController.text,
-          "postal_code": postalCodeController.text,
-          "country": "US"
-        },
-        "amount": getGrandTotal() * 100,
-        "currency": "usd",
-        "description": "Your transaction description here"
-      };
-      Response response = await service.addItem(
-          endpointUrl: 'payment/stripe', itemData: paymentData);
-      final data = await response.body;
-      final paymentIntent = data['paymentIntent'];
-      final ephemeralKey = data['ephemeralKey'];
-      final customer = data['customer'];
-      final publishableKey = data['publishableKey'];
-
-      Stripe.publishableKey = publishableKey;
-      BillingDetails billingDetails = BillingDetails(
-        email: _userProvider.getLoginUsr()?.name,
-        phone: '91234123908',
-        name: _userProvider.getLoginUsr()?.name,
-        address: Address(
-            country: 'US',
-            city: cityController.text,
-            line1: streetController.text,
-            line2: stateController.text,
-            postalCode: postalCodeController.text,
-            state: stateController.text
-            // Other address details
-            ),
-        // Other billing details
-      );
-      await Stripe.instance.initPaymentSheet(
-        paymentSheetParameters: SetupPaymentSheetParameters(
-          customFlow: false,
-          merchantDisplayName: 'MOBIZATE',
-          paymentIntentClientSecret: paymentIntent,
-          customerEphemeralKeySecret: ephemeralKey,
-          customerId: customer,
-          style: ThemeMode.light,
-          billingDetails: billingDetails,
-          // googlePay: const PaymentSheetGooglePay(
-          //   merchantCountryCode: 'US',
-          //   currencyCode: 'usd',
-          //   testEnv: true,
-          // ),
-          // applePay: const PaymentSheetApplePay(merchantCountryCode: 'US')
-        ),
-      );
-
-      await Stripe.instance.presentPaymentSheet().then((value) {
-        log('payment success');
-        //? do the success operation
-        ScaffoldMessenger.of(Get.context!).showSnackBar(
-          const SnackBar(content: Text('Payment Success')),
-        );
-        operation();
-      }).onError((error, stackTrace) {
-        if (error is StripeException) {
-          ScaffoldMessenger.of(Get.context!).showSnackBar(
-            SnackBar(content: Text('${error.error.localizedMessage}')),
-          );
-        } else {
-          ScaffoldMessenger.of(Get.context!).showSnackBar(
-            SnackBar(content: Text('Stripe Error: $error')),
-          );
-        }
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
-    }
-  }
-
   Future<void> razorpayPayment({required void Function() operation}) async {
     try {
       // Step 1: Create order on backend
@@ -350,40 +275,87 @@ class CartProvider extends ChangeNotifier {
 
       final orderData = await orderResponse.body;
       if (orderData['error'] == true) {
-        SnackBarHelper.showErrorSnackBar(orderData['message'] ?? 'Failed to create order');
+        SnackBarHelper.showErrorSnackBar(
+            orderData['message'] ?? 'Failed to create order');
         return;
       }
 
       final orderId = orderData['data']['orderId'];
       final razorpayKey = orderData['data']['key'];
-
-      // Step 2: Open Razorpay checkout with order ID
-      // Note: When using order_id, amount is not needed as it's already in the order
-      var options = {
-        'key': razorpayKey,
-        'name': 'MOBIZATE',
-        'order_id': orderId,
-        'description': 'Order Payment',
-        'timeout': 300, // 5 minutes
-        'prefill': {
-          'contact': phoneController.text.isNotEmpty 
-              ? phoneController.text 
-              : '9999999999',
-          'email': _userProvider.getLoginUsr()?.name ?? '',
-          'name': _userProvider.getLoginUsr()?.name ?? 'User',
-        },
-        'theme': {
-          'color': '#FFE64A',
-        },
-      };
+      final orderAmount = orderData['data']['amount'];
 
       // Store the operation callback for later use
       _pendingPaymentOperation = operation;
       _pendingOrderId = orderId;
 
-      razorpay.open(options);
+      // Platform-specific implementation
+      if (kIsWeb) {
+        await _openRazorpayWebCheckout(
+          razorpayKey: razorpayKey,
+          orderId: orderId,
+          amount: orderAmount,
+        );
+      } else {
+        // Mobile implementation
+        var options = {
+          'key': razorpayKey,
+          'name': 'MOBIZATE',
+          'order_id': orderId,
+          'description': 'Order Payment',
+          'timeout': 300, // 5 minutes
+          'prefill': {
+            'contact': phoneController.text.isNotEmpty
+                ? phoneController.text
+                : '9999999999',
+            'email': _userProvider.getLoginUsr()?.name ?? '',
+            'name': _userProvider.getLoginUsr()?.name ?? 'User',
+          },
+          'theme': {
+            'color': '#FFE64A',
+          },
+        };
+        razorpay.open(options);
+      }
     } catch (e) {
       log('Razorpay Payment Error: $e');
+      SnackBarHelper.showErrorSnackBar('Payment Error: $e');
+    }
+  }
+
+  // Web-specific Razorpay checkout using JavaScript
+  Future<void> _openRazorpayWebCheckout({
+    required String razorpayKey,
+    required String orderId,
+    required int amount,
+  }) async {
+    if (!kIsWeb) return;
+
+    try {
+      await RazorpayWebHelper.openCheckoutSimple(
+        razorpayKey: razorpayKey,
+        orderId: orderId,
+        amount: amount,
+        name: _userProvider.getLoginUsr()?.name ?? 'User',
+        email: _userProvider.getLoginUsr()?.name ?? '',
+        phone: phoneController.text.isNotEmpty
+            ? phoneController.text
+            : '9999999999',
+        onSuccess: (paymentId, signature) async {
+          if (_pendingPaymentOperation != null && _pendingOrderId != null) {
+            await _verifyAndCompletePayment(
+              _pendingOrderId!,
+              paymentId,
+              signature,
+              _pendingPaymentOperation!,
+            );
+          }
+        },
+        onError: (error) {
+          SnackBarHelper.showErrorSnackBar('Payment Failed: $error');
+        },
+      );
+    } catch (e) {
+      log('Web Razorpay Error: $e');
       SnackBarHelper.showErrorSnackBar('Payment Error: $e');
     }
   }
