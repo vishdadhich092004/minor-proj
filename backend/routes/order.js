@@ -2,6 +2,7 @@ const express = require('express');
 const asyncHandler = require('express-async-handler');
 const router = express.Router();
 const Order = require('../model/order');
+const { ensureConnection } = require('../utils/dbHelper');
 
 // Get all orders
 router.get('/', asyncHandler(async (req, res) => {
@@ -54,11 +55,22 @@ router.post('/', asyncHandler(async (req, res) => {
     }
 
     try {
+        // Ensure database connection before creating order
+        await ensureConnection();
+        
         const order = new Order({ userID,orderStatus, items, totalPrice, shippingAddress, paymentMethod, couponCode, orderTotal, trackingUrl });
         const newOrder = await order.save();
         res.json({ success: true, message: "Order created successfully.", data: null });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        console.error('Error creating order:', error);
+        // Provide more specific error messages
+        if (error.name === 'MongoServerSelectionError' || error.name === 'MongooseServerSelectionError') {
+            return res.status(503).json({ 
+                success: false, 
+                message: "Database connection failed. Please check MongoDB Atlas IP whitelist settings and try again." 
+            });
+        }
+        res.status(500).json({ success: false, message: error.message || "Failed to create order" });
     }
 }));
 

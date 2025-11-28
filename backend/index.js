@@ -16,10 +16,53 @@ app.use('/image/category', express.static('public/category'));
 app.use('/image/poster', express.static('public/posters'));
 
 const URL = process.env.MONGO_URL;
-mongoose.connect(URL);
+
+// Improved MongoDB connection with better error handling for serverless environments
+const connectDB = async () => {
+  try {
+    const mongooseOptions = {
+      serverSelectionTimeoutMS: 10000, // 10 seconds timeout
+      socketTimeoutMS: 45000, // 45 seconds socket timeout
+      maxPoolSize: 10, // Maintain up to 10 socket connections
+      minPoolSize: 1,
+      maxIdleTimeMS: 30000, // Close connections after 30 seconds of inactivity
+      retryWrites: true,
+      w: 'majority',
+    };
+
+    await mongoose.connect(URL, mongooseOptions);
+    console.log('✅ Connected to Database successfully');
+  } catch (error) {
+    console.error('❌ Database connection error:', error.message);
+    // Don't exit process in serverless - let it retry on next request
+    if (process.env.NODE_ENV !== 'production') {
+      // Only exit in development
+      // process.exit(1);
+    }
+  }
+};
+
 const db = mongoose.connection;
-db.on('error', (error) => console.error(error));
-db.once('open', () => console.log('Connected to Database'));
+
+// Connection event handlers
+db.on('error', (error) => {
+  console.error('❌ MongoDB connection error:', error);
+});
+
+db.on('disconnected', () => {
+  console.warn('⚠️ MongoDB disconnected. Attempting to reconnect...');
+});
+
+db.on('reconnected', () => {
+  console.log('✅ MongoDB reconnected successfully');
+});
+
+db.once('open', () => {
+  console.log('✅ Database connection opened');
+});
+
+// Handle connection
+connectDB();
 
 // Routes
 app.use('/categories', require('./routes/category'));
@@ -34,6 +77,7 @@ app.use('/users', require('./routes/user'));
 app.use('/orders', require('./routes/order'));
 app.use('/payment', require('./routes/payment'));
 app.use('/notification', require('./routes/notification'));
+app.use('/api/image-proxy', require('./routes/imageProxy'));
 
 
 // Example route using asyncHandler directly in app.js
