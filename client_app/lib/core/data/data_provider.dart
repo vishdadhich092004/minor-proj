@@ -8,6 +8,7 @@ import '../../models/order.dart';
 import '../../models/poster.dart';
 import '../../models/product.dart';
 import '../../models/sub_category.dart';
+import '../../models/variant.dart';
 import '../../services/http_services.dart';
 import '../../utility/snack_bar_helper.dart';
 
@@ -46,6 +47,11 @@ class DataProvider extends ChangeNotifier {
 
   List<Order> get orders => _filteredOrders;
 
+  List<Variant> _allVariants = [];
+  Map<String, String> _variantIdToNameMap = {};
+
+  Map<String, String> get variantIdToNameMap => _variantIdToNameMap;
+
   DataProvider() {
     getAllProduct();
     getAllCategory();
@@ -53,6 +59,7 @@ class DataProvider extends ChangeNotifier {
     getAllBrands();
     getAllPosters();
     getAllOrders();
+    getAllVariants();
   }
 
   Future<List<Category>> getAllCategory({bool showSnack = false}) async {
@@ -273,6 +280,34 @@ class DataProvider extends ChangeNotifier {
       }).toList();
     }
     notifyListeners();
+  }
+
+  Future<List<Variant>> getAllVariants({bool showSnack = false}) async {
+    try {
+      Response response = await service.getItems(endpointUrl: 'variants');
+      if (response.isOk) {
+        ApiResponse<List<Variant>> apiResponse =
+            ApiResponse<List<Variant>>.fromJson(
+          response.body,
+          (json) =>
+              (json as List).map((item) => Variant.fromJson(item)).toList(),
+        );
+
+        _allVariants = apiResponse.data ?? [];
+        // Create a map of variant ID to variant name
+        _variantIdToNameMap = {
+          for (var variant in _allVariants)
+            variant.sId ?? '' : variant.name ?? ''
+        };
+        notifyListeners();
+
+        if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+      }
+    } catch (e) {
+      if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
+    }
+    return _allVariants;
   }
 
   double calculateDiscountPercentage(num originalPrice, num? discountedPrice) {

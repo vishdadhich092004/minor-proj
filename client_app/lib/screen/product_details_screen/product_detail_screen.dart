@@ -8,6 +8,7 @@ import '../../../../widget/page_wrapper.dart';
 import '../../models/product.dart';
 import '../../widget/horizondal_list.dart';
 import 'components/product_rating_section.dart';
+import '../../core/data/data_provider.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final Product product;
@@ -100,14 +101,32 @@ class ProductDetailScreen extends StatelessWidget {
                                   color: Colors.red, fontSize: 16),
                             )
                           : const SizedBox(),
-                      Consumer<ProductDetailProvider>(
-                        builder: (context, proDetailProvider, child) {
+                      Consumer2<ProductDetailProvider, DataProvider>(
+                        builder: (context, proDetailProvider, dataProvider, child) {
+                          // Get variant names from the map
+                          final variantNames = (product.proVariantId ?? [])
+                              .map((variantId) => dataProvider.variantIdToNameMap[variantId] ?? variantId)
+                              .where((name) => name.isNotEmpty)
+                              .toList();
+                          
+                          String? selectedVariantName;
+                          if (proDetailProvider.selectedVariant != null) {
+                            selectedVariantName = dataProvider.variantIdToNameMap[proDetailProvider.selectedVariant] ?? proDetailProvider.selectedVariant;
+                          }
+                          
                           return HorizontalList(
-                            items: product.proVariantId ?? [],
-                            itemToString: (val) => val,
-                            selected: proDetailProvider.selectedVariant,
+                            items: variantNames,
+                            itemToString: (val) => val ?? '',
+                            selected: selectedVariantName,
                             onSelect: (val) {
-                              proDetailProvider.selectedVariant = val;
+                              // Find the variant ID that corresponds to the selected name
+                              final variantId = dataProvider.variantIdToNameMap.entries
+                                  .firstWhere(
+                                    (entry) => entry.value == val,
+                                    orElse: () => MapEntry('', val ?? ''),
+                                  )
+                                  .key;
+                              proDetailProvider.selectedVariant = variantId.isNotEmpty ? variantId : val;
                               proDetailProvider.updateUI();
                             },
                           );

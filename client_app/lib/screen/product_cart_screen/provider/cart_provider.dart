@@ -10,7 +10,6 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import '../../../core/data/data_provider.dart';
 import '../../../models/api_response.dart';
 import '../../../utility/constants.dart';
 import '../../../utility/snack_bar_helper.dart';
@@ -37,7 +36,47 @@ class CartProvider extends ChangeNotifier {
   double couponCodeDiscount = 0;
   String selectedPaymentOption = 'prepaid';
 
-  CartProvider(this._userProvider);
+  CartProvider(this._userProvider) {
+    // Initialize Razorpay event handlers
+    _setupRazorpayHandlers();
+  }
+
+  void _setupRazorpayHandlers() {
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    log('Payment Success: ${response.paymentId}');
+    
+    if (_pendingPaymentOperation != null && _pendingOrderId != null) {
+      // Verify payment and complete order
+      await _verifyAndCompletePayment(
+        _pendingOrderId!,
+        response.paymentId!,
+        response.signature!,
+        _pendingPaymentOperation!,
+      );
+    } else {
+      SnackBarHelper.showErrorSnackBar('Payment received but order context missing');
+    }
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    log('Payment Error: ${response.message}');
+    SnackBarHelper.showErrorSnackBar('Payment Failed: ${response.message}');
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    log('External Wallet: ${response.walletName}');
+  }
+
+  @override
+  void dispose() {
+    razorpay.clear();
+    super.dispose();
+  }
 
   getCartItems() {
     myCartItems = flutterCart.cartItemsList;
@@ -185,11 +224,8 @@ class CartProvider extends ChangeNotifier {
     if (selectedPaymentOption == 'cod') {
       addOrder(context);
     } else {
-      // await stripePayment(operation: () {
-      //    addOrder(context);
-      // });
-
-      await stripePayment(operation: () {
+      // Use Razorpay for prepaid payments
+      await razorpayPayment(operation: () {
         addOrder(context);
       });
     }
@@ -296,41 +332,105 @@ class CartProvider extends ChangeNotifier {
 
   Future<void> razorpayPayment({required void Function() operation}) async {
     try {
-      Response response =
-          await service.addItem(endpointUrl: 'payment/razorpay', itemData: {});
-      final data = await response.body;
-      String? razorpayKey = data['key'];
-      if (razorpayKey != null && razorpayKey != '') {
-        var options = {
-          'key': razorpayKey,
-          'amount': getGrandTotal() * 100,
-          'name': "user",
-          "currency": 'INR',
-          'description': 'Your transaction description',
-          'send_sms_hash': true,
-          "prefill": {
-            "email": _userProvider.getLoginUsr()?.name,
-            "contact": ''
-          },
-          "theme": {'color': '#FFE64A'},
-          "image":
-              'https://store.rapidflutter.com/digitalAssetUpload/rapidlogo.png',
-        };
-        razorpay.open(options);
-        razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-            (PaymentSuccessResponse response) {
-          operation();
-          return;
-        });
-        razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
-            (PaymentFailureResponse response) {
-          SnackBarHelper.showErrorSnackBar('Error ${response.message}');
-          return;
-        });
+      // Step 1: Create order on backend
+      final amount = getGrandTotal();
+      Response orderResponse = await service.addItem(
+        endpointUrl: 'payment/razorpay/create-order',
+        itemData: {
+          'amount': amount,
+          'currency': 'INR',
+          'receipt': 'receipt_${DateTime.now().millisecondsSinceEpoch}',
+        },
+      );
+
+      if (!orderResponse.isOk) {
+        SnackBarHelper.showErrorSnackBar('Failed to create payment order');
+        return;
       }
+
+      final orderData = await orderResponse.body;
+      if (orderData['error'] == true) {
+        SnackBarHelper.showErrorSnackBar(orderData['message'] ?? 'Failed to create order');
+        return;
+      }
+
+      final orderId = orderData['data']['orderId'];
+      final razorpayKey = orderData['data']['key'];
+
+      // Step 2: Open Razorpay checkout with order ID
+      // Note: When using order_id, amount is not needed as it's already in the order
+      var options = {
+        'key': razorpayKey,
+        'name': 'MOBIZATE',
+        'order_id': orderId,
+        'description': 'Order Payment',
+        'timeout': 300, // 5 minutes
+        'prefill': {
+          'contact': phoneController.text.isNotEmpty 
+              ? phoneController.text 
+              : '9999999999',
+          'email': _userProvider.getLoginUsr()?.name ?? '',
+          'name': _userProvider.getLoginUsr()?.name ?? 'User',
+        },
+        'theme': {
+          'color': '#FFE64A',
+        },
+      };
+
+      // Store the operation callback for later use
+      _pendingPaymentOperation = operation;
+      _pendingOrderId = orderId;
+
+      razorpay.open(options);
     } catch (e) {
-      SnackBarHelper.showErrorSnackBar('Error$e');
-      return;
+      log('Razorpay Payment Error: $e');
+      SnackBarHelper.showErrorSnackBar('Payment Error: $e');
+    }
+  }
+
+  // Store pending operation and order ID for payment verification
+  void Function()? _pendingPaymentOperation;
+  String? _pendingOrderId;
+
+  Future<void> _verifyAndCompletePayment(
+    String orderId,
+    String paymentId,
+    String signature,
+    void Function() operation,
+  ) async {
+    try {
+      // Verify payment on backend
+      Response verifyResponse = await service.addItem(
+        endpointUrl: 'payment/razorpay/verify',
+        itemData: {
+          'razorpay_order_id': orderId,
+          'razorpay_payment_id': paymentId,
+          'razorpay_signature': signature,
+        },
+      );
+
+      if (!verifyResponse.isOk) {
+        SnackBarHelper.showErrorSnackBar('Payment verification failed');
+        return;
+      }
+
+      final verifyData = await verifyResponse.body;
+      if (verifyData['error'] == true) {
+        SnackBarHelper.showErrorSnackBar(
+          verifyData['message'] ?? 'Payment verification failed',
+        );
+        return;
+      }
+
+      // Payment verified successfully, proceed with order
+      log('Payment verified successfully');
+      operation();
+    } catch (e) {
+      log('Payment Verification Error: $e');
+      SnackBarHelper.showErrorSnackBar('Payment verification error: $e');
+    } finally {
+      _pendingPaymentOperation = null;
+      _pendingOrderId = null;
     }
   }
 
