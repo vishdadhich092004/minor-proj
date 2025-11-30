@@ -1,5 +1,8 @@
 # Flutter related
 **/build/
+!admin_panal/build/web/**
+admin_panal/build/web/.env.local
+admin_panal/build/web/.vercel/
 **/.dart_tool/
 **/.idea/
 **/.vscode/
