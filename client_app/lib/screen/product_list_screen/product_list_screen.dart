@@ -6,6 +6,8 @@ import 'components/custom_app_bar.dart';
 import '../../../../widget/product_grid_view.dart';
 import 'components/category_selector.dart';
 import 'components/poster_section.dart';
+import '../../providers/language_provider.dart';
+import '../../utility/translations.dart' as AppTranslations;
 
 
 
@@ -34,20 +36,33 @@ class ProductListScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  firstName != null
-                      ? 'Hello, $firstName!'
-                      : 'Hello!',
-                  style: Theme.of(context).textTheme.displayLarge,
+                Consumer<LanguageProvider>(
+                  builder: (context, languageProvider, child) {
+                    final helloText = AppTranslations.Translations.get('hello', languageProvider.currentLanguageCode);
+                    return Text(
+                      firstName != null
+                          ? '$helloText, $firstName!'
+                          : '$helloText!',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    );
+                  },
                 ),
-                Text(
-                  "Lets gets somethings?",
-                  style: Theme.of(context).textTheme.headlineSmall,
+                Consumer<LanguageProvider>(
+                  builder: (context, languageProvider, child) {
+                    return Text(
+                      AppTranslations.Translations.get('lets_get_something', languageProvider.currentLanguageCode),
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    );
+                  },
                 ),
                 const PosterSection(),
-                Text(
-                  "Top categories",
-                  style: Theme.of(context).textTheme.headlineMedium,
+                Consumer<LanguageProvider>(
+                  builder: (context, languageProvider, child) {
+                    return Text(
+                      AppTranslations.Translations.get('top_categories', languageProvider.currentLanguageCode),
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    );
+                  },
                 ),
                 const SizedBox(height: 5),
                 Consumer<DataProvider>(

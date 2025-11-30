@@ -1,7 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-
 import '../utility/app_color.dart';
+import 'translated_text.dart';
 
 class MultiSelectDropDown<T> extends StatelessWidget {
   final String? hintText;
@@ -9,6 +9,7 @@ class MultiSelectDropDown<T> extends StatelessWidget {
   final Function(List<T>) onSelectionChanged;
   final String Function(T) displayItem;
   final List<T> selectedItems;
+  final bool autoTranslate;
 
   const MultiSelectDropDown({
     super.key,
@@ -17,6 +18,7 @@ class MultiSelectDropDown<T> extends StatelessWidget {
     required this.displayItem,
     required this.selectedItems,
     this.hintText = 'Select Items',
+    this.autoTranslate = false,
   });
 
   @override
@@ -60,12 +62,19 @@ class MultiSelectDropDown<T> extends StatelessWidget {
                               const Icon(Icons.check_box_outline_blank),
                             const SizedBox(width: 16),
                             Expanded(
-                              child: Text(
-                                displayItem(item),
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                ),
-                              ),
+                              child: autoTranslate
+                                  ? TranslatedText(
+                                      displayItem(item),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    )
+                                  : Text(
+                                      displayItem(item),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
                             ),
                           ],
                         ),
@@ -81,16 +90,27 @@ class MultiSelectDropDown<T> extends StatelessWidget {
             selectedItemBuilder: (context) {
               return items.map(
                 (item) {
+                  final selectedText =
+                      selectedItems.map(displayItem).join(', ');
                   return Container(
                     alignment: AlignmentDirectional.center,
-                    child: Text(
-                      selectedItems.map(displayItem).join(', '),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      maxLines: 1,
-                    ),
+                    child: autoTranslate
+                        ? TranslatedText(
+                            selectedText,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            maxLines: 1,
+                          )
+                        : Text(
+                            selectedText,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            maxLines: 1,
+                          ),
                   );
                 },
               ).toList();

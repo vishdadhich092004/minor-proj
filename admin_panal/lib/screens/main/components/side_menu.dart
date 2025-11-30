@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/language_provider.dart';
 import '../../../widgets/language_selector.dart';
+import '../../../utility/translations.dart' as AppTranslations;
 
 
 class SideMenu extends StatelessWidget {
@@ -13,82 +14,84 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        children: [
-          DrawerHeader(
-            child: Image.asset("assets/images/logo.png"),
-          ),
-          DrawerListTile(
-            title: "Dashboard",
-            svgSrc: "assets/icons/menu_dashboard.svg",
-            press: () {
-              context.mainScreenProvider.navigateToScreen('Dashboard');
-            },
-          ),
-          DrawerListTile(
-            title: "Category",
-            svgSrc: "assets/icons/menu_tran.svg",
-            press: () {
-              context.mainScreenProvider.navigateToScreen('Category');
-            },
-          ),
-          DrawerListTile(
-            title: "Sub Category",
-            svgSrc: "assets/icons/menu_task.svg",
-            press: () {
-              context.mainScreenProvider.navigateToScreen('SubCategory');
-            },
-          ),
-          DrawerListTile(
-            title: "Brands",
-            svgSrc: "assets/icons/menu_doc.svg",
-            press: () {
-              context.mainScreenProvider.navigateToScreen('Brands');
-            },
-          ),
-          DrawerListTile(
-            title: "Variant Type",
-            svgSrc: "assets/icons/menu_store.svg",
-            press: () {
-              context.mainScreenProvider.navigateToScreen('VariantType');
-            },
-          ),
-          DrawerListTile(
-            title: "Variants",
-            svgSrc: "assets/icons/menu_notification.svg",
-            press: () {
-              context.mainScreenProvider.navigateToScreen('Variants');
-            },
-          ),
-          DrawerListTile(
-            title: "Orders",
-            svgSrc: "assets/icons/menu_profile.svg",
-            press: () {
-              context.mainScreenProvider.navigateToScreen('Order');
-            },
-          ),
-          DrawerListTile(
-            title: "Coupons",
-            svgSrc: "assets/icons/menu_setting.svg",
-            press: () {
-              context.mainScreenProvider.navigateToScreen('Coupon');
-            },
-          ),
-          DrawerListTile(
-            title: "Posters",
-            svgSrc: "assets/icons/menu_doc.svg",
-            press: () {
-              context.mainScreenProvider.navigateToScreen('Poster');
-            },
-          ),
-          DrawerListTile(
-            title: "Notifications",
-            svgSrc: "assets/icons/menu_notification.svg",
-            press: () {
-              context.mainScreenProvider.navigateToScreen('Notifications');
-            },
-          ),
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, child) {
+        return Drawer(
+          child: ListView(
+            children: [
+              DrawerHeader(
+                child: Image.asset("assets/images/logo.png"),
+              ),
+              DrawerListTile(
+                title: AppTranslations.Translations.get('dashboard', languageProvider.currentLanguageCode),
+                svgSrc: "assets/icons/menu_dashboard.svg",
+                press: () {
+                  context.mainScreenProvider.navigateToScreen('Dashboard');
+                },
+              ),
+              DrawerListTile(
+                title: AppTranslations.Translations.get('category', languageProvider.currentLanguageCode),
+                svgSrc: "assets/icons/menu_tran.svg",
+                press: () {
+                  context.mainScreenProvider.navigateToScreen('Category');
+                },
+              ),
+              DrawerListTile(
+                title: AppTranslations.Translations.get('sub_category', languageProvider.currentLanguageCode),
+                svgSrc: "assets/icons/menu_task.svg",
+                press: () {
+                  context.mainScreenProvider.navigateToScreen('SubCategory');
+                },
+              ),
+              DrawerListTile(
+                title: AppTranslations.Translations.get('brands', languageProvider.currentLanguageCode),
+                svgSrc: "assets/icons/menu_doc.svg",
+                press: () {
+                  context.mainScreenProvider.navigateToScreen('Brands');
+                },
+              ),
+              DrawerListTile(
+                title: AppTranslations.Translations.get('variant_type', languageProvider.currentLanguageCode),
+                svgSrc: "assets/icons/menu_store.svg",
+                press: () {
+                  context.mainScreenProvider.navigateToScreen('VariantType');
+                },
+              ),
+              DrawerListTile(
+                title: AppTranslations.Translations.get('variants', languageProvider.currentLanguageCode),
+                svgSrc: "assets/icons/menu_notification.svg",
+                press: () {
+                  context.mainScreenProvider.navigateToScreen('Variants');
+                },
+              ),
+              DrawerListTile(
+                title: AppTranslations.Translations.get('orders', languageProvider.currentLanguageCode),
+                svgSrc: "assets/icons/menu_profile.svg",
+                press: () {
+                  context.mainScreenProvider.navigateToScreen('Order');
+                },
+              ),
+              DrawerListTile(
+                title: AppTranslations.Translations.get('coupons', languageProvider.currentLanguageCode),
+                svgSrc: "assets/icons/menu_setting.svg",
+                press: () {
+                  context.mainScreenProvider.navigateToScreen('Coupon');
+                },
+              ),
+              DrawerListTile(
+                title: AppTranslations.Translations.get('posters', languageProvider.currentLanguageCode),
+                svgSrc: "assets/icons/menu_doc.svg",
+                press: () {
+                  context.mainScreenProvider.navigateToScreen('Poster');
+                },
+              ),
+              DrawerListTile(
+                title: AppTranslations.Translations.get('notifications', languageProvider.currentLanguageCode),
+                svgSrc: "assets/icons/menu_notification.svg",
+                press: () {
+                  context.mainScreenProvider.navigateToScreen('Notifications');
+                },
+              ),
           const Divider(color: Colors.white24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

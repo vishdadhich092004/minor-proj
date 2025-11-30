@@ -7,6 +7,8 @@ import '../../utility/app_color.dart';
 import 'components/buy_now_bottom_sheet.dart';
 import 'components/cart_list_section.dart';
 import 'components/empty_cart.dart';
+import '../../providers/language_provider.dart';
+import '../../utility/translations.dart' as AppTranslations;
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -18,12 +20,16 @@ class CartScreen extends StatelessWidget {
     });
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "My Cart",
-          style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColor.darkOrange),
+        title: Consumer<LanguageProvider>(
+          builder: (context, languageProvider, child) {
+            return Text(
+              AppTranslations.Translations.get('my_cart', languageProvider.currentLanguageCode),
+              style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.darkOrange),
+            );
+          },
         ),
       ),
       body: Consumer<CartProvider>(
@@ -41,49 +47,57 @@ class CartScreen extends StatelessWidget {
                     ),
 
               //? total price section
-              Container(
-                margin: const EdgeInsets.only(bottom: 15),
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Total",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
-                    ),
-                    AnimatedSwitcherWrapper(
-                      child: Text(
-                        "Rs ${context.cartProvider.getCartSubTotal()}",
-                        // key: ValueKey<double>(cartProvider.getCartSubTotal()),
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xFFEC6813),
+              Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          AppTranslations.Translations.get('total', languageProvider.currentLanguageCode),
+                          style:
+                              const TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
                         ),
-                      ),
-                    )
-                  ],
-                ),
+                        AnimatedSwitcherWrapper(
+                          child: Text(
+                            "Rs ${context.cartProvider.getCartSubTotal()}",
+                            style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xFFEC6813),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
               ),
               //? buy now button
-              SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 30, right: 30, bottom: 20),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(20)),
-                    onPressed: context.cartProvider.myCartItems.isEmpty
-                        ? null
-                        : () {
-                            showCustomBottomSheet(context);
-                          },
-                    child: const Text("Buy Now",
-                        style: TextStyle(color: Colors.white)),
-                  ),
-                ),
+              Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 30, right: 30, bottom: 20),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(20)),
+                        onPressed: context.cartProvider.myCartItems.isEmpty
+                            ? null
+                            : () {
+                                showCustomBottomSheet(context);
+                              },
+                        child: Text(
+                            AppTranslations.Translations.get('buy_now', languageProvider.currentLanguageCode),
+                            style: const TextStyle(color: Colors.white)),
+                      ),
+                    ),
+                  );
+                },
               )
             ],
           );

@@ -1,7 +1,10 @@
 import '../../utility/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../utility/app_color.dart';
 import '../../widget/custom_text_field.dart';
+import '../../providers/language_provider.dart';
+import '../../utility/translations.dart' as AppTranslations;
 
 class MyAddressPage extends StatelessWidget {
   const MyAddressPage({super.key});
@@ -11,15 +14,19 @@ class MyAddressPage extends StatelessWidget {
     context.profileProvider.retrieveSavedAddress();
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "My Address",
-          style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColor.darkOrange),
+        title: Consumer<LanguageProvider>(
+          builder: (context, languageProvider, child) {
+            return Text(
+              AppTranslations.Translations.get(
+                  'my_address', languageProvider.currentLanguageCode),
+              style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.darkOrange),
+            );
+          },
         ),
       ),
-
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
@@ -37,70 +44,120 @@ class MyAddressPage extends StatelessWidget {
                     surfaceTintColor: Colors.white,
                     child: Padding(
                       padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomTextField(
-                            labelText: 'Phone',
-                            onSave: (value) {},
-                            inputType: TextInputType.number,
-                            controller: context.profileProvider.phoneController,
-                            validator: (value) => value!.isEmpty
-                                ? 'Please enter a phone number'
-                                : null,
-                          ),
-
-                          CustomTextField(
-                            labelText: 'Street',
-                            onSave: (val) {},
-                            controller:
-                                context.profileProvider.streetController,
-                            validator: (value) =>
-                                value!.isEmpty ? 'Please enter a street' : null,
-                          ),
-                          CustomTextField(
-                            labelText: 'City',
-                            onSave: (value) {},
-                            controller: context.profileProvider.cityController,
-                            validator: (value) =>
-                                value!.isEmpty ? 'Please enter a city' : null,
-                          ),
-                          CustomTextField(
-                            labelText: 'State',
-                            onSave: (value) {},
-                            controller: context.profileProvider.stateController,
-                            validator: (value) =>
-                                value!.isEmpty ? 'Please enter a state' : null,
-                          ),
-                          Row(
+                      child: Consumer<LanguageProvider>(
+                        builder: (context, languageProvider, child) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: CustomTextField(
-                                  labelText: 'Postal Code',
-                                  onSave: (value) {},
-                                  inputType: TextInputType.number,
-                                  controller: context
-                                      .profileProvider.postalCodeController,
-                                  validator: (value) => value!.isEmpty
-                                      ? 'Please enter a code'
-                                      : null,
-                                ),
+                              CustomTextField(
+                                labelText: AppTranslations.Translations.get(
+                                    'phone',
+                                    languageProvider.currentLanguageCode),
+                                onSave: (value) {},
+                                inputType: TextInputType.number,
+                                controller:
+                                    context.profileProvider.phoneController,
+                                validator: (value) => value!.isEmpty
+                                    ? AppTranslations.Translations.get(
+                                            'please_enter_email',
+                                            languageProvider
+                                                .currentLanguageCode)
+                                        .replaceAll('email', 'phone')
+                                    : null,
                               ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: CustomTextField(
-                                  labelText: 'Country',
-                                  onSave: (value) {},
-                                  controller:
-                                      context.profileProvider.countryController,
-                                  validator: (value) => value!.isEmpty
-                                      ? 'Please enter a country'
-                                      : null,
-                                ),
+                              CustomTextField(
+                                labelText: AppTranslations.Translations.get(
+                                    'street',
+                                    languageProvider.currentLanguageCode),
+                                onSave: (val) {},
+                                controller:
+                                    context.profileProvider.streetController,
+                                validator: (value) => value!.isEmpty
+                                    ? AppTranslations.Translations.get(
+                                            'please_enter_email',
+                                            languageProvider
+                                                .currentLanguageCode)
+                                        .replaceAll('email', 'street')
+                                    : null,
+                              ),
+                              CustomTextField(
+                                labelText: AppTranslations.Translations.get(
+                                    'city',
+                                    languageProvider.currentLanguageCode),
+                                onSave: (value) {},
+                                controller:
+                                    context.profileProvider.cityController,
+                                validator: (value) => value!.isEmpty
+                                    ? AppTranslations.Translations.get(
+                                            'please_enter_email',
+                                            languageProvider
+                                                .currentLanguageCode)
+                                        .replaceAll('email', 'city')
+                                    : null,
+                              ),
+                              CustomTextField(
+                                labelText: AppTranslations.Translations.get(
+                                    'state',
+                                    languageProvider.currentLanguageCode),
+                                onSave: (value) {},
+                                controller:
+                                    context.profileProvider.stateController,
+                                validator: (value) => value!.isEmpty
+                                    ? AppTranslations.Translations.get(
+                                            'please_enter_email',
+                                            languageProvider
+                                                .currentLanguageCode)
+                                        .replaceAll('email', 'state')
+                                    : null,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: CustomTextField(
+                                      labelText:
+                                          AppTranslations.Translations.get(
+                                              'postal_code',
+                                              languageProvider
+                                                  .currentLanguageCode),
+                                      onSave: (value) {},
+                                      inputType: TextInputType.number,
+                                      controller: context
+                                          .profileProvider.postalCodeController,
+                                      validator: (value) => value!.isEmpty
+                                          ? AppTranslations.Translations.get(
+                                                  'please_enter_email',
+                                                  languageProvider
+                                                      .currentLanguageCode)
+                                              .replaceAll(
+                                                  'email', 'postal code')
+                                          : null,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: CustomTextField(
+                                      labelText:
+                                          AppTranslations.Translations.get(
+                                              'country',
+                                              languageProvider
+                                                  .currentLanguageCode),
+                                      onSave: (value) {},
+                                      controller: context
+                                          .profileProvider.countryController,
+                                      validator: (value) => value!.isEmpty
+                                          ? AppTranslations.Translations.get(
+                                                  'please_enter_email',
+                                                  languageProvider
+                                                      .currentLanguageCode)
+                                              .replaceAll('email', 'country')
+                                          : null,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
-                          ),
-                        ],
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -121,8 +178,15 @@ class MyAddressPage extends StatelessWidget {
                           context.profileProvider.storeAddress();
                         }
                       },
-                      child: const Text('Update Address',
-                          style: TextStyle(fontSize: 18)),
+                      child: Consumer<LanguageProvider>(
+                        builder: (context, languageProvider, child) {
+                          return Text(
+                            AppTranslations.Translations.get(
+                                'save', languageProvider.currentLanguageCode),
+                            style: const TextStyle(fontSize: 18),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],

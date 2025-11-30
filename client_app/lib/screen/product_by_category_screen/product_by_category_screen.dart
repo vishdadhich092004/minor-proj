@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../widget/horizondal_list.dart';
 import '../../widget/product_grid_view.dart';
+import '../../widget/translated_text.dart';
 
 class ProductByCategoryScreen extends StatelessWidget {
   final Category selectedCategory;
@@ -29,8 +30,8 @@ class ProductByCategoryScreen extends StatelessWidget {
             SliverAppBar(
               floating: true,
               snap: true,
-              title: Text(
-                "${selectedCategory.name}",
+              title: TranslatedText(
+                selectedCategory.name ?? '',
                 style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -54,7 +55,7 @@ class ProductByCategoryScreen extends StatelessWidget {
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10.0),
-                                  child: HorizontalList(
+                                  child: HorizontalList<SubCategory?>(
                                     items: proByCatProvider.subCategories,
                                     itemToString: (SubCategory? val) =>
                                         val?.name ?? '',
@@ -66,6 +67,7 @@ class ProductByCategoryScreen extends StatelessWidget {
                                             .filterProductBySubCategory(val);
                                       }
                                     },
+                                    autoTranslate: true,
                                   ),
                                 );
                               },
@@ -104,6 +106,7 @@ class ProductByCategoryScreen extends StatelessWidget {
                                         displayItem: (val) => val.name ?? '',
                                         selectedItems:
                                             proByCatProvider.selectedBrands,
+                                        autoTranslate: true,
                                       );
                                     },
                                   ),

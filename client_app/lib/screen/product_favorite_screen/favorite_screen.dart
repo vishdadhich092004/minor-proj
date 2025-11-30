@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../widget/product_grid_view.dart';
 import '../../utility/app_color.dart';
+import '../../providers/language_provider.dart';
+import '../../utility/translations.dart' as AppTranslations;
 
 class FavoriteScreen extends StatelessWidget {
   const FavoriteScreen({super.key});
@@ -15,12 +17,16 @@ class FavoriteScreen extends StatelessWidget {
     });
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Favorites",
-          style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColor.darkOrange),
+        title: Consumer<LanguageProvider>(
+          builder: (context, languageProvider, child) {
+            return Text(
+              AppTranslations.Translations.get('favorites', languageProvider.currentLanguageCode),
+              style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.darkOrange),
+            );
+          },
         ),
       ),
       body: Padding(

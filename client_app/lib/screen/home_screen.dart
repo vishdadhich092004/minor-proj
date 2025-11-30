@@ -4,8 +4,10 @@ import 'product_list_screen/product_list_screen.dart';
 import 'profile_screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
-import '../../../utility/app_data.dart';
+import 'package:provider/provider.dart';
 import '../../../widget/page_wrapper.dart';
+import '../providers/language_provider.dart';
+import '../utility/translations.dart' as AppTranslations;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,23 +30,83 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return PageWrapper(
       child: Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          items: AppData.bottomNavBarItems,
-          // Use the updated list
-          currentIndex: newIndex,
-          selectedItemColor: const Color(0xFFEC6813),
-          // Set your active color
-          unselectedItemColor: Colors.grey,
-          // Set your inactive color
-          showSelectedLabels: false,
-          // We are showing labels in the custom icon
-          showUnselectedLabels: false,
-          type: BottomNavigationBarType.fixed,
-          // Adjust if you have fewer/more items
-          onTap: (currentIndex) {
-            setState(() {
-              newIndex = currentIndex;
-            });
+        bottomNavigationBar: Consumer<LanguageProvider>(
+          builder: (context, languageProvider, child) {
+            return BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(
+                  icon: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.home),
+                      const SizedBox(height: 4),
+                      Text(
+                        AppTranslations.Translations.get(
+                            'home', languageProvider.currentLanguageCode),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.favorite),
+                      const SizedBox(height: 4),
+                      Text(
+                        AppTranslations.Translations.get(
+                            'favorite', languageProvider.currentLanguageCode),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.shopping_bag),
+                      const SizedBox(height: 4),
+                      Text(
+                        AppTranslations.Translations.get(
+                            'cart', languageProvider.currentLanguageCode),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.account_circle),
+                      const SizedBox(height: 4),
+                      Text(
+                        AppTranslations.Translations.get(
+                            'profile', languageProvider.currentLanguageCode),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  label: '',
+                ),
+              ],
+              currentIndex: newIndex,
+              selectedItemColor: const Color(0xFFEC6813),
+              unselectedItemColor: Colors.grey,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              type: BottomNavigationBarType.fixed,
+              onTap: (currentIndex) {
+                setState(() {
+                  newIndex = currentIndex;
+                });
+              },
+            );
           },
         ),
         body: PageTransitionSwitcher(

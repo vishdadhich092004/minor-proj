@@ -5,6 +5,8 @@ import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import '../../../models/poster.dart';
 import '../../../utility/constants.dart';
+import '../../../providers/language_provider.dart';
+import '../../../utility/translations.dart' as AppTranslations;
 import '../../../widgets/category_image_card.dart';
 import '../../../widgets/custom_text_field.dart';
 
@@ -31,10 +33,13 @@ class PosterSubmitForm extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Gap(defaultPadding),
-              Consumer<PosterProvider>(
-                builder: (context, posterProvider, child) {
+              Consumer2<PosterProvider, LanguageProvider>(
+                builder: (context, posterProvider, languageProvider, child) {
                   return CategoryImageCard(
-                    labelText: "Poster",
+                    labelText: AppTranslations.Translations.get(
+                      'posters',
+                      languageProvider.currentLanguageCode,
+                    ),
                     imageFile: posterProvider.selectedImage,
                     imageUrlForUpdateImage: poster?.imageUrl,
                     onTap: () {
@@ -44,48 +49,71 @@ class PosterSubmitForm extends StatelessWidget {
                 },
               ),
               Gap(defaultPadding),
-              CustomTextField(
-                controller: context.posterProvider.posterNameCtrl,
-                labelText: 'Poster Name',
-                onSave: (val) {},
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a poster name';
-                  }
-                  return null;
+              Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return CustomTextField(
+                    controller: context.posterProvider.posterNameCtrl,
+                    labelText: AppTranslations.Translations.get(
+                      'poster_name',
+                      languageProvider.currentLanguageCode,
+                    ),
+                    onSave: (val) {},
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppTranslations.Translations.get(
+                          'please_enter_poster_name',
+                          languageProvider.currentLanguageCode,
+                        );
+                      }
+                      return null;
+                    },
+                  );
                 },
               ),
               Gap(defaultPadding * 2),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: secondaryColor,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the popup
-                    },
-                    child: Text('Cancel'),
-                  ),
-                  Gap(defaultPadding),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: primaryColor,
-                    ),
-                    onPressed: () {
-                      // Validate and save the form
-                      if (context.posterProvider.addPosterFormKey.currentState!.validate()) {
-                        context.posterProvider.addPosterFormKey.currentState!.save();
-                         context.posterProvider.submitPoster();
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: Text('Submit'),
-                  ),
-                ],
+              Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: secondaryColor,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          AppTranslations.Translations.get(
+                            'cancel',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
+                      ),
+                      Gap(defaultPadding),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: primaryColor,
+                        ),
+                        onPressed: () {
+                          if (context.posterProvider.addPosterFormKey.currentState!.validate()) {
+                            context.posterProvider.addPosterFormKey.currentState!.save();
+                            context.posterProvider.submitPoster();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(
+                          AppTranslations.Translations.get(
+                            'submit',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ],
           ),
@@ -100,10 +128,22 @@ void showAddPosterForm(BuildContext context, Poster? poster) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: bgColor,
-        title: Center(child: Text('Add Poster'.toUpperCase(), style: TextStyle(color: primaryColor))),
-        content: PosterSubmitForm(poster: poster),
+      return Consumer<LanguageProvider>(
+        builder: (context, languageProvider, child) {
+          return AlertDialog(
+            backgroundColor: bgColor,
+            title: Center(
+              child: Text(
+                AppTranslations.Translations.get(
+                  'add_poster',
+                  languageProvider.currentLanguageCode,
+                ).toUpperCase(),
+                style: TextStyle(color: primaryColor),
+              ),
+            ),
+            content: PosterSubmitForm(poster: poster),
+          );
+        },
       );
     },
   );

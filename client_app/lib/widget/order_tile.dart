@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../utility/app_color.dart';
+import 'translated_text.dart';
 
 class OrderTile extends StatelessWidget {
   final String items;
@@ -32,7 +32,7 @@ class OrderTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              TranslatedText(
                 items,
                 style: const TextStyle(
                   fontSize: 18,

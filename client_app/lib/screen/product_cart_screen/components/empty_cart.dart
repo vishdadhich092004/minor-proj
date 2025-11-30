@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/language_provider.dart';
+import '../../../utility/translations.dart' as AppTranslations;
 
 class EmptyCart extends StatelessWidget {
   const EmptyCart({super.key});
@@ -13,11 +16,16 @@ class EmptyCart extends StatelessWidget {
               child: Image.asset('assets/images/empty_cart.png'),
             ),
           ),
-
-          const Text(
-            "Empty cart",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          )
+          Consumer<LanguageProvider>(
+            builder: (context, languageProvider, child) {
+              return Text(
+                AppTranslations.Translations.get(
+                    'empty_cart', languageProvider.currentLanguageCode),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              );
+            },
+          ),
         ],
       ),
     );

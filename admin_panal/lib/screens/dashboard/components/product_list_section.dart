@@ -1,11 +1,12 @@
 import 'package:admin/utility/extensions.dart';
-
 import '../../../core/data/data_provider.dart';
 import '../../../models/product.dart';
 import 'add_product_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../utility/constants.dart';
+import '../../../providers/language_provider.dart';
+import '../../../utility/translations.dart' as AppTranslations;
 
 class ProductListSection extends StatelessWidget {
   const ProductListSection({
@@ -23,43 +24,75 @@ class ProductListSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "All Products",
-            style: Theme
-                .of(context)
-                .textTheme
-                .titleMedium,
+          Consumer<LanguageProvider>(
+            builder: (context, languageProvider, child) {
+              return Text(
+                AppTranslations.Translations.get(
+                  'all_products',
+                  languageProvider.currentLanguageCode,
+                ),
+                style: Theme.of(context).textTheme.titleMedium,
+              );
+            },
           ),
           SizedBox(
             width: double.infinity,
-            child: Consumer<DataProvider>(
-              builder: (context, dataProvider, child) {
+            child: Consumer2<DataProvider, LanguageProvider>(
+              builder: (context, dataProvider, languageProvider, child) {
                 return ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: 400,
                   ),
                   child: DataTable(
                     columnSpacing: defaultPadding,
-                    // minWidth: 600,
                     columns: [
                       DataColumn(
-                        label: Text("Product Name"),
+                        label: Text(
+                          AppTranslations.Translations.get(
+                            'product_name',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text("Category"),
+                        label: Text(
+                          AppTranslations.Translations.get(
+                            'category',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text("Sub Category"),
-
+                        label: Text(
+                          AppTranslations.Translations.get(
+                            'sub_category',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text("Price"),
+                        label: Text(
+                          AppTranslations.Translations.get(
+                            'price',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text("Edit"),
+                        label: Text(
+                          AppTranslations.Translations.get(
+                            'edit',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text("Delete"),
+                        label: Text(
+                          AppTranslations.Translations.get(
+                            'delete',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
                       ),
                     ],
                     rows: List.generate(

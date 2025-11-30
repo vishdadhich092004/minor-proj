@@ -1,45 +1,12 @@
-import 'package:admin/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import '../../../utility/constants.dart';
-import '../../../providers/language_provider.dart';
-import '../../../utility/translations.dart' as AppTranslations;
+import '../utility/constants.dart';
+import '../providers/language_provider.dart';
+import '../utility/translations.dart' as AppTranslations;
 
-class DashBoardHeader extends StatelessWidget {
-  const DashBoardHeader({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<LanguageProvider>(
-      builder: (context, languageProvider, child) {
-        return Row(
-          children: [
-            Text(
-              AppTranslations.Translations.get(
-                'dashboard',
-                languageProvider.currentLanguageCode,
-              ),
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            Spacer(flex: 1),
-            Expanded(
-              child: SearchField(
-                onChange: (val) {
-                  context.dataProvider.filterProducts(val);
-                },
-              ),
-            ),
-            ProfileCard(),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class ProfileCard extends StatelessWidget {
-  const ProfileCard({Key? key}) : super(key: key);
+class SharedProfileCard extends StatelessWidget {
+  const SharedProfileCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +26,7 @@ class ProfileCard extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
-                radius: 12, // Adjust size
+                radius: 12,
                 backgroundImage: AssetImage('assets/images/profile.png'),
               ),
               Padding(
@@ -82,10 +49,10 @@ class ProfileCard extends StatelessWidget {
   }
 }
 
-class SearchField extends StatelessWidget {
+class SharedSearchField extends StatelessWidget {
   final Function(String) onChange;
 
-  const SearchField({Key? key, required this.onChange}) : super(key: key);
+  const SharedSearchField({Key? key, required this.onChange}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

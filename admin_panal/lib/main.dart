@@ -24,38 +24,71 @@ import 'providers/language_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => DataProvider()),
-    ChangeNotifierProvider(create: (context) => LanguageProvider()),
-    ChangeNotifierProvider(create: (context) => MainScreenProvider()),
-    ChangeNotifierProvider(create: (context) => CategoryProvider(context.dataProvider)),
-    ChangeNotifierProvider(create: (context) => SubCategoryProvider(context.dataProvider)),
-    ChangeNotifierProvider(create: (context) => BrandProvider(context.dataProvider)),
-    ChangeNotifierProvider(create: (context) => VariantsTypeProvider(context.dataProvider)),
-    ChangeNotifierProvider(create: (context) => VariantsProvider(context.dataProvider)),
-    ChangeNotifierProvider(create: (context) => DashBoardProvider(context.dataProvider)),
-    ChangeNotifierProvider(create: (context) => CouponCodeProvider(context.dataProvider)),
-    ChangeNotifierProvider(create: (context) => PosterProvider(context.dataProvider)),
-    ChangeNotifierProvider(create: (context) => OrderProvider(context.dataProvider)),
-    ChangeNotifierProvider(create: (context) => NotificationProvider(context.dataProvider)),
-  ], child: MyApp()));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => DataProvider()),
+        ChangeNotifierProvider(create: (context) => LanguageProvider()),
+        ChangeNotifierProvider(create: (context) => MainScreenProvider()),
+        ChangeNotifierProvider(
+          create: (context) => CategoryProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SubCategoryProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => BrandProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => VariantsTypeProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => VariantsProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => DashBoardProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CouponCodeProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PosterProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => OrderProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => NotificationProvider(context.dataProvider),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Admin Panel',
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: bgColor,
-        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).apply(bodyColor: Colors.white),
-        canvasColor: secondaryColor,
-      ),
-      initialRoute: AppPages.HOME,
-      unknownRoute: GetPage(name: '/notFount', page: () => MainScreen()),
-      defaultTransition: Transition.cupertino,
-      getPages: AppPages.routes,
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, child) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Admin Panel',
+          locale: Locale(languageProvider.currentLanguageCode),
+          fallbackLocale: const Locale('en'),
+          theme: ThemeData.dark().copyWith(
+            scaffoldBackgroundColor: bgColor,
+            textTheme: GoogleFonts.poppinsTextTheme(
+              Theme.of(context).textTheme,
+            ).apply(bodyColor: Colors.white),
+            canvasColor: secondaryColor,
+          ),
+          initialRoute: AppPages.HOME,
+          unknownRoute: GetPage(name: '/notFount', page: () => MainScreen()),
+          defaultTransition: Transition.cupertino,
+          getPages: AppPages.routes,
+        );
+      },
     );
   }
 }

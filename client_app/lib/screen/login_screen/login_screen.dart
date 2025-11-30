@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../../utility/app_color.dart';
 import '../home_screen.dart';
 import 'package:e_commerce_app/utility/extensions.dart';
+import 'package:provider/provider.dart';
+import '../../providers/language_provider.dart';
+import '../../utility/translations.dart' as AppTranslations;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -37,40 +40,47 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
-  String? _validateEmail(String? value) {
+  String? _validateEmail(String? value, String languageCode) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your email';
+      return AppTranslations.Translations.get(
+          'please_enter_email', languageCode);
     }
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address';
+      return AppTranslations.Translations.get(
+          'please_enter_valid_email', languageCode);
     }
     return null;
   }
 
-  String? _validatePassword(String? value) {
+  String? _validatePassword(String? value, String languageCode) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your password';
+      return AppTranslations.Translations.get(
+          'please_enter_password', languageCode);
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return AppTranslations.Translations.get(
+          'password_min_length', languageCode);
     }
     return null;
   }
 
-  String? _validateUsername(String? value) {
+  String? _validateUsername(String? value, String languageCode) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your username';
+      return AppTranslations.Translations.get(
+          'please_enter_username', languageCode);
     }
     return null;
   }
 
-  String? _validateConfirmPassword(String? value) {
+  String? _validateConfirmPassword(String? value, String languageCode) {
     if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+      return AppTranslations.Translations.get(
+          'please_confirm_password', languageCode);
     }
     if (value != _passwordController.text) {
-      return 'Passwords do not match';
+      return AppTranslations.Translations.get(
+          'passwords_not_match', languageCode);
     }
     return null;
   }
@@ -171,21 +181,40 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   const SizedBox(height: 32),
                   // Title
-                  Text(
-                    _isLogin ? 'Welcome Back' : 'Create Account',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: AppColor.darkGrey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                    textAlign: TextAlign.center,
+                  Consumer<LanguageProvider>(
+                    builder: (context, languageProvider, child) {
+                      return Text(
+                        _isLogin
+                            ? AppTranslations.Translations.get('welcome_back',
+                                languageProvider.currentLanguageCode)
+                            : AppTranslations.Translations.get('create_account',
+                                languageProvider.currentLanguageCode),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              color: AppColor.darkGrey,
+                              fontWeight: FontWeight.bold,
+                            ),
+                        textAlign: TextAlign.center,
+                      );
+                    },
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    _isLogin ? 'Sign in to continue' : 'Sign up to get started',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.grey[600],
-                        ),
-                    textAlign: TextAlign.center,
+                  Consumer<LanguageProvider>(
+                    builder: (context, languageProvider, child) {
+                      return Text(
+                        _isLogin
+                            ? AppTranslations.Translations.get(
+                                'sign_in', languageProvider.currentLanguageCode)
+                            : AppTranslations.Translations.get('sign_up',
+                                languageProvider.currentLanguageCode),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                        textAlign: TextAlign.center,
+                      );
+                    },
                   ),
                   const SizedBox(height: 32),
                   // Form
@@ -221,76 +250,132 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ),
                               ),
 
-                            if (!_isLogin)
-                              TextFormField(
-                                controller: _usernameController,
-                                decoration: InputDecoration(
-                                  labelText: 'Username',
-                                  hintText: 'Enter your username',
-                                  prefixIcon: const Icon(Icons.person),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey[50],
-                                ),
-                                validator: _validateUsername,
-                                textInputAction: TextInputAction.next,
-                              ),
-                            if (!_isLogin) const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _emailController,
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                hintText: 'Enter your email',
-                                prefixIcon: const Icon(Icons.email),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[50],
-                              ),
-                              validator: _validateEmail,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
+                            Consumer<LanguageProvider>(
+                              builder: (context, languageProvider, child) {
+                                return Column(
+                                  children: [
+                                    if (!_isLogin)
+                                      TextFormField(
+                                        controller: _usernameController,
+                                        decoration: InputDecoration(
+                                          labelText:
+                                              AppTranslations.Translations.get(
+                                                  'username',
+                                                  languageProvider
+                                                      .currentLanguageCode),
+                                          hintText:
+                                              AppTranslations.Translations.get(
+                                                  'enter_username',
+                                                  languageProvider
+                                                      .currentLanguageCode),
+                                          prefixIcon: const Icon(Icons.person),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.grey[50],
+                                        ),
+                                        validator: (value) => _validateUsername(
+                                            value,
+                                            languageProvider
+                                                .currentLanguageCode),
+                                        textInputAction: TextInputAction.next,
+                                      ),
+                                    if (!_isLogin) const SizedBox(height: 16),
+                                    TextFormField(
+                                      controller: _emailController,
+                                      decoration: InputDecoration(
+                                        labelText:
+                                            AppTranslations.Translations.get(
+                                                'email',
+                                                languageProvider
+                                                    .currentLanguageCode),
+                                        hintText:
+                                            AppTranslations.Translations.get(
+                                                'enter_email',
+                                                languageProvider
+                                                    .currentLanguageCode),
+                                        prefixIcon: const Icon(Icons.email),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.grey[50],
+                                      ),
+                                      validator: (value) => _validateEmail(
+                                          value,
+                                          languageProvider.currentLanguageCode),
+                                      keyboardType: TextInputType.emailAddress,
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    TextFormField(
+                                      controller: _passwordController,
+                                      decoration: InputDecoration(
+                                        labelText:
+                                            AppTranslations.Translations.get(
+                                                'password',
+                                                languageProvider
+                                                    .currentLanguageCode),
+                                        hintText:
+                                            AppTranslations.Translations.get(
+                                                'enter_password',
+                                                languageProvider
+                                                    .currentLanguageCode),
+                                        prefixIcon: const Icon(Icons.lock),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.grey[50],
+                                      ),
+                                      obscureText: true,
+                                      validator: (value) => _validatePassword(
+                                          value,
+                                          languageProvider.currentLanguageCode),
+                                      textInputAction: _isLogin
+                                          ? TextInputAction.done
+                                          : TextInputAction.next,
+                                    ),
+                                    if (!_isLogin) const SizedBox(height: 16),
+                                    if (!_isLogin)
+                                      TextFormField(
+                                        controller: _confirmPasswordController,
+                                        decoration: InputDecoration(
+                                          labelText:
+                                              AppTranslations.Translations.get(
+                                                  'confirm_password',
+                                                  languageProvider
+                                                      .currentLanguageCode),
+                                          hintText:
+                                              AppTranslations.Translations.get(
+                                                  'confirm_your_password',
+                                                  languageProvider
+                                                      .currentLanguageCode),
+                                          prefixIcon:
+                                              const Icon(Icons.lock_outline),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.grey[50],
+                                        ),
+                                        obscureText: true,
+                                        validator: (value) =>
+                                            _validateConfirmPassword(
+                                                value,
+                                                languageProvider
+                                                    .currentLanguageCode),
+                                        textInputAction: TextInputAction.done,
+                                      ),
+                                  ],
+                                );
+                              },
                             ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _passwordController,
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                hintText: 'Enter your password',
-                                prefixIcon: const Icon(Icons.lock),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[50],
-                              ),
-                              obscureText: true,
-                              validator: _validatePassword,
-                              textInputAction: _isLogin
-                                  ? TextInputAction.done
-                                  : TextInputAction.next,
-                            ),
-                            if (!_isLogin) const SizedBox(height: 16),
-                            if (!_isLogin)
-                              TextFormField(
-                                controller: _confirmPasswordController,
-                                decoration: InputDecoration(
-                                  labelText: 'Confirm Password',
-                                  hintText: 'Confirm your password',
-                                  prefixIcon: const Icon(Icons.lock_outline),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey[50],
-                                ),
-                                obscureText: true,
-                                validator: _validateConfirmPassword,
-                                textInputAction: TextInputAction.done,
-                              ),
 
                             const SizedBox(height: 24),
 
@@ -308,17 +393,31 @@ class _AuthScreenState extends State<AuthScreen> {
                                   ),
                                   elevation: 2,
                                 ),
-                                child: _isLoading
-                                    ? const CircularProgressIndicator(
-                                        color: Colors.white,
-                                      )
-                                    : Text(
-                                        _isLogin ? 'LOG IN' : 'SIGN UP',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
+                                child: Consumer<LanguageProvider>(
+                                  builder: (context, languageProvider, child) {
+                                    return _isLoading
+                                        ? const CircularProgressIndicator(
+                                            color: Colors.white,
+                                          )
+                                        : Text(
+                                            _isLogin
+                                                ? AppTranslations.Translations.get(
+                                                        'login',
+                                                        languageProvider
+                                                            .currentLanguageCode)
+                                                    .toUpperCase()
+                                                : AppTranslations.Translations.get(
+                                                        'sign_up',
+                                                        languageProvider
+                                                            .currentLanguageCode)
+                                                    .toUpperCase(),
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                  },
+                                ),
                               ),
                             ),
                           ],
@@ -329,28 +428,42 @@ class _AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 24),
 
                   // Toggle button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _isLogin
-                            ? "Don't have an account? "
-                            : 'Already have an account? ',
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: _toggleAuthMode,
-                        child: Text(
-                          _isLogin ? 'SIGN UP' : 'LOG IN',
-                          style: const TextStyle(
-                            color: AppColor.darkOrange,
-                            fontWeight: FontWeight.bold,
+                  Consumer<LanguageProvider>(
+                    builder: (context, languageProvider, child) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _isLogin
+                                ? AppTranslations.Translations.get(
+                                    'dont_have_account',
+                                    languageProvider.currentLanguageCode)
+                                : AppTranslations.Translations.get(
+                                    'already_have_account',
+                                    languageProvider.currentLanguageCode),
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
+                          TextButton(
+                            onPressed: _toggleAuthMode,
+                            child: Text(
+                              _isLogin
+                                  ? AppTranslations.Translations.get('sign_up',
+                                          languageProvider.currentLanguageCode)
+                                      .toUpperCase()
+                                  : AppTranslations.Translations.get('login',
+                                          languageProvider.currentLanguageCode)
+                                      .toUpperCase(),
+                              style: const TextStyle(
+                                color: AppColor.darkOrange,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),

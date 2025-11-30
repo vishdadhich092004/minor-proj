@@ -4,6 +4,8 @@ import 'package:flutter_cart/flutter_cart.dart';
 import '../../../core/data/data_provider.dart';
 import '../../../models/product.dart';
 import '../../../utility/snack_bar_helper.dart';
+import '../../../providers/language_provider.dart';
+import '../../../utility/translations.dart' as AppTranslations;
 
 class ProductDetailProvider extends ChangeNotifier {
   final DataProvider _dataProvider;
@@ -12,9 +14,13 @@ class ProductDetailProvider extends ChangeNotifier {
 
   ProductDetailProvider(this._dataProvider);
 
-  void addToCart(Product product) {
+  void addToCart(Product product,
+      {required LanguageProvider languageProvider}) {
+    final langCode = languageProvider.currentLanguageCode;
+
     if (product.proVariantId!.isNotEmpty && selectedVariant == null) {
-      SnackBarHelper.showErrorSnackBar('Pleas select a variant');
+      SnackBarHelper.showErrorSnackBar(
+          AppTranslations.Translations.get('select_variant', langCode));
       return;
     }
     double? price = product.offerPrice != product.price
@@ -29,7 +35,8 @@ class ProductDetailProvider extends ChangeNotifier {
           productDetails: '${product.description}'), // CartModel
     );
     selectedVariant = null;
-    SnackBarHelper.showSuccessSnackBar('Item Added');
+    SnackBarHelper.showSuccessSnackBar(
+        AppTranslations.Translations.get('item_added', langCode));
     notifyListeners();
   }
 

@@ -5,6 +5,8 @@ import '../../../utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../utility/constants.dart';
+import '../../../providers/language_provider.dart';
+import '../../../utility/translations.dart' as AppTranslations;
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_field.dart';
 
@@ -36,12 +38,16 @@ class VariantSubmitForm extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: Consumer<VariantsProvider>(
-                      builder: (context, variantProvider, child) {
+                    child: Consumer2<VariantsProvider, LanguageProvider>(
+                      builder: (context, variantProvider, languageProvider, child) {
                         return CustomDropdown(
                           initialValue: variantProvider.selectedVariantType,
                           items: context.dataProvider.variantTypes,
-                          hintText: variantProvider.selectedVariantType?.name ?? 'Select Variant Type',
+                          hintText: variantProvider.selectedVariantType?.name ??
+                              AppTranslations.Translations.get(
+                                'select_variant_type',
+                                languageProvider.currentLanguageCode,
+                              ),
                           displayItem: (VariantType? variantType) => variantType?.name ?? '',
                           onChanged: (newValue) {
                             variantProvider.selectedVariantType = newValue;
@@ -49,61 +55,86 @@ class VariantSubmitForm extends StatelessWidget {
                           },
                           validator: (value) {
                             if (value == null) {
-                              return 'Please select a Variant Type';
+                              return AppTranslations.Translations.get(
+                                'please_select_variant_type',
+                                languageProvider.currentLanguageCode,
+                              );
                             }
                             return null;
                           },
-
                         );
                       },
                     ),
                   ),
                   Expanded(
-                    child: CustomTextField(
-                      controller: context.variantProvider.variantCtrl,
-                      labelText: 'Variant Name',
-                      onSave: (val) {},
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a variant name';
-                        }
-                        return null;
+                    child: Consumer<LanguageProvider>(
+                      builder: (context, languageProvider, child) {
+                        return CustomTextField(
+                          controller: context.variantProvider.variantCtrl,
+                          labelText: AppTranslations.Translations.get(
+                            'variant_name',
+                            languageProvider.currentLanguageCode,
+                          ),
+                          onSave: (val) {},
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppTranslations.Translations.get(
+                                'please_enter_name',
+                                languageProvider.currentLanguageCode,
+                              );
+                            }
+                            return null;
+                          },
+                        );
                       },
                     ),
                   ),
                 ],
               ),
               SizedBox(height: defaultPadding * 2),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: secondaryColor,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the popup
-                    },
-                    child: Text('Cancel'),
-                  ),
-                  SizedBox(width: defaultPadding),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: primaryColor,
-                    ),
-                    onPressed: () {
-                      // Validate and save the form
-                      if (context.variantProvider.addVariantsFormKey.currentState!.validate()) {
-                        context.variantProvider.addVariantsFormKey.currentState!.save();
-                        context.variantProvider.submitVariant();
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: Text('Submit'),
-                  ),
-                ],
+              Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: secondaryColor,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          AppTranslations.Translations.get(
+                            'cancel',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: defaultPadding),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: primaryColor,
+                        ),
+                        onPressed: () {
+                          if (context.variantProvider.addVariantsFormKey.currentState!.validate()) {
+                            context.variantProvider.addVariantsFormKey.currentState!.save();
+                            context.variantProvider.submitVariant();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(
+                          AppTranslations.Translations.get(
+                            'submit',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ],
           ),
@@ -118,10 +149,22 @@ void showAddVariantForm(BuildContext context, Variant? variant) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: bgColor,
-        title: Center(child: Text('Add Variant'.toUpperCase(), style: TextStyle(color: primaryColor))),
-        content: VariantSubmitForm(variant: variant),
+      return Consumer<LanguageProvider>(
+        builder: (context, languageProvider, child) {
+          return AlertDialog(
+            backgroundColor: bgColor,
+            title: Center(
+              child: Text(
+                AppTranslations.Translations.get(
+                  'add_variant',
+                  languageProvider.currentLanguageCode,
+                ).toUpperCase(),
+                style: TextStyle(color: primaryColor),
+              ),
+            ),
+            content: VariantSubmitForm(variant: variant),
+          );
+        },
       );
     },
   );

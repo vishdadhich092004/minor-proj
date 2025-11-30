@@ -2,6 +2,7 @@ import '../../product_by_category_screen/product_by_category_screen.dart';
 import '../../../utility/animation/open_container_wrapper.dart';
 import 'package:flutter/material.dart';
 import '../../../models/category.dart';
+import '../../../widget/translated_text.dart';
 
 class CategorySelector extends StatelessWidget {
   final List<Category> categories;
@@ -52,7 +53,7 @@ class CategorySelector extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
+                    TranslatedText(
                       category.name ?? '',
                       style: TextStyle(
                         color:

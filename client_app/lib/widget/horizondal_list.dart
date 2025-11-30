@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'translated_text.dart';
 
 class HorizontalList<T> extends StatelessWidget {
   final List<T>? items;
-  final T selected;
+  final T? selected;
   final String Function(T) itemToString;
   final void Function(T) onSelect;
+  final bool autoTranslate;
 
-  const HorizontalList(
-      {super.key,
-      this.items,
-      required this.itemToString,
-      required this.selected,
-      required this.onSelect});
+  const HorizontalList({
+    super.key,
+    this.items,
+    required this.itemToString,
+    this.selected,
+    required this.onSelect,
+    this.autoTranslate = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +28,17 @@ class HorizontalList<T> extends StatelessWidget {
           itemCount: items?.length ?? 0,
           itemBuilder: (context, index) {
             T item = items![index];
+            final itemText = itemToString(item);
+
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: ChoiceChip(
-                label: Text(itemToString(item)),
+                label: autoTranslate
+                    ? TranslatedText(
+                        itemText,
+                        style: const TextStyle(fontSize: 14),
+                      )
+                    : Text(itemText),
                 selected: selected == item,
                 onSelected: (bool selected) {
                   onSelect(item);

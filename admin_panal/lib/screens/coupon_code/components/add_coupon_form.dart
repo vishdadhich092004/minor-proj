@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import '../../../models/category.dart';
 import '../../../models/coupon.dart';
 import '../../../utility/constants.dart';
+import '../../../providers/language_provider.dart';
+import '../../../utility/translations.dart' as AppTranslations;
 import '../../../widgets/custom_date_picker.dart';
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_field.dart';
@@ -35,123 +37,184 @@ class CouponSubmitForm extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Gap(defaultPadding),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTextField(
-                      controller: context.couponCodeProvider.couponCodeCtrl,
-                      labelText: 'Coupon Code',
-                      onSave: (val) {},
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter coupon code';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: CustomDropdown(
-                      key: GlobalKey(),
-                      hintText: 'Discount Type',
-                      items: ['fixed', 'percentage'],
-                      initialValue:
-                          context.couponCodeProvider.selectedDiscountType,
-                      onChanged: (newValue) {
-                        context.couponCodeProvider.selectedDiscountType =
-                            newValue ?? 'fixed';
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please select a discount type';
-                        }
-                        return null;
-                      },
-                      displayItem: (val) => val,
-                    ),
-                  ),
-                ],
+              Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          controller: context.couponCodeProvider.couponCodeCtrl,
+                          labelText: AppTranslations.Translations.get(
+                            'coupon_code',
+                            languageProvider.currentLanguageCode,
+                          ),
+                          onSave: (val) {},
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppTranslations.Translations.get(
+                                'please_enter_coupon_code',
+                                languageProvider.currentLanguageCode,
+                              );
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: CustomDropdown(
+                          key: GlobalKey(),
+                          hintText: AppTranslations.Translations.get(
+                            'discount_type',
+                            languageProvider.currentLanguageCode,
+                          ),
+                          items: [
+                            AppTranslations.Translations.get('fixed', languageProvider.currentLanguageCode),
+                            AppTranslations.Translations.get('percentage', languageProvider.currentLanguageCode),
+                          ],
+                          initialValue: context.couponCodeProvider.selectedDiscountType == 'fixed'
+                              ? AppTranslations.Translations.get('fixed', languageProvider.currentLanguageCode)
+                              : AppTranslations.Translations.get('percentage', languageProvider.currentLanguageCode),
+                          onChanged: (newValue) {
+                            if (newValue == AppTranslations.Translations.get('fixed', languageProvider.currentLanguageCode)) {
+                              context.couponCodeProvider.selectedDiscountType = 'fixed';
+                            } else {
+                              context.couponCodeProvider.selectedDiscountType = 'percentage';
+                            }
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppTranslations.Translations.get(
+                                'please_select_discount_type',
+                                languageProvider.currentLanguageCode,
+                              );
+                            }
+                            return null;
+                          },
+                          displayItem: (val) => val,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
               Gap(defaultPadding),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTextField(
-                      controller: context.couponCodeProvider.discountAmountCtrl,
-                      labelText: 'Discount Amount',
-                      inputType: TextInputType.number,
-                      onSave: (val) {},
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter discount amount';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: CustomTextField(
-                      controller:
-                          context.couponCodeProvider.minimumPurchaseAmountCtrl,
-                      labelText: 'Minimum Purchase Amount',
-                      inputType: TextInputType.number,
-                      onSave: (val) {},
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please select status';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
+              Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          controller: context.couponCodeProvider.discountAmountCtrl,
+                          labelText: AppTranslations.Translations.get(
+                            'discount_amount',
+                            languageProvider.currentLanguageCode,
+                          ),
+                          inputType: TextInputType.number,
+                          onSave: (val) {},
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppTranslations.Translations.get(
+                                'please_enter_discount_amount',
+                                languageProvider.currentLanguageCode,
+                              );
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: CustomTextField(
+                          controller: context.couponCodeProvider.minimumPurchaseAmountCtrl,
+                          labelText: AppTranslations.Translations.get(
+                            'minimum_purchase_amount',
+                            languageProvider.currentLanguageCode,
+                          ),
+                          inputType: TextInputType.number,
+                          onSave: (val) {},
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppTranslations.Translations.get(
+                                'please_enter_minimum_purchase_amount',
+                                languageProvider.currentLanguageCode,
+                              );
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
               Gap(defaultPadding),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomDatePicker(
-                      labelText: 'Select Date',
-                      controller: context.couponCodeProvider.endDateCtrl,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                      onDateSelected: (DateTime date) {
-                        print('Selected Date: $date');
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: CustomDropdown(
-                      key: GlobalKey(),
-                      hintText: 'Status',
-                      initialValue:
-                          context.couponCodeProvider.selectedCouponStatus,
-                      items: ['active', 'inactive'],
-                      displayItem: (val) => val,
-                      onChanged: (newValue) {
-                        context.couponCodeProvider.selectedCouponStatus =
-                            newValue ?? 'active';
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please select status';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
+              Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: CustomDatePicker(
+                          labelText: AppTranslations.Translations.get(
+                            'select_date',
+                            languageProvider.currentLanguageCode,
+                          ),
+                          controller: context.couponCodeProvider.endDateCtrl,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          onDateSelected: (DateTime date) {
+                            print('Selected Date: $date');
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: CustomDropdown(
+                          key: GlobalKey(),
+                          hintText: AppTranslations.Translations.get(
+                            'status',
+                            languageProvider.currentLanguageCode,
+                          ),
+                          initialValue: context.couponCodeProvider.selectedCouponStatus == 'active'
+                              ? AppTranslations.Translations.get('active', languageProvider.currentLanguageCode)
+                              : AppTranslations.Translations.get('inactive', languageProvider.currentLanguageCode),
+                          items: [
+                            AppTranslations.Translations.get('active', languageProvider.currentLanguageCode),
+                            AppTranslations.Translations.get('inactive', languageProvider.currentLanguageCode),
+                          ],
+                          displayItem: (val) => val,
+                          onChanged: (newValue) {
+                            if (newValue == AppTranslations.Translations.get('active', languageProvider.currentLanguageCode)) {
+                              context.couponCodeProvider.selectedCouponStatus = 'active';
+                            } else {
+                              context.couponCodeProvider.selectedCouponStatus = 'inactive';
+                            }
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppTranslations.Translations.get(
+                                'please_select_status',
+                                languageProvider.currentLanguageCode,
+                              );
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Consumer<CouponCodeProvider>(
-                      builder: (context, couponProvider, child) {
-                        return CustomDropdown(
+              Consumer2<CouponCodeProvider, LanguageProvider>(
+                builder: (context, couponProvider, languageProvider, child) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: CustomDropdown(
                           initialValue: couponProvider.selectedCategory,
                           hintText: couponProvider.selectedCategory?.name ??
-                              'Select category',
+                              AppTranslations.Translations.get(
+                                'select_category',
+                                languageProvider.currentLanguageCode,
+                              ),
                           items: context.dataProvider.categories,
                           displayItem: (Category? category) =>
                               category?.name ?? '',
@@ -163,17 +226,16 @@ class CouponSubmitForm extends StatelessWidget {
                               couponProvider.updateUi();
                             }
                           },
-                        );
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: Consumer<CouponCodeProvider>(
-                      builder: (context, couponProvider, child) {
-                        return CustomDropdown(
+                        ),
+                      ),
+                      Expanded(
+                        child: CustomDropdown(
                           initialValue: couponProvider.selectedSubCategory,
                           hintText: couponProvider.selectedSubCategory?.name ??
-                              'Select sub category',
+                              AppTranslations.Translations.get(
+                                'select_sub_category',
+                                languageProvider.currentLanguageCode,
+                              ),
                           items: context.dataProvider.subCategories,
                           displayItem: (SubCategory? subCategory) =>
                               subCategory?.name ?? '',
@@ -185,17 +247,16 @@ class CouponSubmitForm extends StatelessWidget {
                               couponProvider.updateUi();
                             }
                           },
-                        );
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: Consumer<CouponCodeProvider>(
-                      builder: (context, couponProvider, child) {
-                        return CustomDropdown(
+                        ),
+                      ),
+                      Expanded(
+                        child: CustomDropdown(
                           initialValue: couponProvider.selectedProduct,
                           hintText: couponProvider.selectedProduct?.name ??
-                              'Select product',
+                              AppTranslations.Translations.get(
+                                'select_product',
+                                languageProvider.currentLanguageCode,
+                              ),
                           items: context.dataProvider.products,
                           displayItem: (Product? product) =>
                               product?.name ?? '',
@@ -207,47 +268,60 @@ class CouponSubmitForm extends StatelessWidget {
                               couponProvider.updateUi();
                             }
                           },
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
               Gap(defaultPadding),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: secondaryColor,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the popup
-                    },
-                    child: Text('Cancel'),
-                  ),
-                  SizedBox(width: defaultPadding),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: primaryColor,
-                    ),
-                    onPressed: () {
-                      // Validate and save the form
-                      if (context
-                          .couponCodeProvider.addCouponFormKey.currentState!
-                          .validate()) {
-                        context
-                            .couponCodeProvider.addCouponFormKey.currentState!
-                            .save();
-                        context.couponCodeProvider.submitCoupon();
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: Text('Submit'),
-                  ),
-                ],
+              Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: secondaryColor,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          AppTranslations.Translations.get(
+                            'cancel',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: defaultPadding),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: primaryColor,
+                        ),
+                        onPressed: () {
+                          if (context
+                              .couponCodeProvider.addCouponFormKey.currentState!
+                              .validate()) {
+                            context
+                                .couponCodeProvider.addCouponFormKey.currentState!
+                                .save();
+                            context.couponCodeProvider.submitCoupon();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(
+                          AppTranslations.Translations.get(
+                            'submit',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ],
           ),
@@ -262,12 +336,22 @@ void showAddCouponForm(BuildContext context, Coupon? coupon) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: bgColor,
-        title: Center(
-            child: Text('Add Coupon'.toUpperCase(),
-                style: TextStyle(color: primaryColor))),
-        content: CouponSubmitForm(coupon: coupon),
+      return Consumer<LanguageProvider>(
+        builder: (context, languageProvider, child) {
+          return AlertDialog(
+            backgroundColor: bgColor,
+            title: Center(
+              child: Text(
+                AppTranslations.Translations.get(
+                  'add_coupon',
+                  languageProvider.currentLanguageCode,
+                ).toUpperCase(),
+                style: TextStyle(color: primaryColor),
+              ),
+            ),
+            content: CouponSubmitForm(coupon: coupon),
+          );
+        },
       );
     },
   );

@@ -6,6 +6,7 @@ import '../screen/product_favorite_screen/provider/favorite_provider.dart';
 import '../utility/extensions.dart';
 import '../utility/utility_extention.dart';
 import 'custom_network_image.dart';
+import 'translated_text.dart';
 
 class ProductGridTile extends StatelessWidget {
   final Product product;
@@ -83,7 +84,7 @@ class ProductGridTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FittedBox(
-                child: Text(
+                child: TranslatedText(
                   product.name ?? '',
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,

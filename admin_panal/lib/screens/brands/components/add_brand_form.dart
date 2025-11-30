@@ -6,6 +6,8 @@ import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import '../../../models/brand.dart';
 import '../../../utility/constants.dart';
+import '../../../providers/language_provider.dart';
+import '../../../utility/translations.dart' as AppTranslations;
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_field.dart';
 
@@ -35,13 +37,16 @@ class BrandSubmitForm extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: Consumer<BrandProvider>(
-                      builder: (context, brandProvider, child) {
+                    child: Consumer2<BrandProvider, LanguageProvider>(
+                      builder: (context, brandProvider, languageProvider, child) {
                         return CustomDropdown(
                           initialValue: brandProvider.selectedSubCategory,
                           items: context.dataProvider.subCategories,
                           hintText: brandProvider.selectedSubCategory?.name ??
-                              'Select Sub Category',
+                              AppTranslations.Translations.get(
+                                'please_select_sub_category',
+                                languageProvider.currentLanguageCode,
+                              ),
                           displayItem: (SubCategory? subCategory) =>
                               subCategory?.name ?? '',
                           onChanged: (newValue) {
@@ -50,7 +55,10 @@ class BrandSubmitForm extends StatelessWidget {
                           },
                           validator: (value) {
                             if (value == null) {
-                              return 'Please select a Sub Category';
+                              return AppTranslations.Translations.get(
+                                'please_select_sub_category',
+                                languageProvider.currentLanguageCode,
+                              );
                             }
                             return null;
                           },
@@ -59,53 +67,76 @@ class BrandSubmitForm extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: CustomTextField(
-                      controller: context.brandProvider.brandNameCtrl,
-                      labelText: 'Brand Name',
-                      onSave: (val) {},
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a brand name';
-                        }
-                        return null;
+                    child: Consumer<LanguageProvider>(
+                      builder: (context, languageProvider, child) {
+                        return CustomTextField(
+                          controller: context.brandProvider.brandNameCtrl,
+                          labelText: AppTranslations.Translations.get(
+                            'brand_name',
+                            languageProvider.currentLanguageCode,
+                          ),
+                          onSave: (val) {},
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return AppTranslations.Translations.get(
+                                'please_enter_name',
+                                languageProvider.currentLanguageCode,
+                              );
+                            }
+                            return null;
+                          },
+                        );
                       },
                     ),
                   ),
                 ],
               ),
               Gap(defaultPadding * 2),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: secondaryColor,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the popup
-                    },
-                    child: Text('Cancel'),
-                  ),
-                  SizedBox(width: defaultPadding),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: primaryColor,
-                    ),
-                    onPressed: () {
-                      // Validate and save the form
-                      if (context.brandProvider.addBrandFormKey.currentState!
-                          .validate()) {
-                        context.brandProvider.addBrandFormKey.currentState!
-                            .save();
-                        context.brandProvider.submitBrand();
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: Text('Submit'),
-                  ),
-                ],
+              Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: secondaryColor,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          AppTranslations.Translations.get(
+                            'cancel',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: defaultPadding),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: primaryColor,
+                        ),
+                        onPressed: () {
+                          if (context.brandProvider.addBrandFormKey.currentState!
+                              .validate()) {
+                            context.brandProvider.addBrandFormKey.currentState!
+                                .save();
+                            context.brandProvider.submitBrand();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(
+                          AppTranslations.Translations.get(
+                            'submit',
+                            languageProvider.currentLanguageCode,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ],
           ),
@@ -120,14 +151,24 @@ void showBrandForm(BuildContext context, Brand? brand) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: bgColor,
-        title: Center(
-            child: Text('Add Brand'.toUpperCase(),
-                style: TextStyle(color: primaryColor))),
-        content: BrandSubmitForm(
-          brand: brand,
-        ),
+      return Consumer<LanguageProvider>(
+        builder: (context, languageProvider, child) {
+          return AlertDialog(
+            backgroundColor: bgColor,
+            title: Center(
+              child: Text(
+                AppTranslations.Translations.get(
+                  'add_brand',
+                  languageProvider.currentLanguageCode,
+                ).toUpperCase(),
+                style: TextStyle(color: primaryColor),
+              ),
+            ),
+            content: BrandSubmitForm(
+              brand: brand,
+            ),
+          );
+        },
       );
     },
   );

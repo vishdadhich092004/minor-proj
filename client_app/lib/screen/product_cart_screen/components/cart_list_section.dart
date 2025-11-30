@@ -2,6 +2,7 @@ import 'package:e_commerce_app/utility/extensions.dart';
 import '../../../utility/utility_extention.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cart/model/cart_model.dart';
+import '../../../widget/translated_text.dart';
 
 class CartListSection extends StatelessWidget {
   final List<CartModel> cartProducts;
@@ -73,7 +74,7 @@ class CartListSection extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      TranslatedText(
                         cartItem.productName,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

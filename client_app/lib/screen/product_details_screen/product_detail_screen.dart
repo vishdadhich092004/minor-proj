@@ -9,6 +9,9 @@ import '../../models/product.dart';
 import '../../widget/horizondal_list.dart';
 import 'components/product_rating_section.dart';
 import '../../core/data/data_provider.dart';
+import '../../providers/language_provider.dart';
+import '../../utility/translations.dart' as AppTranslations;
+import '../../widget/translated_text.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final Product product;
@@ -54,9 +57,9 @@ class ProductDetailScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      //? product nam e
-                      Text(
-                        '${product.name}',
+                      //? product name (automatically translated)
+                      TranslatedText(
+                        product.name ?? '',
                         style: Theme.of(context).textTheme.displayMedium,
                       ),
                       const SizedBox(height: 10),
@@ -85,95 +88,143 @@ class ProductDetailScreen extends StatelessWidget {
                             ),
                           ),
                           const Spacer(),
-                          Text(
-                            product.quantity != 0
-                                ? "Available stock : ${product.quantity}"
-                                : "Not available",
-                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          Consumer<LanguageProvider>(
+                            builder: (context, languageProvider, child) {
+                              return Text(
+                                product.quantity != 0
+                                    ? "${AppTranslations.Translations.get('available_stock', languageProvider.currentLanguageCode)} : ${product.quantity}"
+                                    : AppTranslations.Translations.get(
+                                        'not_available',
+                                        languageProvider.currentLanguageCode),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500),
+                              );
+                            },
                           )
                         ],
                       ),
                       const SizedBox(height: 30),
                       product.proVariantId!.isNotEmpty
-                          ? Text(
-                              'Available ${product.proVariantTypeId?.type}',
-                              style: const TextStyle(
-                                  color: Colors.red, fontSize: 16),
+                          ? Consumer<LanguageProvider>(
+                              builder: (context, languageProvider, child) {
+                                return FutureBuilder<String>(
+                                  future: languageProvider.translate(
+                                      'Available ${product.proVariantTypeId?.type ?? ''}'),
+                                  builder: (context, snapshot) {
+                                    return Text(
+                                      snapshot.data ??
+                                          'Available ${product.proVariantTypeId?.type ?? ''}',
+                                      style: const TextStyle(
+                                          color: Colors.red, fontSize: 16),
+                                    );
+                                  },
+                                );
+                              },
                             )
                           : const SizedBox(),
                       Consumer2<ProductDetailProvider, DataProvider>(
-                        builder: (context, proDetailProvider, dataProvider, child) {
+                        builder:
+                            (context, proDetailProvider, dataProvider, child) {
                           // Get variant names from the map
                           final variantNames = (product.proVariantId ?? [])
-                              .map((variantId) => dataProvider.variantIdToNameMap[variantId] ?? variantId)
+                              .map((variantId) =>
+                                  dataProvider.variantIdToNameMap[variantId] ??
+                                  variantId)
                               .where((name) => name.isNotEmpty)
                               .toList();
-                          
+
                           String? selectedVariantName;
                           if (proDetailProvider.selectedVariant != null) {
-                            selectedVariantName = dataProvider.variantIdToNameMap[proDetailProvider.selectedVariant] ?? proDetailProvider.selectedVariant;
+                            selectedVariantName =
+                                dataProvider.variantIdToNameMap[
+                                        proDetailProvider.selectedVariant] ??
+                                    proDetailProvider.selectedVariant;
                           }
-                          
+
                           return HorizontalList(
                             items: variantNames,
-                            itemToString: (val) => val ?? '',
+                            itemToString: (val) => val,
                             selected: selectedVariantName,
                             onSelect: (val) {
                               // Find the variant ID that corresponds to the selected name
-                              final variantId = dataProvider.variantIdToNameMap.entries
-                                  .firstWhere(
-                                    (entry) => entry.value == val,
-                                    orElse: () => MapEntry('', val ?? ''),
-                                  )
-                                  .key;
-                              proDetailProvider.selectedVariant = variantId.isNotEmpty ? variantId : val;
+                              final variantId =
+                                  dataProvider.variantIdToNameMap.entries
+                                      .firstWhere(
+                                        (entry) => entry.value == val,
+                                        orElse: () => MapEntry('', val),
+                                      )
+                                      .key;
+                              proDetailProvider.selectedVariant =
+                                  variantId.isNotEmpty ? variantId : val;
                               proDetailProvider.updateUI();
                             },
                           );
                         },
                       ),
-                      //? product description
-                      Text(
-                        "About",
-                        style: Theme.of(context).textTheme.headlineMedium,
+                      //? product description (automatically translated)
+                      Consumer<LanguageProvider>(
+                        builder: (context, languageProvider, child) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppTranslations.Translations.get('about',
+                                    languageProvider.currentLanguageCode),
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              ),
+                              const SizedBox(height: 10),
+                              TranslatedText(
+                                product.description ?? '',
+                              ),
+                            ],
+                          );
+                        },
                       ),
-                      const SizedBox(height: 10),
-                      Text("${product.description}"),
                       const SizedBox(height: 40),
                       //? add to cart button
-                      SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: product.quantity != 0
-                                ? () {
-                                    context.proDetailProvider
-                                        .addToCart(product);
-                                  }
-                                : null,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: product.quantity != 0
-                                  ? AppColor.primaryOrange
-                                  : Colors.grey[400],
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              elevation: 2,
-                            ),
-                            icon: const Icon(Icons.shopping_cart_outlined,
-                                color: Colors.white, size: 20), // Add cart icon
-                            label: Text(
-                              product.quantity != 0
-                                  ? "Add to cart"
-                                  : "Out of Stock",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600, // Semi-bold
-                                fontSize: 16,
-                              ),
-                            ),
-                          ))
+                      Consumer<LanguageProvider>(
+                        builder: (context, languageProvider, child) {
+                          return SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: product.quantity != 0
+                                    ? () {
+                                        context.proDetailProvider.addToCart(
+                                            product,
+                                            languageProvider: languageProvider);
+                                      }
+                                    : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: product.quantity != 0
+                                      ? AppColor.primaryOrange
+                                      : Colors.grey[400],
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  elevation: 2,
+                                ),
+                                icon: const Icon(Icons.shopping_cart_outlined,
+                                    color: Colors.white, size: 20),
+                                label: Text(
+                                  product.quantity != 0
+                                      ? AppTranslations.Translations.get(
+                                          'add_to_cart',
+                                          languageProvider.currentLanguageCode)
+                                      : AppTranslations.Translations.get(
+                                          'out_of_stock',
+                                          languageProvider.currentLanguageCode),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ));
+                        },
+                      )
                     ],
                   ),
                 )

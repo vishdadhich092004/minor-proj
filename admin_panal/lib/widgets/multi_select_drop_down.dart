@@ -7,6 +7,7 @@ class MultiSelectDropDown<T> extends StatelessWidget {
   final Function(List<T>) onSelectionChanged;
   final String Function(T) displayItem;
   final List<T> selectedItems;
+  final String? hintText;
 
   const MultiSelectDropDown({
     Key? key,
@@ -14,6 +15,7 @@ class MultiSelectDropDown<T> extends StatelessWidget {
     required this.onSelectionChanged,
     required this.displayItem,
     required this.selectedItems,
+    this.hintText,
   }) : super(key: key);
 
   @override
@@ -24,7 +26,7 @@ class MultiSelectDropDown<T> extends StatelessWidget {
           child: DropdownButton2<T>(
             isExpanded: true,
             hint: Text(
-              'Select Items',
+              hintText ?? 'Select Items',
               style: TextStyle(
                 fontSize: 14,
                 color: Theme.of(context).hintColor,
