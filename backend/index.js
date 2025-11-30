@@ -77,6 +77,7 @@ app.use('/users', require('./routes/user'));
 app.use('/orders', require('./routes/order'));
 app.use('/payment', require('./routes/payment'));
 app.use('/notification', require('./routes/notification'));
+app.use('/translate', require('./routes/translate'));
 app.use('/api/image-proxy', require('./routes/imageProxy'));
 
 

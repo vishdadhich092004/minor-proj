@@ -1,6 +1,9 @@
 import '../../../utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/language_provider.dart';
+import '../../../widgets/language_selector.dart';
 
 
 class SideMenu extends StatelessWidget {
@@ -85,6 +88,23 @@ class SideMenu extends StatelessWidget {
             press: () {
               context.mainScreenProvider.navigateToScreen('Notifications');
             },
+          ),
+          const Divider(color: Colors.white24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: [
+                SvgPicture.asset(
+                  "assets/icons/menu_setting.svg",
+                  colorFilter: const ColorFilter.mode(Colors.white54, BlendMode.srcIn),
+                  height: 16,
+                ),
+                const SizedBox(width: 16),
+                const Expanded(
+                  child: LanguageSelector(),
+                ),
+              ],
+            ),
           ),
         ],
       ),

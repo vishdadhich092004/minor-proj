@@ -3,9 +3,13 @@ import '../my_address_screen/my_address_screen.dart';
 import '../../utility/animation/open_container_wrapper.dart';
 import '../../utility/extensions.dart';
 import '../../widget/navigation_tile.dart';
+import '../../widget/language_selector.dart';
+import '../../utility/translations.dart' as AppTranslations;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import '../../utility/app_color.dart';
+import '../../providers/language_provider.dart';
 import '../my_order_screen/my_order_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -21,12 +25,16 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "My Account",
-          style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColor.darkOrange),
+        title: Consumer<LanguageProvider>(
+          builder: (context, languageProvider, child) {
+            return Text(
+              AppTranslations.Translations.get('profile', languageProvider.currentLanguageCode),
+              style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.darkOrange),
+            );
+          },
         ),
       ),
       body: ListView(
@@ -50,22 +58,42 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 40),
-          const OpenContainerWrapper(
-            nextScreen: MyOrderScreen(),
-            child: SizedBox(
-              child: NavigationTile(
-                icon: Icons.list,
-                title: 'My Orders',
-              ),
-            ),
+          Consumer<LanguageProvider>(
+            builder: (context, languageProvider, child) {
+              return OpenContainerWrapper(
+                nextScreen: MyOrderScreen(),
+                child: SizedBox(
+                  child: NavigationTile(
+                    icon: Icons.list,
+                    title: AppTranslations.Translations.get('my_orders', languageProvider.currentLanguageCode),
+                  ),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 15),
-          const OpenContainerWrapper(
-            nextScreen: MyAddressPage(),
-            child: NavigationTile(
-              icon: Icons.location_on,
-              title: 'My Addresses',
-            ),
+          Consumer<LanguageProvider>(
+            builder: (context, languageProvider, child) {
+              return OpenContainerWrapper(
+                nextScreen: MyAddressPage(),
+                child: NavigationTile(
+                  icon: Icons.location_on,
+                  title: AppTranslations.Translations.get('my_address', languageProvider.currentLanguageCode),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 15),
+          Consumer<LanguageProvider>(
+            builder: (context, languageProvider, child) {
+              return InkWell(
+                onTap: () => showLanguageSelectorDialog(context),
+                child: NavigationTile(
+                  icon: Icons.language,
+                  title: AppTranslations.Translations.get('language', languageProvider.currentLanguageCode),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 60),
           Center(
@@ -82,7 +110,14 @@ class ProfileScreen extends StatelessWidget {
                 context.userProvider.logOutUser();
                 Get.offAll(const AuthScreen());
               },
-              child: const Text('Logout', style: TextStyle(fontSize: 18)),
+              child: Consumer<LanguageProvider>(
+                builder: (context, languageProvider, child) {
+                  return Text(
+                    AppTranslations.Translations.get('logout', languageProvider.currentLanguageCode),
+                    style: const TextStyle(fontSize: 18),
+                  );
+                },
+              ),
             ),
           ),
         ],

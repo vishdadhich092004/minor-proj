@@ -17,6 +17,7 @@ import 'dart:ui' show PointerDeviceKind;
 import 'package:provider/provider.dart';
 import 'core/data/data_provider.dart';
 import 'models/user.dart';
+import 'providers/language_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +31,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => DataProvider()),
+        ChangeNotifierProvider(create: (context) => LanguageProvider()),
         ChangeNotifierProvider(
             create: (context) => UserProvider(context.dataProvider)),
         ChangeNotifierProvider(

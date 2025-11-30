@@ -18,11 +18,15 @@ import 'screens/variants/provider/variant_provider.dart';
 import 'screens/variants_type/provider/variant_type_provider.dart';
 import 'utility/constants.dart';
 import 'utility/extensions.dart';
+import 'package:get_storage/get_storage.dart';
+import 'providers/language_provider.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => DataProvider()),
+    ChangeNotifierProvider(create: (context) => LanguageProvider()),
     ChangeNotifierProvider(create: (context) => MainScreenProvider()),
     ChangeNotifierProvider(create: (context) => CategoryProvider(context.dataProvider)),
     ChangeNotifierProvider(create: (context) => SubCategoryProvider(context.dataProvider)),
