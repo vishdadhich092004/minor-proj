@@ -6,7 +6,6 @@ import '../../../providers/language_provider.dart';
 import '../../../widgets/language_selector.dart';
 import '../../../utility/translations.dart' as AppTranslations;
 
-
 class SideMenu extends StatelessWidget {
   const SideMenu({
     Key? key,
@@ -23,94 +22,108 @@ class SideMenu extends StatelessWidget {
                 child: Image.asset("assets/images/logo.png"),
               ),
               DrawerListTile(
-                title: AppTranslations.Translations.get('dashboard', languageProvider.currentLanguageCode),
+                title: AppTranslations.Translations.get(
+                    'dashboard', languageProvider.currentLanguageCode),
                 svgSrc: "assets/icons/menu_dashboard.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Dashboard');
                 },
               ),
               DrawerListTile(
-                title: AppTranslations.Translations.get('category', languageProvider.currentLanguageCode),
+                title: AppTranslations.Translations.get(
+                    'category', languageProvider.currentLanguageCode),
                 svgSrc: "assets/icons/menu_tran.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Category');
                 },
               ),
               DrawerListTile(
-                title: AppTranslations.Translations.get('sub_category', languageProvider.currentLanguageCode),
+                title: AppTranslations.Translations.get(
+                    'sub_category', languageProvider.currentLanguageCode),
                 svgSrc: "assets/icons/menu_task.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('SubCategory');
                 },
               ),
               DrawerListTile(
-                title: AppTranslations.Translations.get('brands', languageProvider.currentLanguageCode),
+                title: AppTranslations.Translations.get(
+                    'brands', languageProvider.currentLanguageCode),
                 svgSrc: "assets/icons/menu_doc.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Brands');
                 },
               ),
               DrawerListTile(
-                title: AppTranslations.Translations.get('variant_type', languageProvider.currentLanguageCode),
+                title: AppTranslations.Translations.get(
+                    'variant_type', languageProvider.currentLanguageCode),
                 svgSrc: "assets/icons/menu_store.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('VariantType');
                 },
               ),
               DrawerListTile(
-                title: AppTranslations.Translations.get('variants', languageProvider.currentLanguageCode),
+                title: AppTranslations.Translations.get(
+                    'variants', languageProvider.currentLanguageCode),
                 svgSrc: "assets/icons/menu_notification.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Variants');
                 },
               ),
               DrawerListTile(
-                title: AppTranslations.Translations.get('orders', languageProvider.currentLanguageCode),
+                title: AppTranslations.Translations.get(
+                    'orders', languageProvider.currentLanguageCode),
                 svgSrc: "assets/icons/menu_profile.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Order');
                 },
               ),
               DrawerListTile(
-                title: AppTranslations.Translations.get('coupons', languageProvider.currentLanguageCode),
+                title: AppTranslations.Translations.get(
+                    'coupons', languageProvider.currentLanguageCode),
                 svgSrc: "assets/icons/menu_setting.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Coupon');
                 },
               ),
               DrawerListTile(
-                title: AppTranslations.Translations.get('posters', languageProvider.currentLanguageCode),
+                title: AppTranslations.Translations.get(
+                    'posters', languageProvider.currentLanguageCode),
                 svgSrc: "assets/icons/menu_doc.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Poster');
                 },
               ),
               DrawerListTile(
-                title: AppTranslations.Translations.get('notifications', languageProvider.currentLanguageCode),
+                title: AppTranslations.Translations.get(
+                    'notifications', languageProvider.currentLanguageCode),
                 svgSrc: "assets/icons/menu_notification.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Notifications');
                 },
               ),
-          const Divider(color: Colors.white24),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Row(
-              children: [
-                SvgPicture.asset(
-                  "assets/icons/menu_setting.svg",
-                  colorFilter: const ColorFilter.mode(Colors.white54, BlendMode.srcIn),
-                  height: 16,
+              const Divider(color: Colors.white24),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      "assets/icons/menu_setting.svg",
+                      colorFilter: const ColorFilter.mode(
+                          Colors.white54, BlendMode.srcIn),
+                      height: 16,
+                    ),
+                    const SizedBox(width: 16),
+                    const Expanded(
+                      child: LanguageSelector(),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                const Expanded(
-                  child: LanguageSelector(),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
