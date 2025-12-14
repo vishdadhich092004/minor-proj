@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 import '../../../models/api_response.dart';
 import '../../../services/http_services.dart';
 import 'package:flutter/cupertino.dart';
@@ -138,6 +139,64 @@ class CategoryProvider extends ChangeNotifier {
     }
   }
 
+  //? Helper function to get MIME type from XFile or filename
+  String _getMimeType(XFile file, String fileName) {
+    // Try to get MIME type from XFile if available (for newer versions)
+    try {
+      // XFile might have mimeType property in some versions
+      // If not available, infer from filename
+      final extension = fileName.toLowerCase().split('.').last;
+      switch (extension) {
+        case 'jpg':
+        case 'jpeg':
+          return 'image/jpeg';
+        case 'png':
+          return 'image/png';
+        case 'gif':
+          return 'image/gif';
+        case 'webp':
+          return 'image/webp';
+        default:
+          return 'image/jpeg'; // Default to jpeg if unknown
+      }
+    } catch (e) {
+      return 'image/jpeg';
+    }
+  }
+
+  //? Helper function to ensure filename has proper extension
+  String _ensureFileExtension(String fileName, String mimeType) {
+    // Check if filename already has an extension
+    final parts = fileName.split('.');
+    if (parts.length > 1) {
+      final ext = parts.last.toLowerCase();
+      // Validate extension matches MIME type
+      if ((mimeType == 'image/jpeg' && (ext == 'jpg' || ext == 'jpeg')) ||
+          (mimeType == 'image/png' && ext == 'png') ||
+          (mimeType == 'image/gif' && ext == 'gif') ||
+          (mimeType == 'image/webp' && ext == 'webp')) {
+        return fileName;
+      }
+    }
+
+    // If no extension or wrong extension, add correct one based on MIME type
+    final baseName = parts.length > 1
+        ? parts.sublist(0, parts.length - 1).join('.')
+        : fileName;
+    switch (mimeType) {
+      case 'image/jpeg':
+        return '$baseName.jpg';
+      case 'image/png':
+        return '$baseName.png';
+      case 'image/gif':
+        return '$baseName.gif';
+      case 'image/webp':
+        return '$baseName.webp';
+      default:
+        return '$baseName.jpg';
+    }
+  }
+
   //? to create form data for sending image with body
   Future<FormData> createFormData(
       {required XFile? imgXFile,
@@ -147,10 +206,28 @@ class CategoryProvider extends ChangeNotifier {
       if (kIsWeb) {
         String fileName = imgXFile.name;
         Uint8List byteImg = await imgXFile.readAsBytes();
-        multipartFile = MultipartFile(byteImg, filename: fileName);
+
+        // Get MIME type
+        String mimeType = _getMimeType(imgXFile, fileName);
+
+        // Ensure filename has proper extension
+        fileName = _ensureFileExtension(fileName, mimeType);
+
+        // Create MultipartFile with explicit contentType
+        multipartFile = MultipartFile(
+          byteImg,
+          filename: fileName,
+          contentType: mimeType,
+        );
       } else {
         String fileName = imgXFile.path.split('/').last;
-        multipartFile = MultipartFile(imgXFile.path, filename: fileName);
+        String mimeType = _getMimeType(imgXFile, fileName);
+        fileName = _ensureFileExtension(fileName, mimeType);
+        multipartFile = MultipartFile(
+          imgXFile.path,
+          filename: fileName,
+          contentType: mimeType,
+        );
       }
       formData['img'] = multipartFile;
     }
