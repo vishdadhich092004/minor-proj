@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../model/product');
 const multer = require('multer');
-const { uploadProduct } = require('../uploadFile');
+const { uploadProduct, uploadToCloudinary } = require('../uploadFile');
 const asyncHandler = require('express-async-handler');
 
 // Get all products
@@ -76,15 +76,27 @@ router.post('/', asyncHandler(async (req, res) => {
             // Initialize an array to store image URLs
             const imageUrls = [];
 
-            // Iterate over the file fields
+            // Iterate over the file fields and upload to Cloudinary
             const fields = ['image1', 'image2', 'image3', 'image4', 'image5'];
-            fields.forEach((field, index) => {
+            for (let index = 0; index < fields.length; index++) {
+                const field = fields[index];
                 if (req.files[field] && req.files[field].length > 0) {
                     const file = req.files[field][0];
-                    const imageUrl = `http://localhost:3000/image/products/${file.filename}`;
-                    imageUrls.push({ image: index + 1, url: imageUrl });
+                    try {
+                        // Upload to Cloudinary
+                        const cloudinaryResult = await uploadToCloudinary(file, 'products');
+                        const imageUrl = cloudinaryResult.secure_url;
+                        imageUrls.push({ image: index + 1, url: imageUrl });
+                        console.log(`Product image ${index + 1} uploaded to Cloudinary:`, imageUrl);
+                    } catch (cloudinaryError) {
+                        console.error(`Cloudinary upload error for ${field}:`, cloudinaryError);
+                        return res.status(500).json({ 
+                            success: false, 
+                            message: `Failed to upload image ${index + 1} to cloud storage. Please try again.` 
+                        });
+                    }
                 }
-            });
+            }
 
             // Create a new product object with data
             const newProduct = new Product({ name, description, quantity, price, offerPrice, proCategoryId, proSubCategoryId, proBrandId,proVariantTypeId, proVariantId, images: imageUrls });
@@ -116,9 +128,26 @@ router.put('/:id', asyncHandler(async (req, res) => {
             { name: 'image4', maxCount: 1 },
             { name: 'image5', maxCount: 1 }
         ])(req, res, async function (err) {
-            if (err) {
-                console.log(`Update product: ${err}`);
-                return res.status(500).json({ success: false, message: err.message });
+            if (err instanceof multer.MulterError) {
+                let errorMessage = 'File upload error occurred.';
+                if (err.code === 'LIMIT_FILE_SIZE') {
+                    errorMessage = 'File size is too large. Maximum filesize is 10MB per image.';
+                } else if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+                    errorMessage = 'Unexpected file field.';
+                } else {
+                    errorMessage = err.message || `Multer error: ${err.code}`;
+                }
+                console.log(`Update product MulterError: ${errorMessage}`);
+                return res.status(400).json({ success: false, message: errorMessage });
+            } else if (err) {
+                let errorMessage = 'File upload failed.';
+                if (err.message) {
+                    errorMessage = err.message;
+                } else if (typeof err === 'string') {
+                    errorMessage = err;
+                }
+                console.log(`Update product error: ${errorMessage}`, err);
+                return res.status(500).json({ success: false, message: errorMessage });
             }
 
             const { name, description, quantity, price, offerPrice, proCategoryId, proSubCategoryId, proBrandId, proVariantTypeId, proVariantId } = req.body;
@@ -141,22 +170,35 @@ router.put('/:id', asyncHandler(async (req, res) => {
             productToUpdate.proVariantTypeId = proVariantTypeId || productToUpdate.proVariantTypeId;
             productToUpdate.proVariantId = proVariantId || productToUpdate.proVariantId;
 
-            // Iterate over the file fields to update images
+            // Iterate over the file fields to update images with Cloudinary
             const fields = ['image1', 'image2', 'image3', 'image4', 'image5'];
-            fields.forEach((field, index) => {
+            for (let index = 0; index < fields.length; index++) {
+                const field = fields[index];
                 if (req.files[field] && req.files[field].length > 0) {
                     const file = req.files[field][0];
-                    const imageUrl = `http://localhost:3000/image/products/${file.filename}`;
-                    // Update the specific image URL in the images array
-                    let imageEntry = productToUpdate.images.find(img => img.image === (index + 1));
-                    if (imageEntry) {
-                        imageEntry.url = imageUrl;
-                    } else {
-                        // If the image entry does not exist, add it
-                        productToUpdate.images.push({ image: index + 1, url: imageUrl });
+                    try {
+                        // Upload to Cloudinary
+                        const cloudinaryResult = await uploadToCloudinary(file, 'products');
+                        const imageUrl = cloudinaryResult.secure_url;
+                        console.log(`Product image ${index + 1} uploaded to Cloudinary:`, imageUrl);
+                        
+                        // Update the specific image URL in the images array
+                        let imageEntry = productToUpdate.images.find(img => img.image === (index + 1));
+                        if (imageEntry) {
+                            imageEntry.url = imageUrl;
+                        } else {
+                            // If the image entry does not exist, add it
+                            productToUpdate.images.push({ image: index + 1, url: imageUrl });
+                        }
+                    } catch (cloudinaryError) {
+                        console.error(`Cloudinary upload error for ${field}:`, cloudinaryError);
+                        return res.status(500).json({ 
+                            success: false, 
+                            message: `Failed to upload image ${index + 1} to cloud storage. Please try again.` 
+                        });
                     }
                 }
-            });
+            }
 
             // Save the updated product
             await productToUpdate.save();

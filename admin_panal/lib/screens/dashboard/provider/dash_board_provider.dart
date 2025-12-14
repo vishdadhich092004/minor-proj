@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 import '../../../models/api_response.dart';
 import '../../../models/brand.dart';
 import '../../../models/sub_category.dart';
@@ -34,14 +35,21 @@ class DashBoardProvider extends ChangeNotifier {
   List<String> selectedVariants = [];
 
   Product? productForUpdate;
-  File? selectedMainImage, selectedSecondImage, selectedThirdImage, selectedFourthImage, selectedFifthImage;
-  XFile? mainImgXFile, secondImgXFile, thirdImgXFile, fourthImgXFile, fifthImgXFile;
+  File? selectedMainImage,
+      selectedSecondImage,
+      selectedThirdImage,
+      selectedFourthImage,
+      selectedFifthImage;
+  XFile? mainImgXFile,
+      secondImgXFile,
+      thirdImgXFile,
+      fourthImgXFile,
+      fifthImgXFile;
 
   //? to filter the data depend on parent dropdown value
   List<SubCategory> subCategoriesByCategory = [];
   List<Brand> brandsBySubCategory = [];
   List<String> variantsByVariantType = [];
-
 
   DashBoardProvider(this._dataProvider);
 
@@ -59,7 +67,9 @@ class DashBoardProvider extends ChangeNotifier {
         'proSubCategoryId': selectedSubCategory?.sId ?? '',
         'proBrandId': selectedBrand?.sId ?? '',
         'price': productPriceCtrl.text,
-        'offerPrice': productOffPriceCtrl.text.isEmpty ? productPriceCtrl.text : productOffPriceCtrl.text,
+        'offerPrice': productOffPriceCtrl.text.isEmpty
+            ? productPriceCtrl.text
+            : productOffPriceCtrl.text,
         'quantity': productQntCtrl.text,
         'proVariantTypeId': selectedVariantType?.sId,
         'proVariantId': selectedVariants,
@@ -73,30 +83,31 @@ class DashBoardProvider extends ChangeNotifier {
         {'image5': fifthImgXFile}
       ], formData: formDataMap);
 
-      if (productForUpdate != null) {}
-        final response = await service.addItem(endpointUrl: 'products', itemData: form);
+      final response =
+          await service.addItem(endpointUrl: 'products', itemData: form);
 
-        if (response.isOk) {
-          ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+      if (response.isOk) {
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
 
-          if (apiResponse.success == true) {
-            clearFields();
-            SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
-            _dataProvider.getAllProduct();
-            log('products added');
-            clearFields();
-          } else {
-            SnackBarHelper.showErrorSnackBar('Failed to add products: ${apiResponse.message}');
-          }
+        if (apiResponse.success == true) {
+          clearFields();
+          SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
+          _dataProvider.getAllProduct();
+          log('products added');
         } else {
-          SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+          SnackBarHelper.showErrorSnackBar(
+              'Failed to add products: ${apiResponse.message}');
         }
-        } catch (e) {
-          print(e);
-          SnackBarHelper.showErrorSnackBar('An error occurred: $e');
-          rethrow;
-        }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
       }
+    } catch (e) {
+      print(e);
+      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
+      rethrow;
+    }
+  }
 
   updateProduct() async {
     try {
@@ -107,7 +118,9 @@ class DashBoardProvider extends ChangeNotifier {
         'proSubCategoryId': selectedSubCategory?.sId ?? '',
         'proBrandId': selectedBrand?.sId ?? '',
         'price': productPriceCtrl.text,
-        'offerPrice': productOffPriceCtrl.text.isEmpty ? productPriceCtrl.text : productOffPriceCtrl.text,
+        'offerPrice': productOffPriceCtrl.text.isEmpty
+            ? productPriceCtrl.text
+            : productOffPriceCtrl.text,
         'quantity': productQntCtrl.text,
         'proVariantTypeId': selectedVariantType?.sId ?? '',
         'proVariantId': selectedVariants,
@@ -120,9 +133,11 @@ class DashBoardProvider extends ChangeNotifier {
         {'image4': fourthImgXFile},
         {'image5': fifthImgXFile}
       ], formData: formDataMap);
-      if (productForUpdate != null) {}
-      final response =
-      await service.updateItem(endpointUrl: 'products', itemData: form, itemId: '${productForUpdate?.sId}');
+
+      final response = await service.updateItem(
+          endpointUrl: 'products',
+          itemData: form,
+          itemId: '${productForUpdate?.sId}');
 
       if (response.isOk) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
@@ -134,10 +149,12 @@ class DashBoardProvider extends ChangeNotifier {
           log('products added');
           clearFields();
         } else {
-          SnackBarHelper.showErrorSnackBar('Failed to add products: ${apiResponse.message}');
+          SnackBarHelper.showErrorSnackBar(
+              'Failed to add products: ${apiResponse.message}');
         }
       } else {
-        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
       }
     } catch (e) {
       print(e);
@@ -156,7 +173,8 @@ class DashBoardProvider extends ChangeNotifier {
 
   deleteProduct(Product product) async {
     try {
-      Response response = await service.deleteItem(endpointUrl: 'products', itemId: product.sId ?? '');
+      Response response = await service.deleteItem(
+          endpointUrl: 'products', itemId: product.sId ?? '');
       if (response.isOk) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
         if (apiResponse.success == true) {
@@ -164,14 +182,14 @@ class DashBoardProvider extends ChangeNotifier {
           _dataProvider.getAllProduct();
         }
       } else {
-        SnackBarHelper.showErrorSnackBar('Error ${response.body['message'] ?? response.statusText}');
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body['message'] ?? response.statusText}');
       }
     } catch (e) {
       print(e);
       rethrow;
     }
   }
-
 
   void pickImage({required int imageCardNumber}) async {
     final ImagePicker picker = ImagePicker();
@@ -197,6 +215,63 @@ class DashBoardProvider extends ChangeNotifier {
     }
   }
 
+  //? Helper function to get MIME type from XFile or filename
+  String _getMimeType(XFile file, String fileName) {
+    // Try to get MIME type from XFile if available (for newer versions)
+    // If not available, infer from filename
+    try {
+      final extension = fileName.toLowerCase().split('.').last;
+      switch (extension) {
+        case 'jpg':
+        case 'jpeg':
+          return 'image/jpeg';
+        case 'png':
+          return 'image/png';
+        case 'gif':
+          return 'image/gif';
+        case 'webp':
+          return 'image/webp';
+        default:
+          return 'image/jpeg'; // Default to jpeg if unknown
+      }
+    } catch (e) {
+      return 'image/jpeg';
+    }
+  }
+
+  //? Helper function to ensure filename has proper extension
+  String _ensureFileExtension(String fileName, String mimeType) {
+    // Check if filename already has an extension
+    final parts = fileName.split('.');
+    if (parts.length > 1) {
+      final ext = parts.last.toLowerCase();
+      // Validate extension matches MIME type
+      if ((mimeType == 'image/jpeg' && (ext == 'jpg' || ext == 'jpeg')) ||
+          (mimeType == 'image/png' && ext == 'png') ||
+          (mimeType == 'image/gif' && ext == 'gif') ||
+          (mimeType == 'image/webp' && ext == 'webp')) {
+        return fileName;
+      }
+    }
+
+    // If no extension or wrong extension, add correct one based on MIME type
+    final baseName = parts.length > 1
+        ? parts.sublist(0, parts.length - 1).join('.')
+        : fileName;
+    switch (mimeType) {
+      case 'image/jpeg':
+        return '$baseName.jpg';
+      case 'image/png':
+        return '$baseName.png';
+      case 'image/gif':
+        return '$baseName.gif';
+      case 'image/webp':
+        return '$baseName.webp';
+      default:
+        return '$baseName.jpg';
+    }
+  }
+
   Future<FormData> createFormDataForMultipleImage({
     required List<Map<String, XFile?>>? imgXFiles,
     required Map<String, dynamic> formData,
@@ -210,11 +285,29 @@ class DashBoardProvider extends ChangeNotifier {
           if (kIsWeb) {
             String fileName = imgXFile.name;
             Uint8List byteImg = await imgXFile.readAsBytes();
-            formData['image' + (i + 1).toString()] = MultipartFile(byteImg, filename: fileName);
+
+            // Get MIME type
+            String mimeType = _getMimeType(imgXFile, fileName);
+
+            // Ensure filename has proper extension
+            fileName = _ensureFileExtension(fileName, mimeType);
+
+            // Create MultipartFile with explicit contentType
+            formData['image' + (i + 1).toString()] = MultipartFile(
+              byteImg,
+              filename: fileName,
+              contentType: mimeType,
+            );
           } else {
             String filePath = imgXFile.path;
             String fileName = filePath.split('/').last;
-            formData['image' + (i + 1).toString()] = await MultipartFile(filePath, filename: fileName);
+            String mimeType = _getMimeType(imgXFile, fileName);
+            fileName = _ensureFileExtension(fileName, mimeType);
+            formData['image' + (i + 1).toString()] = await MultipartFile(
+              filePath,
+              filename: fileName,
+              contentType: mimeType,
+            );
           }
         }
       }
@@ -230,7 +323,9 @@ class DashBoardProvider extends ChangeNotifier {
     selectedBrand = null;
     selectedCategory = category;
     subCategoriesByCategory.clear();
-    final newList = _dataProvider.subCategories.where((subcategory) => subcategory.categoryId?.sId == category.sId).toList();
+    final newList = _dataProvider.subCategories
+        .where((subcategory) => subcategory.categoryId?.sId == category.sId)
+        .toList();
     subCategoriesByCategory = newList;
     notifyListeners();
   }
@@ -239,7 +334,9 @@ class DashBoardProvider extends ChangeNotifier {
     selectedBrand = null;
     selectedSubCategory = subCategory;
     brandsBySubCategory.clear();
-    final newList = _dataProvider.brands.where((brand) => brand.subcategoryId?.sId == subCategory.sId).toList();
+    final newList = _dataProvider.brands
+        .where((brand) => brand.subcategoryId?.sId == subCategory.sId)
+        .toList();
     brandsBySubCategory = newList;
     notifyListeners();
   }
@@ -247,13 +344,14 @@ class DashBoardProvider extends ChangeNotifier {
   filterVariant(VariantType variantType) {
     selectedVariants = [];
     selectedVariantType = variantType;
-    final newList = _dataProvider.variants.where((variant) => variant.variantTypeId?.sId == variantType.sId).toList();
-    final List<String> variantNames = newList.map((variant) => variant.name ?? '').toList();
+    final newList = _dataProvider.variants
+        .where((variant) => variant.variantTypeId?.sId == variantType.sId)
+        .toList();
+    final List<String> variantNames =
+        newList.map((variant) => variant.name ?? '').toList();
     variantsByVariantType = variantNames;
     notifyListeners();
   }
-
-
 
   setDataForUpdateProduct(Product? product) {
     if (product != null) {
@@ -265,27 +363,34 @@ class DashBoardProvider extends ChangeNotifier {
       productOffPriceCtrl.text = '${product.offerPrice}';
       productQntCtrl.text = '${product.quantity}';
 
-      selectedCategory = _dataProvider.categories.firstWhereOrNull((element) => element.sId == product.proCategoryId?.sId);
+      selectedCategory = _dataProvider.categories.firstWhereOrNull(
+          (element) => element.sId == product.proCategoryId?.sId);
 
       final newListCategory = _dataProvider.subCategories
-          .where((subcategory) => subcategory.categoryId?.sId == product.proCategoryId?.sId)
+          .where((subcategory) =>
+              subcategory.categoryId?.sId == product.proCategoryId?.sId)
           .toList();
       subCategoriesByCategory = newListCategory;
-      selectedSubCategory =
-          _dataProvider.subCategories.firstWhereOrNull((element) => element.sId == product.proSubCategoryId?.sId);
+      selectedSubCategory = _dataProvider.subCategories.firstWhereOrNull(
+          (element) => element.sId == product.proSubCategoryId?.sId);
 
-      final newListBrand =
-          _dataProvider.brands.where((brand) => brand.subcategoryId?.sId == product.proSubCategoryId?.sId).toList();
+      final newListBrand = _dataProvider.brands
+          .where((brand) =>
+              brand.subcategoryId?.sId == product.proSubCategoryId?.sId)
+          .toList();
       brandsBySubCategory = newListBrand;
-      selectedBrand = _dataProvider.brands.firstWhereOrNull((element) => element.sId == product.proBrandId?.sId);
+      selectedBrand = _dataProvider.brands.firstWhereOrNull(
+          (element) => element.sId == product.proBrandId?.sId);
 
-      selectedVariantType =
-          _dataProvider.variantTypes.firstWhereOrNull((element) => element.sId == product.proVariantTypeId?.sId);
+      selectedVariantType = _dataProvider.variantTypes.firstWhereOrNull(
+          (element) => element.sId == product.proVariantTypeId?.sId);
 
       final newListVariant = _dataProvider.variants
-          .where((variant) => variant.variantTypeId?.sId == product.proVariantTypeId?.sId)
+          .where((variant) =>
+              variant.variantTypeId?.sId == product.proVariantTypeId?.sId)
           .toList();
-      final List<String> variantNames = newListVariant.map((variant) => variant.name ?? '').toList();
+      final List<String> variantNames =
+          newListVariant.map((variant) => variant.name ?? '').toList();
       variantsByVariantType = variantNames;
       selectedVariants = product.proVariantId ?? [];
     } else {
@@ -329,4 +434,3 @@ class DashBoardProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-

@@ -10,10 +10,11 @@ const app = express();
 //?Middle wair
 app.use(cors({ origin: '*' }))
 app.use(bodyParser.json());
-//? setting static folder path
-app.use('/image/products', express.static('public/products'));
-app.use('/image/category', express.static('public/category'));
-app.use('/image/poster', express.static('public/posters'));
+//? Static file serving removed - All images are now stored on Cloudinary
+//? Old local images can be accessed directly if needed, but new uploads use Cloudinary
+// app.use('/image/products', express.static('public/products'));
+// app.use('/image/category', express.static('public/category'));
+// app.use('/image/poster', express.static('public/posters'));
 
 const URL = process.env.MONGO_URL;
 
