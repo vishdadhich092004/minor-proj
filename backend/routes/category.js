@@ -6,13 +6,37 @@ const Product = require('../model/product');
 const { uploadCategory } = require('../uploadFile');
 const multer = require('multer');
 const asyncHandler = require('express-async-handler');
+const { ensureConnection } = require('../utils/dbHelper');
 
 // Get all categories
 router.get('/', asyncHandler(async (req, res) => {
     try {
-        const categories = await Category.find();
+        // Ensure database connection
+        await ensureConnection();
+        
+        // Set a timeout for the query (5 seconds)
+        const queryPromise = Category.find().lean().maxTimeMS(5000);
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Query timeout')), 5000)
+        );
+        
+        const categories = await Promise.race([queryPromise, timeoutPromise]);
+        
         res.json({ success: true, message: "Categories retrieved successfully.", data: categories });
     } catch (error) {
+        console.error('Error fetching categories:', error);
+        if (error.name === 'MongoServerSelectionError' || error.name === 'MongooseServerSelectionError') {
+            return res.status(503).json({ 
+                success: false, 
+                message: "Database connection failed. Please check MongoDB Atlas IP whitelist settings and try again." 
+            });
+        }
+        if (error.message === 'Query timeout') {
+            return res.status(504).json({ 
+                success: false, 
+                message: "Request timeout. The query took too long to execute." 
+            });
+        }
         res.status(500).json({ success: false, message: error.message });
     }
 }));

@@ -4,13 +4,45 @@ const SubCategory = require('../model/subCategory');
 const Brand = require('../model/brand');
 const Product = require('../model/product');
 const asyncHandler = require('express-async-handler');
+const { ensureConnection } = require('../utils/dbHelper');
 
 // Get all sub-categories
 router.get('/', asyncHandler(async (req, res) => {
     try {
-        const subCategories = await SubCategory.find().populate('categoryId').sort({'categoryId': 1});
+        // Ensure database connection
+        await ensureConnection();
+        
+        // Set a timeout for the query (5 seconds)
+        const queryPromise = SubCategory.find()
+            .populate({
+                path: 'categoryId',
+                select: 'id name'
+            })
+            .sort({ 'categoryId': 1 })
+            .lean()
+            .maxTimeMS(5000); // 5 second timeout
+        
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Query timeout')), 5000)
+        );
+        
+        const subCategories = await Promise.race([queryPromise, timeoutPromise]);
+        
         res.json({ success: true, message: "Sub-categories retrieved successfully.", data: subCategories });
     } catch (error) {
+        console.error('Error fetching sub-categories:', error);
+        if (error.name === 'MongoServerSelectionError' || error.name === 'MongooseServerSelectionError') {
+            return res.status(503).json({ 
+                success: false, 
+                message: "Database connection failed. Please check MongoDB Atlas IP whitelist settings and try again." 
+            });
+        }
+        if (error.message === 'Query timeout') {
+            return res.status(504).json({ 
+                success: false, 
+                message: "Request timeout. The query took too long to execute." 
+            });
+        }
         res.status(500).json({ success: false, message: error.message });
     }
 }));
