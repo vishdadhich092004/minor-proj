@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Poster = require('../model/poster');
-const { uploadPosters } = require('../uploadFile');
+const { uploadPosters, uploadToCloudinary } = require('../uploadFile');
 const multer = require('multer');
 const asyncHandler = require('express-async-handler');
 
@@ -34,19 +34,43 @@ router.post('/', asyncHandler(async (req, res) => {
     try {
         uploadPosters.single('img')(req, res, async function (err) {
             if (err instanceof multer.MulterError) {
+                let errorMessage = 'File upload error occurred.';
                 if (err.code === 'LIMIT_FILE_SIZE') {
-                    err.message = 'File size is too large. Maximum filesize is 5MB.';
+                    errorMessage = 'File size is too large. Maximum filesize is 10MB.';
+                } else if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+                    errorMessage = 'Unexpected file field. Please use "img" as the field name.';
+                } else {
+                    errorMessage = err.message || `Multer error: ${err.code}`;
                 }
-                console.log(`Add poster: ${err}`);
-                return res.json({ success: false, message: err });
+                console.log(`Add poster MulterError: ${errorMessage}`);
+                return res.status(400).json({ success: false, message: errorMessage });
             } else if (err) {
-                console.log(`Add poster: ${err}`);
-                return res.json({ success: false, message: err });
+                let errorMessage = 'File upload failed.';
+                if (err.message) {
+                    errorMessage = err.message;
+                } else if (typeof err === 'string') {
+                    errorMessage = err;
+                }
+                console.log(`Add poster error: ${errorMessage}`, err);
+                return res.status(500).json({ success: false, message: errorMessage });
             }
+            
             const { posterName } = req.body;
             let imageUrl = 'no_url';
+            
             if (req.file) {
-                imageUrl = `http://localhost:3000/image/poster/${req.file.filename}`;
+                try {
+                    // Upload to Cloudinary
+                    const cloudinaryResult = await uploadToCloudinary(req.file, 'posters');
+                    imageUrl = cloudinaryResult.secure_url;
+                    console.log('Poster image uploaded to Cloudinary:', imageUrl);
+                } catch (cloudinaryError) {
+                    console.error('Cloudinary upload error:', cloudinaryError);
+                    return res.status(500).json({ 
+                        success: false, 
+                        message: 'Failed to upload image to cloud storage. Please try again.' 
+                    });
+                }
             }
 
             if (!posterName) {
@@ -79,22 +103,43 @@ router.put('/:id', asyncHandler(async (req, res) => {
         const categoryID = req.params.id;
         uploadPosters.single('img')(req, res, async function (err) {
             if (err instanceof multer.MulterError) {
+                let errorMessage = 'File upload error occurred.';
                 if (err.code === 'LIMIT_FILE_SIZE') {
-                    err.message = 'File size is too large. Maximum filesize is 5MB.';
+                    errorMessage = 'File size is too large. Maximum filesize is 10MB.';
+                } else if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+                    errorMessage = 'Unexpected file field. Please use "img" as the field name.';
+                } else {
+                    errorMessage = err.message || `Multer error: ${err.code}`;
                 }
-                console.log(`Update poster: ${err.message}`);
-                return res.json({ success: false, message: err.message });
+                console.log(`Update poster MulterError: ${errorMessage}`);
+                return res.status(400).json({ success: false, message: errorMessage });
             } else if (err) {
-                console.log(`Update poster: ${err.message}`);
-                return res.json({ success: false, message: err.message });
+                let errorMessage = 'File upload failed.';
+                if (err.message) {
+                    errorMessage = err.message;
+                } else if (typeof err === 'string') {
+                    errorMessage = err;
+                }
+                console.log(`Update poster error: ${errorMessage}`, err);
+                return res.status(500).json({ success: false, message: errorMessage });
             }
 
             const { posterName } = req.body;
             let image = req.body.image;
 
-
             if (req.file) {
-                image = `http://localhost:3000/image/poster/${req.file.filename}`;
+                try {
+                    // Upload to Cloudinary
+                    const cloudinaryResult = await uploadToCloudinary(req.file, 'posters');
+                    image = cloudinaryResult.secure_url;
+                    console.log('Poster image uploaded to Cloudinary:', image);
+                } catch (cloudinaryError) {
+                    console.error('Cloudinary upload error:', cloudinaryError);
+                    return res.status(500).json({ 
+                        success: false, 
+                        message: 'Failed to upload image to cloud storage. Please try again.' 
+                    });
+                }
             }
 
             if (!posterName || !image) {

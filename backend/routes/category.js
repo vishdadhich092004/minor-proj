@@ -3,7 +3,7 @@ const router = express.Router();
 const Category = require('../model/category');
 const SubCategory = require('../model/subCategory');
 const Product = require('../model/product');
-const { uploadCategory } = require('../uploadFile');
+const { uploadCategory, uploadToCloudinary } = require('../uploadFile');
 const multer = require('multer');
 const asyncHandler = require('express-async-handler');
 const { ensureConnection } = require('../utils/dbHelper');
@@ -60,21 +60,45 @@ router.post('/', asyncHandler(async (req, res) => {
     try {
         uploadCategory.single('img')(req, res, async function (err) {
             if (err instanceof multer.MulterError) {
+                let errorMessage = 'File upload error occurred.';
                 if (err.code === 'LIMIT_FILE_SIZE') {
-                    err.message = 'File size is too large. Maximum filesize is 5MB.';
+                    errorMessage = 'File size is too large. Maximum filesize is 5MB.';
+                } else if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+                    errorMessage = 'Unexpected file field. Please use "img" as the field name.';
+                } else {
+                    errorMessage = err.message || `Multer error: ${err.code}`;
                 }
-                console.log(`Add category: ${err}`);
-                return res.json({ success: false, message: err });
+                console.log(`Add category MulterError: ${errorMessage}`);
+                return res.status(400).json({ success: false, message: errorMessage });
             } else if (err) {
-                console.log(`Add category: ${err}`);
-                return res.json({ success: false, message: err });
+                // Handle file upload errors
+                let errorMessage = 'File upload failed.';
+                if (err.message) {
+                    errorMessage = err.message;
+                } else if (typeof err === 'string') {
+                    errorMessage = err;
+                }
+                console.log(`Add category error: ${errorMessage}`, err);
+                return res.status(500).json({ success: false, message: errorMessage });
             }
+            
             const { name } = req.body;
             let imageUrl = 'no_url';
+            
             if (req.file) {
-                imageUrl = `http://localhost:3000/image/category/${req.file.filename}`;
+                try {
+                    // Upload to Cloudinary
+                    const cloudinaryResult = await uploadToCloudinary(req.file, 'categories');
+                    imageUrl = cloudinaryResult.secure_url;
+                    console.log('Image uploaded to Cloudinary:', imageUrl);
+                } catch (cloudinaryError) {
+                    console.error('Cloudinary upload error:', cloudinaryError);
+                    return res.status(500).json({ 
+                        success: false, 
+                        message: 'Failed to upload image to cloud storage. Please try again.' 
+                    });
+                }
             }
-            console.log('url ', req.file)
 
             if (!name) {
                 return res.status(400).json({ success: false, message: "Name is required." });
@@ -106,21 +130,44 @@ router.put('/:id', asyncHandler(async (req, res) => {
         const categoryID = req.params.id;
         uploadCategory.single('img')(req, res, async function (err) {
             if (err instanceof multer.MulterError) {
+                let errorMessage = 'File upload error occurred.';
                 if (err.code === 'LIMIT_FILE_SIZE') {
-                    err.message = 'File size is too large. Maximum filesize is 5MB.';
+                    errorMessage = 'File size is too large. Maximum filesize is 5MB.';
+                } else if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+                    errorMessage = 'Unexpected file field. Please use "img" as the field name.';
+                } else {
+                    errorMessage = err.message || `Multer error: ${err.code}`;
                 }
-                console.log(`Update category: ${err.message}`);
-                return res.json({ success: false, message: err.message });
+                console.log(`Update category MulterError: ${errorMessage}`);
+                return res.status(400).json({ success: false, message: errorMessage });
             } else if (err) {
-                console.log(`Update category: ${err.message}`);
-                return res.json({ success: false, message: err.message });
+                // Handle file upload errors
+                let errorMessage = 'File upload failed.';
+                if (err.message) {
+                    errorMessage = err.message;
+                } else if (typeof err === 'string') {
+                    errorMessage = err;
+                }
+                console.log(`Update category error: ${errorMessage}`, err);
+                return res.status(500).json({ success: false, message: errorMessage });
             }
 
             const { name } = req.body;
             let image = req.body.image;
 
             if (req.file) {
-                image = `http://localhost:3000/image/category/${req.file.filename}`;
+                try {
+                    // Upload to Cloudinary
+                    const cloudinaryResult = await uploadToCloudinary(req.file, 'categories');
+                    image = cloudinaryResult.secure_url;
+                    console.log('Image uploaded to Cloudinary:', image);
+                } catch (cloudinaryError) {
+                    console.error('Cloudinary upload error:', cloudinaryError);
+                    return res.status(500).json({ 
+                        success: false, 
+                        message: 'Failed to upload image to cloud storage. Please try again.' 
+                    });
+                }
             }
 
             if (!name || !image) {
