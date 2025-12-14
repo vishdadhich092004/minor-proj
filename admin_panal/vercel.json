@@ -1,8 +1,8 @@
 {
   "version": 2,
   "outputDirectory": "build/web",
-  "buildCommand": "flutter build web --release",
-  "installCommand": "if cd .fvm; then cd ..; fvm flutter pub get; else flutter pub get; fi",
+  "buildCommand": "bash build.sh",
+  "installCommand": "echo 'Dependencies will be installed in build script'",
   "framework": null,
   "rewrites": [
     {
