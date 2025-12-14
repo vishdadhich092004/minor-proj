@@ -203,7 +203,7 @@ void showCustomBottomSheet(BuildContext context) {
                   builder: (context, cartProvider, child) {
                     return CompleteOrderButton(
                         labelText:
-                            'Complete Order  \$${context.cartProvider.getGrandTotal()} ',
+                            'Complete Order  ₹${context.cartProvider.getGrandTotal()} ',
                         onPressed: () {
                           if (!cartProvider.isExpanded) {
                             cartProvider.isExpanded = true;

@@ -17,80 +17,137 @@ class VariantSubmitForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery
-        .of(context)
-        .size;
+    var size = MediaQuery.of(context).size;
+    var isMobile = size.width < 950;
     context.variantProvider.setDataForUpdateVariant(variant);
     return SingleChildScrollView(
       child: Form(
         key: context.variantProvider.addVariantsFormKey,
-        child: Container(
-          padding: EdgeInsets.all(defaultPadding),
-          width: size.width * 0.5,
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(12.0),
-          ),
+        child: Padding(
+          padding:
+              EdgeInsets.all(isMobile ? defaultPadding / 2 : defaultPadding),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: defaultPadding),
-              Row(
-                children: [
-                  Expanded(
-                    child: Consumer2<VariantsProvider, LanguageProvider>(
-                      builder: (context, variantProvider, languageProvider, child) {
-                        return CustomDropdown(
-                          initialValue: variantProvider.selectedVariantType,
-                          items: context.dataProvider.variantTypes,
-                          hintText: variantProvider.selectedVariantType?.name ??
-                              AppTranslations.Translations.get(
-                                'select_variant_type',
+              isMobile
+                  ? Column(
+                      children: [
+                        Consumer2<VariantsProvider, LanguageProvider>(
+                          builder: (context, variantProvider, languageProvider,
+                              child) {
+                            return CustomDropdown(
+                              initialValue: variantProvider.selectedVariantType,
+                              items: context.dataProvider.variantTypes,
+                              hintText:
+                                  variantProvider.selectedVariantType?.name ??
+                                      AppTranslations.Translations.get(
+                                        'select_variant_type',
+                                        languageProvider.currentLanguageCode,
+                                      ),
+                              displayItem: (VariantType? variantType) =>
+                                  variantType?.name ?? '',
+                              onChanged: (newValue) {
+                                variantProvider.selectedVariantType = newValue;
+                                variantProvider.updateUI();
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return AppTranslations.Translations.get(
+                                    'please_select_variant_type',
+                                    languageProvider.currentLanguageCode,
+                                  );
+                                }
+                                return null;
+                              },
+                            );
+                          },
+                        ),
+                        SizedBox(height: defaultPadding),
+                        Consumer<LanguageProvider>(
+                          builder: (context, languageProvider, child) {
+                            return CustomTextField(
+                              controller: context.variantProvider.variantCtrl,
+                              labelText: AppTranslations.Translations.get(
+                                'variant_name',
                                 languageProvider.currentLanguageCode,
                               ),
-                          displayItem: (VariantType? variantType) => variantType?.name ?? '',
-                          onChanged: (newValue) {
-                            variantProvider.selectedVariantType = newValue;
-                            variantProvider.updateUI();
+                              onSave: (val) {},
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return AppTranslations.Translations.get(
+                                    'please_enter_name',
+                                    languageProvider.currentLanguageCode,
+                                  );
+                                }
+                                return null;
+                              },
+                            );
                           },
-                          validator: (value) {
-                            if (value == null) {
-                              return AppTranslations.Translations.get(
-                                'please_select_variant_type',
-                                languageProvider.currentLanguageCode,
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        Expanded(
+                          child: Consumer2<VariantsProvider, LanguageProvider>(
+                            builder: (context, variantProvider,
+                                languageProvider, child) {
+                              return CustomDropdown(
+                                initialValue:
+                                    variantProvider.selectedVariantType,
+                                items: context.dataProvider.variantTypes,
+                                hintText:
+                                    variantProvider.selectedVariantType?.name ??
+                                        AppTranslations.Translations.get(
+                                          'select_variant_type',
+                                          languageProvider.currentLanguageCode,
+                                        ),
+                                displayItem: (VariantType? variantType) =>
+                                    variantType?.name ?? '',
+                                onChanged: (newValue) {
+                                  variantProvider.selectedVariantType =
+                                      newValue;
+                                  variantProvider.updateUI();
+                                },
+                                validator: (value) {
+                                  if (value == null) {
+                                    return AppTranslations.Translations.get(
+                                      'please_select_variant_type',
+                                      languageProvider.currentLanguageCode,
+                                    );
+                                  }
+                                  return null;
+                                },
                               );
-                            }
-                            return null;
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: Consumer<LanguageProvider>(
-                      builder: (context, languageProvider, child) {
-                        return CustomTextField(
-                          controller: context.variantProvider.variantCtrl,
-                          labelText: AppTranslations.Translations.get(
-                            'variant_name',
-                            languageProvider.currentLanguageCode,
+                            },
                           ),
-                          onSave: (val) {},
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppTranslations.Translations.get(
-                                'please_enter_name',
-                                languageProvider.currentLanguageCode,
+                        ),
+                        Expanded(
+                          child: Consumer<LanguageProvider>(
+                            builder: (context, languageProvider, child) {
+                              return CustomTextField(
+                                controller: context.variantProvider.variantCtrl,
+                                labelText: AppTranslations.Translations.get(
+                                  'variant_name',
+                                  languageProvider.currentLanguageCode,
+                                ),
+                                onSave: (val) {},
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return AppTranslations.Translations.get(
+                                      'please_enter_name',
+                                      languageProvider.currentLanguageCode,
+                                    );
+                                  }
+                                  return null;
+                                },
                               );
-                            }
-                            return null;
-                          },
-                        );
-                      },
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
               SizedBox(height: defaultPadding * 2),
               Consumer<LanguageProvider>(
                 builder: (context, languageProvider, child) {
@@ -119,8 +176,12 @@ class VariantSubmitForm extends StatelessWidget {
                           backgroundColor: primaryColor,
                         ),
                         onPressed: () {
-                          if (context.variantProvider.addVariantsFormKey.currentState!.validate()) {
-                            context.variantProvider.addVariantsFormKey.currentState!.save();
+                          if (context
+                              .variantProvider.addVariantsFormKey.currentState!
+                              .validate()) {
+                            context.variantProvider.addVariantsFormKey
+                                .currentState!
+                                .save();
                             context.variantProvider.submitVariant();
                             Navigator.of(context).pop();
                           }
@@ -151,18 +212,44 @@ void showAddVariantForm(BuildContext context, Variant? variant) {
     builder: (BuildContext context) {
       return Consumer<LanguageProvider>(
         builder: (context, languageProvider, child) {
-          return AlertDialog(
-            backgroundColor: bgColor,
-            title: Center(
-              child: Text(
-                AppTranslations.Translations.get(
-                  'add_variant',
-                  languageProvider.currentLanguageCode,
-                ).toUpperCase(),
-                style: TextStyle(color: primaryColor),
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width < 950 ? 10 : 20,
+              vertical: 20,
+            ),
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.9,
+                maxWidth: 800,
+              ),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(defaultPadding),
+                    child: Text(
+                      AppTranslations.Translations.get(
+                        'add_variant',
+                        languageProvider.currentLanguageCode,
+                      ).toUpperCase(),
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: VariantSubmitForm(variant: variant),
+                  ),
+                ],
               ),
             ),
-            content: VariantSubmitForm(variant: variant),
           );
         },
       );

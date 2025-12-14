@@ -18,17 +18,14 @@ class CategorySubmitForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    var isMobile = size.width < 950;
     context.categoryProvider.setDataForUpdateCategory(category);
     return SingleChildScrollView(
       child: Form(
         key: context.categoryProvider.addCategoryFormKey,
-        child: Container(
-          padding: EdgeInsets.all(defaultPadding),
-          width: size.width * 0.3,
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(12.0),
-          ),
+        child: Padding(
+          padding:
+              EdgeInsets.all(isMobile ? defaultPadding / 2 : defaultPadding),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -101,8 +98,8 @@ class CategorySubmitForm extends StatelessWidget {
                           if (context
                               .categoryProvider.addCategoryFormKey.currentState!
                               .validate()) {
-                            context
-                                .categoryProvider.addCategoryFormKey.currentState!
+                            context.categoryProvider.addCategoryFormKey
+                                .currentState!
                                 .save();
                             context.categoryProvider.submitCategory();
                             Navigator.of(context).pop();
@@ -134,18 +131,44 @@ void showAddCategoryForm(BuildContext context, Category? category) {
     builder: (BuildContext context) {
       return Consumer<LanguageProvider>(
         builder: (context, languageProvider, child) {
-          return AlertDialog(
-            backgroundColor: bgColor,
-            title: Center(
-              child: Text(
-                AppTranslations.Translations.get(
-                  'add_category',
-                  languageProvider.currentLanguageCode,
-                ).toUpperCase(),
-                style: TextStyle(color: primaryColor),
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width < 950 ? 10 : 20,
+              vertical: 20,
+            ),
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.9,
+                maxWidth: 600,
+              ),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(defaultPadding),
+                    child: Text(
+                      AppTranslations.Translations.get(
+                        'add_category',
+                        languageProvider.currentLanguageCode,
+                      ).toUpperCase(),
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: CategorySubmitForm(category: category),
+                  ),
+                ],
               ),
             ),
-            content: CategorySubmitForm(category: category),
           );
         },
       );

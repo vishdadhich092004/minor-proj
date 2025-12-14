@@ -208,16 +208,16 @@ class OrderSubmitForm extends StatelessWidget {
           formRow(
               'Order Sub Total:',
               Text(
-                  '\$${order?.orderTotal?.subtotal?.toStringAsFixed(2) ?? 'N/A'}',
+                  '₹${order?.orderTotal?.subtotal?.toStringAsFixed(2) ?? 'N/A'}',
                   style: TextStyle(fontSize: 16))),
           formRow(
               'Discount:',
               Text(
-                  '\$${order?.orderTotal?.discount?.toStringAsFixed(2) ?? 'N/A'}',
+                  '₹${order?.orderTotal?.discount?.toStringAsFixed(2) ?? 'N/A'}',
                   style: TextStyle(fontSize: 16, color: Colors.red))),
           formRow(
               'Grand Total:',
-              Text('\$${order?.orderTotal?.total?.toStringAsFixed(2) ?? 'N/A'}',
+              Text('₹${order?.orderTotal?.total?.toStringAsFixed(2) ?? 'N/A'}',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
         ],
       ),
@@ -259,7 +259,7 @@ class OrderSubmitForm extends StatelessWidget {
           // Add some spacing before the total price
           formRow(
             'Total Price:',
-            Text('\$${order?.totalPrice?.toStringAsFixed(2) ?? 'N/A'}',
+            Text('₹${order?.totalPrice?.toStringAsFixed(2) ?? 'N/A'}',
                 style: TextStyle(fontSize: 16, color: Colors.green)),
           ),
         ],
@@ -281,7 +281,7 @@ class OrderSubmitForm extends StatelessWidget {
         return Padding(
           padding: EdgeInsets.only(bottom: 4.0), // Add spacing between items
           child: Text(
-              '${item.productName}: ${item.quantity} x \$${item.price?.toStringAsFixed(2)}',
+              '${item.productName}: ${item.quantity} x ₹${item.price?.toStringAsFixed(2)}',
               style: TextStyle(fontSize: 16)),
         );
       },

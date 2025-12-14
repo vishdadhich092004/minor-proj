@@ -20,78 +20,139 @@ class SubCategorySubmitForm extends StatelessWidget {
   Widget build(BuildContext context) {
     context.subCategoryProvider.setDataForUpdateSubCategory(subCategory);
     var size = MediaQuery.of(context).size;
+    var isMobile = size.width < 950;
     return SingleChildScrollView(
       child: Form(
         key: context.subCategoryProvider.addSubCategoryFormKey,
-        child: Container(
-          padding: EdgeInsets.all(defaultPadding),
-          width: size.width * 0.5,
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(12.0),
-          ),
+        child: Padding(
+          padding:
+              EdgeInsets.all(isMobile ? defaultPadding / 2 : defaultPadding),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Gap(defaultPadding),
-              Row(
-                children: [
-                  Expanded(
-                    child: Consumer2<SubCategoryProvider, LanguageProvider>(
-                      builder: (context, subCatProvider, languageProvider, child) {
-                        return CustomDropdown(
-                          initialValue: subCatProvider.selectedCategory,
-                          hintText: subCatProvider.selectedCategory?.name ??
-                              AppTranslations.Translations.get(
-                                'select_category',
+              isMobile
+                  ? Column(
+                      children: [
+                        Consumer2<SubCategoryProvider, LanguageProvider>(
+                          builder: (context, subCatProvider, languageProvider,
+                              child) {
+                            return CustomDropdown(
+                              initialValue: subCatProvider.selectedCategory,
+                              hintText: subCatProvider.selectedCategory?.name ??
+                                  AppTranslations.Translations.get(
+                                    'select_category',
+                                    languageProvider.currentLanguageCode,
+                                  ),
+                              items: context.dataProvider.categories,
+                              displayItem: (Category? category) =>
+                                  category?.name ?? '',
+                              onChanged: (newValue) {
+                                if (newValue != null) {
+                                  subCatProvider.selectedCategory = newValue;
+                                  subCatProvider.updateUi();
+                                }
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return AppTranslations.Translations.get(
+                                    'please_select_category',
+                                    languageProvider.currentLanguageCode,
+                                  );
+                                }
+                                return null;
+                              },
+                            );
+                          },
+                        ),
+                        Gap(defaultPadding),
+                        Consumer<LanguageProvider>(
+                          builder: (context, languageProvider, child) {
+                            return CustomTextField(
+                              controller: context
+                                  .subCategoryProvider.subCategoryNameCtrl,
+                              labelText: AppTranslations.Translations.get(
+                                'sub_category_name',
                                 languageProvider.currentLanguageCode,
                               ),
-                          items: context.dataProvider.categories,
-                          displayItem: (Category? category) => category?.name ?? '',
-                          onChanged: (newValue) {
-                            if (newValue != null) {
-                              subCatProvider.selectedCategory = newValue;
-                              subCatProvider.updateUi();
-                            }
+                              onSave: (val) {},
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return AppTranslations.Translations.get(
+                                    'please_enter_name',
+                                    languageProvider.currentLanguageCode,
+                                  );
+                                }
+                                return null;
+                              },
+                            );
                           },
-                          validator: (value) {
-                            if (value == null) {
-                              return AppTranslations.Translations.get(
-                                'please_select_category',
-                                languageProvider.currentLanguageCode,
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        Expanded(
+                          child:
+                              Consumer2<SubCategoryProvider, LanguageProvider>(
+                            builder: (context, subCatProvider, languageProvider,
+                                child) {
+                              return CustomDropdown(
+                                initialValue: subCatProvider.selectedCategory,
+                                hintText:
+                                    subCatProvider.selectedCategory?.name ??
+                                        AppTranslations.Translations.get(
+                                          'select_category',
+                                          languageProvider.currentLanguageCode,
+                                        ),
+                                items: context.dataProvider.categories,
+                                displayItem: (Category? category) =>
+                                    category?.name ?? '',
+                                onChanged: (newValue) {
+                                  if (newValue != null) {
+                                    subCatProvider.selectedCategory = newValue;
+                                    subCatProvider.updateUi();
+                                  }
+                                },
+                                validator: (value) {
+                                  if (value == null) {
+                                    return AppTranslations.Translations.get(
+                                      'please_select_category',
+                                      languageProvider.currentLanguageCode,
+                                    );
+                                  }
+                                  return null;
+                                },
                               );
-                            }
-                            return null;
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: Consumer<LanguageProvider>(
-                      builder: (context, languageProvider, child) {
-                        return CustomTextField(
-                          controller: context.subCategoryProvider.subCategoryNameCtrl,
-                          labelText: AppTranslations.Translations.get(
-                            'sub_category_name',
-                            languageProvider.currentLanguageCode,
+                            },
                           ),
-                          onSave: (val) {},
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppTranslations.Translations.get(
-                                'please_enter_name',
-                                languageProvider.currentLanguageCode,
+                        ),
+                        Expanded(
+                          child: Consumer<LanguageProvider>(
+                            builder: (context, languageProvider, child) {
+                              return CustomTextField(
+                                controller: context
+                                    .subCategoryProvider.subCategoryNameCtrl,
+                                labelText: AppTranslations.Translations.get(
+                                  'sub_category_name',
+                                  languageProvider.currentLanguageCode,
+                                ),
+                                onSave: (val) {},
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return AppTranslations.Translations.get(
+                                      'please_enter_name',
+                                      languageProvider.currentLanguageCode,
+                                    );
+                                  }
+                                  return null;
+                                },
                               );
-                            }
-                            return null;
-                          },
-                        );
-                      },
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
               Gap(defaultPadding * 2),
               Consumer<LanguageProvider>(
                 builder: (context, languageProvider, child) {
@@ -120,8 +181,12 @@ class SubCategorySubmitForm extends StatelessWidget {
                           backgroundColor: primaryColor,
                         ),
                         onPressed: () {
-                          if (context.subCategoryProvider.addSubCategoryFormKey.currentState!.validate()) {
-                            context.subCategoryProvider.addSubCategoryFormKey.currentState!.save();
+                          if (context.subCategoryProvider.addSubCategoryFormKey
+                              .currentState!
+                              .validate()) {
+                            context.subCategoryProvider.addSubCategoryFormKey
+                                .currentState!
+                                .save();
                             context.subCategoryProvider.submitSubCategory();
                             Navigator.of(context).pop();
                           }
@@ -152,18 +217,44 @@ void showAddSubCategoryForm(BuildContext context, SubCategory? subCategory) {
     builder: (BuildContext context) {
       return Consumer<LanguageProvider>(
         builder: (context, languageProvider, child) {
-          return AlertDialog(
-            backgroundColor: bgColor,
-            title: Center(
-              child: Text(
-                AppTranslations.Translations.get(
-                  'add_sub_category',
-                  languageProvider.currentLanguageCode,
-                ).toUpperCase(),
-                style: TextStyle(color: primaryColor),
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width < 950 ? 10 : 20,
+              vertical: 20,
+            ),
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.9,
+                maxWidth: 800,
+              ),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(defaultPadding),
+                    child: Text(
+                      AppTranslations.Translations.get(
+                        'add_sub_category',
+                        languageProvider.currentLanguageCode,
+                      ).toUpperCase(),
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: SubCategorySubmitForm(subCategory: subCategory),
+                  ),
+                ],
               ),
             ),
-            content: SubCategorySubmitForm(subCategory: subCategory),
           );
         },
       );

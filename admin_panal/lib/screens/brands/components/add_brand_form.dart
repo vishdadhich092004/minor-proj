@@ -19,78 +19,134 @@ class BrandSubmitForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    var isMobile = size.width < 950;
     context.brandProvider.setDataForUpdateBrand(brand);
     return SingleChildScrollView(
       child: Form(
         key: context.brandProvider.addBrandFormKey,
-        child: Container(
-          padding: EdgeInsets.all(defaultPadding),
-          width: size.width * 0.5,
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(12.0),
-          ),
+        child: Padding(
+          padding:
+              EdgeInsets.all(isMobile ? defaultPadding / 2 : defaultPadding),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Gap(defaultPadding),
-              Row(
-                children: [
-                  Expanded(
-                    child: Consumer2<BrandProvider, LanguageProvider>(
-                      builder: (context, brandProvider, languageProvider, child) {
-                        return CustomDropdown(
-                          initialValue: brandProvider.selectedSubCategory,
-                          items: context.dataProvider.subCategories,
-                          hintText: brandProvider.selectedSubCategory?.name ??
-                              AppTranslations.Translations.get(
-                                'please_select_sub_category',
+              isMobile
+                  ? Column(
+                      children: [
+                        Consumer2<BrandProvider, LanguageProvider>(
+                          builder: (context, brandProvider, languageProvider,
+                              child) {
+                            return CustomDropdown(
+                              initialValue: brandProvider.selectedSubCategory,
+                              items: context.dataProvider.subCategories,
+                              hintText:
+                                  brandProvider.selectedSubCategory?.name ??
+                                      AppTranslations.Translations.get(
+                                        'please_select_sub_category',
+                                        languageProvider.currentLanguageCode,
+                                      ),
+                              displayItem: (SubCategory? subCategory) =>
+                                  subCategory?.name ?? '',
+                              onChanged: (newValue) {
+                                brandProvider.selectedSubCategory = newValue;
+                                brandProvider.updateUI();
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return AppTranslations.Translations.get(
+                                    'please_select_sub_category',
+                                    languageProvider.currentLanguageCode,
+                                  );
+                                }
+                                return null;
+                              },
+                            );
+                          },
+                        ),
+                        Gap(defaultPadding),
+                        Consumer<LanguageProvider>(
+                          builder: (context, languageProvider, child) {
+                            return CustomTextField(
+                              controller: context.brandProvider.brandNameCtrl,
+                              labelText: AppTranslations.Translations.get(
+                                'brand_name',
                                 languageProvider.currentLanguageCode,
                               ),
-                          displayItem: (SubCategory? subCategory) =>
-                              subCategory?.name ?? '',
-                          onChanged: (newValue) {
-                            brandProvider.selectedSubCategory = newValue;
-                            brandProvider.updateUI();
+                              onSave: (val) {},
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return AppTranslations.Translations.get(
+                                    'please_enter_name',
+                                    languageProvider.currentLanguageCode,
+                                  );
+                                }
+                                return null;
+                              },
+                            );
                           },
-                          validator: (value) {
-                            if (value == null) {
-                              return AppTranslations.Translations.get(
-                                'please_select_sub_category',
-                                languageProvider.currentLanguageCode,
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        Expanded(
+                          child: Consumer2<BrandProvider, LanguageProvider>(
+                            builder: (context, brandProvider, languageProvider,
+                                child) {
+                              return CustomDropdown(
+                                initialValue: brandProvider.selectedSubCategory,
+                                items: context.dataProvider.subCategories,
+                                hintText:
+                                    brandProvider.selectedSubCategory?.name ??
+                                        AppTranslations.Translations.get(
+                                          'please_select_sub_category',
+                                          languageProvider.currentLanguageCode,
+                                        ),
+                                displayItem: (SubCategory? subCategory) =>
+                                    subCategory?.name ?? '',
+                                onChanged: (newValue) {
+                                  brandProvider.selectedSubCategory = newValue;
+                                  brandProvider.updateUI();
+                                },
+                                validator: (value) {
+                                  if (value == null) {
+                                    return AppTranslations.Translations.get(
+                                      'please_select_sub_category',
+                                      languageProvider.currentLanguageCode,
+                                    );
+                                  }
+                                  return null;
+                                },
                               );
-                            }
-                            return null;
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: Consumer<LanguageProvider>(
-                      builder: (context, languageProvider, child) {
-                        return CustomTextField(
-                          controller: context.brandProvider.brandNameCtrl,
-                          labelText: AppTranslations.Translations.get(
-                            'brand_name',
-                            languageProvider.currentLanguageCode,
+                            },
                           ),
-                          onSave: (val) {},
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppTranslations.Translations.get(
-                                'please_enter_name',
-                                languageProvider.currentLanguageCode,
+                        ),
+                        Expanded(
+                          child: Consumer<LanguageProvider>(
+                            builder: (context, languageProvider, child) {
+                              return CustomTextField(
+                                controller: context.brandProvider.brandNameCtrl,
+                                labelText: AppTranslations.Translations.get(
+                                  'brand_name',
+                                  languageProvider.currentLanguageCode,
+                                ),
+                                onSave: (val) {},
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return AppTranslations.Translations.get(
+                                      'please_enter_name',
+                                      languageProvider.currentLanguageCode,
+                                    );
+                                  }
+                                  return null;
+                                },
                               );
-                            }
-                            return null;
-                          },
-                        );
-                      },
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
               Gap(defaultPadding * 2),
               Consumer<LanguageProvider>(
                 builder: (context, languageProvider, child) {
@@ -119,7 +175,8 @@ class BrandSubmitForm extends StatelessWidget {
                           backgroundColor: primaryColor,
                         ),
                         onPressed: () {
-                          if (context.brandProvider.addBrandFormKey.currentState!
+                          if (context
+                              .brandProvider.addBrandFormKey.currentState!
                               .validate()) {
                             context.brandProvider.addBrandFormKey.currentState!
                                 .save();
@@ -153,19 +210,43 @@ void showBrandForm(BuildContext context, Brand? brand) {
     builder: (BuildContext context) {
       return Consumer<LanguageProvider>(
         builder: (context, languageProvider, child) {
-          return AlertDialog(
-            backgroundColor: bgColor,
-            title: Center(
-              child: Text(
-                AppTranslations.Translations.get(
-                  'add_brand',
-                  languageProvider.currentLanguageCode,
-                ).toUpperCase(),
-                style: TextStyle(color: primaryColor),
-              ),
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width < 950 ? 10 : 20,
+              vertical: 20,
             ),
-            content: BrandSubmitForm(
-              brand: brand,
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.9,
+                maxWidth: 800,
+              ),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(defaultPadding),
+                    child: Text(
+                      AppTranslations.Translations.get(
+                        'add_brand',
+                        languageProvider.currentLanguageCode,
+                      ).toUpperCase(),
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: BrandSubmitForm(brand: brand),
+                  ),
+                ],
+              ),
             ),
           );
         },

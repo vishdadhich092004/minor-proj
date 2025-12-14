@@ -18,17 +18,14 @@ class PosterSubmitForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    var isMobile = size.width < 950;
     context.posterProvider.setDataForUpdatePoster(poster);
     return SingleChildScrollView(
       child: Form(
         key: context.posterProvider.addPosterFormKey,
-        child: Container(
-          padding: EdgeInsets.all(defaultPadding),
-          width: size.width * 0.3,
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(12.0),
-          ),
+        child: Padding(
+          padding:
+              EdgeInsets.all(isMobile ? defaultPadding / 2 : defaultPadding),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -98,8 +95,12 @@ class PosterSubmitForm extends StatelessWidget {
                           backgroundColor: primaryColor,
                         ),
                         onPressed: () {
-                          if (context.posterProvider.addPosterFormKey.currentState!.validate()) {
-                            context.posterProvider.addPosterFormKey.currentState!.save();
+                          if (context
+                              .posterProvider.addPosterFormKey.currentState!
+                              .validate()) {
+                            context
+                                .posterProvider.addPosterFormKey.currentState!
+                                .save();
                             context.posterProvider.submitPoster();
                             Navigator.of(context).pop();
                           }
@@ -130,18 +131,44 @@ void showAddPosterForm(BuildContext context, Poster? poster) {
     builder: (BuildContext context) {
       return Consumer<LanguageProvider>(
         builder: (context, languageProvider, child) {
-          return AlertDialog(
-            backgroundColor: bgColor,
-            title: Center(
-              child: Text(
-                AppTranslations.Translations.get(
-                  'add_poster',
-                  languageProvider.currentLanguageCode,
-                ).toUpperCase(),
-                style: TextStyle(color: primaryColor),
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width < 950 ? 10 : 20,
+              vertical: 20,
+            ),
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.9,
+                maxWidth: 600,
+              ),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(defaultPadding),
+                    child: Text(
+                      AppTranslations.Translations.get(
+                        'add_poster',
+                        languageProvider.currentLanguageCode,
+                      ).toUpperCase(),
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: PosterSubmitForm(poster: poster),
+                  ),
+                ],
               ),
             ),
-            content: PosterSubmitForm(poster: poster),
           );
         },
       );

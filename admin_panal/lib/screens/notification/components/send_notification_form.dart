@@ -8,22 +8,18 @@ import '../../../utility/translations.dart' as AppTranslations;
 import '../../../widgets/custom_text_field.dart';
 
 class SendNotificationForm extends StatelessWidget {
-
   const SendNotificationForm({super.key});
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    var isMobile = size.width < 950;
     return SingleChildScrollView(
       child: Form(
         key: context.notificationProvider.sendNotificationFormKey,
-        child: Container(
-          padding: EdgeInsets.all(defaultPadding),
-          width: size.width * 0.5,
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(12.0),
-          ),
+        child: Padding(
+          padding:
+              EdgeInsets.all(isMobile ? defaultPadding / 2 : defaultPadding),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -50,7 +46,8 @@ class SendNotificationForm extends StatelessWidget {
                         },
                       ),
                       CustomTextField(
-                        controller: context.notificationProvider.descriptionCtrl,
+                        controller:
+                            context.notificationProvider.descriptionCtrl,
                         labelText: AppTranslations.Translations.get(
                           'enter_notification_description',
                           languageProvider.currentLanguageCode,
@@ -107,8 +104,12 @@ class SendNotificationForm extends StatelessWidget {
                           backgroundColor: primaryColor,
                         ),
                         onPressed: () {
-                          if (context.notificationProvider.sendNotificationFormKey.currentState!.validate()) {
-                            context.notificationProvider.sendNotificationFormKey.currentState!.save();
+                          if (context.notificationProvider
+                              .sendNotificationFormKey.currentState!
+                              .validate()) {
+                            context.notificationProvider.sendNotificationFormKey
+                                .currentState!
+                                .save();
                             context.notificationProvider.sendNotification();
                             Navigator.of(context).pop();
                           }
@@ -139,18 +140,44 @@ void sendNotificationFormForm(BuildContext context) {
     builder: (BuildContext context) {
       return Consumer<LanguageProvider>(
         builder: (context, languageProvider, child) {
-          return AlertDialog(
-            backgroundColor: bgColor,
-            title: Center(
-              child: Text(
-                AppTranslations.Translations.get(
-                  'send_notification',
-                  languageProvider.currentLanguageCode,
-                ).toUpperCase(),
-                style: TextStyle(color: primaryColor),
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width < 950 ? 10 : 20,
+              vertical: 20,
+            ),
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.9,
+                maxWidth: 800,
+              ),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(defaultPadding),
+                    child: Text(
+                      AppTranslations.Translations.get(
+                        'send_notification',
+                        languageProvider.currentLanguageCode,
+                      ).toUpperCase(),
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: SendNotificationForm(),
+                  ),
+                ],
               ),
             ),
-            content: SendNotificationForm(),
           );
         },
       );
