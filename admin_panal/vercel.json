@@ -1,13 +1,15 @@
 {
   "version": 2,
   "outputDirectory": "build/web",
+  "buildCommand": "flutter build web --release",
+  "installCommand": "if cd .fvm; then cd ..; fvm flutter pub get; else flutter pub get; fi",
+  "framework": null,
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
-  "buildCommand": "",
   "headers": [
     {
       "source": "/(.*)",
