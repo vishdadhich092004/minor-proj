@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import '../../utility/constants.dart';
+import '../../utility/responsive.dart';
 import '../../providers/language_provider.dart';
 import '../../utility/translations.dart' as AppTranslations;
 import 'components/send_notification_form.dart';
@@ -12,6 +13,7 @@ import 'components/send_notification_form.dart';
 class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
     return SafeArea(
       child: SingleChildScrollView(
         primary: false,
@@ -20,54 +22,54 @@ class NotificationScreen extends StatelessWidget {
           children: [
             NotificationHeader(),
             Gap(defaultPadding),
-            Row(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  flex: 5,
-                  child: Column(
+                if (isMobile)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Consumer<LanguageProvider>(
+                        builder: (context, languageProvider, child) {
+                          return Text(
+                            AppTranslations.Translations.get(
+                              'my_notifications',
+                              languageProvider.currentLanguageCode,
+                            ),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.titleMedium,
+                          );
+                        },
+                      ),
+                      Gap(defaultPadding / 2),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: Consumer<LanguageProvider>(
                               builder: (context, languageProvider, child) {
-                                return Text(
-                                  AppTranslations.Translations.get(
-                                    'my_notifications',
-                                    languageProvider.currentLanguageCode,
+                                return ElevatedButton.icon(
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: defaultPadding * 1.5,
+                                      vertical: defaultPadding,
+                                    ),
                                   ),
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.titleMedium,
+                                  onPressed: () {
+                                    sendNotificationFormForm(context);
+                                  },
+                                  icon: Icon(Icons.add),
+                                  label: Text(
+                                    AppTranslations.Translations.get(
+                                      'send_new',
+                                      languageProvider.currentLanguageCode,
+                                    ),
+                                  ),
                                 );
                               },
                             ),
                           ),
-                          Consumer<LanguageProvider>(
-                            builder: (context, languageProvider, child) {
-                              return ElevatedButton.icon(
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: defaultPadding * 1.5,
-                                    vertical: defaultPadding,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  sendNotificationFormForm(context);
-                                },
-                                icon: Icon(Icons.add),
-                                label: Text(
-                                  AppTranslations.Translations.get(
-                                    'send_new',
-                                    languageProvider.currentLanguageCode,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          Gap(20),
+                          Gap(10),
                           IconButton(
                             onPressed: () {
                               context.dataProvider.getAllNotifications(
@@ -78,11 +80,62 @@ class NotificationScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Gap(defaultPadding),
-                      NotificationListSection(),
+                    ],
+                  )
+                else
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Consumer<LanguageProvider>(
+                          builder: (context, languageProvider, child) {
+                            return Text(
+                              AppTranslations.Translations.get(
+                                'my_notifications',
+                                languageProvider.currentLanguageCode,
+                              ),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.titleMedium,
+                            );
+                          },
+                        ),
+                      ),
+                      Consumer<LanguageProvider>(
+                        builder: (context, languageProvider, child) {
+                          return ElevatedButton.icon(
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: defaultPadding * 1.5,
+                                vertical: defaultPadding,
+                              ),
+                            ),
+                            onPressed: () {
+                              sendNotificationFormForm(context);
+                            },
+                            icon: Icon(Icons.add),
+                            label: Text(
+                              AppTranslations.Translations.get(
+                                'send_new',
+                                languageProvider.currentLanguageCode,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      Gap(20),
+                      IconButton(
+                        onPressed: () {
+                          context.dataProvider.getAllNotifications(
+                            showSnack: true,
+                          );
+                        },
+                        icon: Icon(Icons.refresh),
+                      ),
                     ],
                   ),
-                ),
+                Gap(defaultPadding),
+                NotificationListSection(),
               ],
             ),
           ],

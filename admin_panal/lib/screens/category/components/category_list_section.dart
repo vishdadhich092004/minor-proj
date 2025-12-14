@@ -31,33 +31,35 @@ class CategoryListSection extends StatelessWidget {
             width: double.infinity,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Category Name"),
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    columns: [
+                      DataColumn(
+                        label: Text("Category Name"),
+                      ),
+                      DataColumn(
+                        label: Text("Added Date"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.categories.length,
+                      (index) => categoryDataRow(dataProvider.categories[index],
+                          delete: () {
+                        context.categoryProvider
+                            .deleteCategory(dataProvider.categories[index]);
+                      }, edit: () {
+                        showAddCategoryForm(
+                            context, dataProvider.categories[index]);
+                      }),
                     ),
-                    DataColumn(
-                      label: Text("Added Date"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.categories.length,
-                    (index) => categoryDataRow(dataProvider.categories[index],
-                        delete: () {
-                      context.categoryProvider
-                          .deleteCategory(dataProvider.categories[index]);
-                    }, edit: () {
-                      showAddCategoryForm(
-                          context, dataProvider.categories[index]);
-                    }),
                   ),
                 );
               },
@@ -73,25 +75,41 @@ DataRow categoryDataRow(Category CatInfo, {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
       DataCell(
-        Row(
-          children: [
-            Image.network(
-              CatInfo.image ?? '',
-              height: 30,
-              width: 30,
-              errorBuilder: (BuildContext context, Object exception,
-                  StackTrace? stackTrace) {
-                return Icon(Icons.error);
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(CatInfo.name ?? ''),
-            ),
-          ],
+        SizedBox(
+          width: 200,
+          child: Row(
+            children: [
+              Image.network(
+                CatInfo.image ?? '',
+                height: 30,
+                width: 30,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Icon(Icons.error);
+                },
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  CatInfo.name ?? '',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      DataCell(Text(CatInfo.createdAt ?? '')),
+      DataCell(
+        SizedBox(
+          width: 120,
+          child: Text(
+            CatInfo.createdAt ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();

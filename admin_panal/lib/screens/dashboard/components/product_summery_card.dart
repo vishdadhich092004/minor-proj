@@ -3,11 +3,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../utility/constants.dart';
 import '../../../models/product_summery_info.dart';
 
-
 class ProductSummeryCard extends StatelessWidget {
   const ProductSummeryCard({
     Key? key,
-    required this.info, required this.onTap,
+    required this.info,
+    required this.onTap,
   }) : super(key: key);
 
   final ProductSummeryInfo info;
@@ -16,7 +16,7 @@ class ProductSummeryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         onTap(info.title);
       },
       child: Container(
@@ -49,10 +49,12 @@ class ProductSummeryCard extends StatelessWidget {
                 Icon(Icons.more_vert, color: Colors.white54)
               ],
             ),
-            Text(
-              info.title!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            Flexible(
+              child: Text(
+                info.title!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             ProgressLine(
               color: info.color,
@@ -61,12 +63,16 @@ class ProductSummeryCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "${info.productsCount} Product",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(color: Colors.white70),
+                Flexible(
+                  child: Text(
+                    "${info.productsCount} Product",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(color: Colors.white70),
+                  ),
                 ),
               ],
             )

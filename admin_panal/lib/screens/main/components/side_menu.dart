@@ -1,4 +1,5 @@
 import '../../../utility/extensions.dart';
+import '../../../utility/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
     return Consumer<LanguageProvider>(
       builder: (context, languageProvider, child) {
         return Drawer(
@@ -27,6 +29,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/menu_dashboard.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Dashboard');
+                  if (isMobile) Navigator.pop(context);
                 },
               ),
               DrawerListTile(
@@ -35,6 +38,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/menu_tran.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Category');
+                  if (isMobile) Navigator.pop(context);
                 },
               ),
               DrawerListTile(
@@ -43,6 +47,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/menu_task.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('SubCategory');
+                  if (isMobile) Navigator.pop(context);
                 },
               ),
               DrawerListTile(
@@ -51,6 +56,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/menu_doc.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Brands');
+                  if (isMobile) Navigator.pop(context);
                 },
               ),
               DrawerListTile(
@@ -59,6 +65,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/menu_store.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('VariantType');
+                  if (isMobile) Navigator.pop(context);
                 },
               ),
               DrawerListTile(
@@ -67,6 +74,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/menu_notification.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Variants');
+                  if (isMobile) Navigator.pop(context);
                 },
               ),
               DrawerListTile(
@@ -75,6 +83,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/menu_profile.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Order');
+                  if (isMobile) Navigator.pop(context);
                 },
               ),
               DrawerListTile(
@@ -83,6 +92,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/menu_setting.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Coupon');
+                  if (isMobile) Navigator.pop(context);
                 },
               ),
               DrawerListTile(
@@ -91,6 +101,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/menu_doc.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Poster');
+                  if (isMobile) Navigator.pop(context);
                 },
               ),
               DrawerListTile(
@@ -99,6 +110,7 @@ class SideMenu extends StatelessWidget {
                 svgSrc: "assets/icons/menu_notification.svg",
                 press: () {
                   context.mainScreenProvider.navigateToScreen('Notifications');
+                  if (isMobile) Navigator.pop(context);
                 },
               ),
               const Divider(color: Colors.white24),

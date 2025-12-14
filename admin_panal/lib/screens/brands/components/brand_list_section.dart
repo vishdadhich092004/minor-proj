@@ -32,35 +32,37 @@ class BrandListSection extends StatelessWidget {
             width: double.infinity,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Brands Name"),
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    columns: [
+                      DataColumn(
+                        label: Text("Brands Name"),
+                      ),
+                      DataColumn(
+                        label: Text("Sub Category"),
+                      ),
+                      DataColumn(
+                        label: Text("Added Date"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.brands.length,
+                      (index) => brandDataRow(
+                          dataProvider.brands[index], index + 1, edit: () {
+                        showBrandForm(context, dataProvider.brands[index]);
+                      }, delete: () {
+                        context.brandProvider
+                            .deleteBrand(dataProvider.brands[index]);
+                      }),
                     ),
-                    DataColumn(
-                      label: Text("Sub Category"),
-                    ),
-                    DataColumn(
-                      label: Text("Added Date"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.brands.length,
-                    (index) => brandDataRow(
-                        dataProvider.brands[index], index + 1, edit: () {
-                      showBrandForm(context, dataProvider.brands[index]);
-                    }, delete: () {
-                      context.brandProvider
-                          .deleteBrand(dataProvider.brands[index]);
-                    }),
                   ),
                 );
               },
@@ -76,28 +78,52 @@ DataRow brandDataRow(Brand brandInfo, int index,
     {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
-      //list of datacell objects
       DataCell(
-        Row(
-          children: [
-            Container(
-              height: 24,
-              width: 24,
-              decoration: BoxDecoration(
-                color: colors[index % colors.length],
-                shape: BoxShape.circle,
+        SizedBox(
+          width: 150,
+          child: Row(
+            children: [
+              Container(
+                height: 24,
+                width: 24,
+                decoration: BoxDecoration(
+                  color: colors[index % colors.length],
+                  shape: BoxShape.circle,
+                ),
+                child: Text(index.toString(), textAlign: TextAlign.center),
               ),
-              child: Text(index.toString(), textAlign: TextAlign.center),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(brandInfo.name!),
-            ),
-          ],
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  brandInfo.name!,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      DataCell(Text(brandInfo.subcategoryId?.name ?? '')),
-      DataCell(Text(brandInfo.createdAt ?? '')),
+      DataCell(
+        SizedBox(
+          width: 120,
+          child: Text(
+            brandInfo.subcategoryId?.name ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: 100,
+          child: Text(
+            brandInfo.createdAt ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();

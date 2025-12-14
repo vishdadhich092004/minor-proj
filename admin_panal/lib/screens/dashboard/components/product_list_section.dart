@@ -39,10 +39,8 @@ class ProductListSection extends StatelessWidget {
             width: double.infinity,
             child: Consumer2<DataProvider, LanguageProvider>(
               builder: (context, dataProvider, languageProvider, child) {
-                return ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: 400,
-                  ),
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
                   child: DataTable(
                     columnSpacing: defaultPadding,
                     columns: [
@@ -97,12 +95,17 @@ class ProductListSection extends StatelessWidget {
                     ],
                     rows: List.generate(
                       dataProvider.products.length,
-                          (index) => productDataRow(dataProvider.products[index],edit: () {
-                            showAddProductForm(context, dataProvider.products[index]);
-                          },
-                            delete: () {
-                            context.dashBoardProvider.deleteProduct(dataProvider.products[index]);
-                            },),
+                      (index) => productDataRow(
+                        dataProvider.products[index],
+                        edit: () {
+                          showAddProductForm(
+                              context, dataProvider.products[index]);
+                        },
+                        delete: () {
+                          context.dashBoardProvider
+                              .deleteProduct(dataProvider.products[index]);
+                        },
+                      ),
                     ),
                   ),
                 );
@@ -115,30 +118,59 @@ class ProductListSection extends StatelessWidget {
   }
 }
 
-DataRow productDataRow(Product productInfo,{Function? edit, Function? delete}) {
+DataRow productDataRow(Product productInfo,
+    {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
       DataCell(
-        Row(
-          children: [
-            Image.network(
-              productInfo.images?.first.url ?? '',
-              height: 30,
-              width: 30,
-              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                return Icon(Icons.error);
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(productInfo.name ?? ''),
-            ),
-          ],
+        SizedBox(
+          width: 150,
+          child: Row(
+            children: [
+              Image.network(
+                productInfo.images?.first.url ?? '',
+                height: 30,
+                width: 30,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Icon(Icons.error);
+                },
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  productInfo.name ?? '',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      DataCell(Text(productInfo.proCategoryId?.name ?? '')),
-      DataCell(Text(productInfo.proSubCategoryId?.name ?? '')),
-      DataCell(Text('${productInfo.price}'),),
+      DataCell(
+        SizedBox(
+          width: 100,
+          child: Text(
+            productInfo.proCategoryId?.name ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: 100,
+          child: Text(
+            productInfo.proSubCategoryId?.name ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
+      DataCell(
+        Text('${productInfo.price}'),
+      ),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();
@@ -147,7 +179,6 @@ DataRow productDataRow(Product productInfo,{Function? edit, Function? delete}) {
             Icons.edit,
             color: Colors.white,
           ))),
-
       DataCell(IconButton(
           onPressed: () {
             if (delete != null) delete();

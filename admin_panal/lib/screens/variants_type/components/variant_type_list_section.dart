@@ -8,7 +8,6 @@ import '../../../utility/color_list.dart';
 import '../../../utility/constants.dart';
 import '../../../models/variant_type.dart';
 
-
 class VariantsTypeListSection extends StatelessWidget {
   const VariantsTypeListSection({
     Key? key,
@@ -33,38 +32,41 @@ class VariantsTypeListSection extends StatelessWidget {
             width: double.infinity,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Variant Name"),
-                    ),
-                    DataColumn(
-                      label: Text("Variant Type"),
-                    ),
-                    DataColumn(
-                      label: Text("Added Date"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.variantTypes.length,
-                    (index) => variantTypeDataRow(
-                      dataProvider.variantTypes[index],
-                      index + 1,
-                      edit: () {
-                        showAddVariantsTypeForm(context, dataProvider.variantTypes[index]);
-                      },
-                      delete: () {
-                        context.variantTypeProvider.deleteVariantType(dataProvider.variantTypes[index]);
-
-                      },
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    columns: [
+                      DataColumn(
+                        label: Text("Variant Name"),
+                      ),
+                      DataColumn(
+                        label: Text("Variant Type"),
+                      ),
+                      DataColumn(
+                        label: Text("Added Date"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.variantTypes.length,
+                      (index) => variantTypeDataRow(
+                        dataProvider.variantTypes[index],
+                        index + 1,
+                        edit: () {
+                          showAddVariantsTypeForm(
+                              context, dataProvider.variantTypes[index]);
+                        },
+                        delete: () {
+                          context.variantTypeProvider.deleteVariantType(
+                              dataProvider.variantTypes[index]);
+                        },
+                      ),
                     ),
                   ),
                 );
@@ -77,30 +79,56 @@ class VariantsTypeListSection extends StatelessWidget {
   }
 }
 
-DataRow variantTypeDataRow(VariantType VariantTypeInfo, int index, {Function? edit, Function? delete}) {
+DataRow variantTypeDataRow(VariantType VariantTypeInfo, int index,
+    {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
       DataCell(
-        Row(
-          children: [
-            Container(
-              height: 24,
-              width: 24,
-              decoration: BoxDecoration(
-                color: colors[index % colors.length],
-                shape: BoxShape.circle,
+        SizedBox(
+          width: 150,
+          child: Row(
+            children: [
+              Container(
+                height: 24,
+                width: 24,
+                decoration: BoxDecoration(
+                  color: colors[index % colors.length],
+                  shape: BoxShape.circle,
+                ),
+                child: Text(index.toString(), textAlign: TextAlign.center),
               ),
-              child: Text(index.toString(), textAlign: TextAlign.center),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(VariantTypeInfo.name ?? ''),
-            ),
-          ],
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  VariantTypeInfo.name ?? '',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      DataCell(Text(VariantTypeInfo.type ?? '')),
-      DataCell(Text(VariantTypeInfo.createdAt ?? '')),
+      DataCell(
+        SizedBox(
+          width: 120,
+          child: Text(
+            VariantTypeInfo.type ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: 100,
+          child: Text(
+            VariantTypeInfo.createdAt ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();

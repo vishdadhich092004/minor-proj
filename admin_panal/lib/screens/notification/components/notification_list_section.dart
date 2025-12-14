@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../../../utility/color_list.dart';
 import '../../../utility/constants.dart';
 
-
 class NotificationListSection extends StatelessWidget {
   const NotificationListSection({
     Key? key,
@@ -33,33 +32,39 @@ class NotificationListSection extends StatelessWidget {
             width: double.infinity,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Title"),
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    columns: [
+                      DataColumn(
+                        label: Text("Title"),
+                      ),
+                      DataColumn(
+                        label: Text("Description"),
+                      ),
+                      DataColumn(
+                        label: Text("Send Date"),
+                      ),
+                      DataColumn(
+                        label: Text("View"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.notifications.length,
+                      (index) => notificationDataRow(
+                          dataProvider.notifications[index], index + 1,
+                          edit: () {
+                        viewNotificationStatics(
+                            context, dataProvider.notifications[index]);
+                      }, delete: () {
+                        context.notificationProvider.deleteNotification(
+                            dataProvider.notifications[index]);
+                      }),
                     ),
-                    DataColumn(
-                      label: Text("Description"),
-                    ),
-                    DataColumn(
-                      label: Text("Send Date"),
-                    ),
-                    DataColumn(
-                      label: Text("View"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.notifications.length,
-                    (index) => notificationDataRow(dataProvider.notifications[index], index + 1, edit: () {
-                      viewNotificationStatics(context, dataProvider.notifications[index]);
-                    }, delete: () {
-                      context.notificationProvider.deleteNotification(dataProvider.notifications[index]);
-                    }),
                   ),
                 );
               },
@@ -71,30 +76,56 @@ class NotificationListSection extends StatelessWidget {
   }
 }
 
-DataRow notificationDataRow(MyNotification notificationInfo, int index, {Function? edit, Function? delete}) {
+DataRow notificationDataRow(MyNotification notificationInfo, int index,
+    {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
       DataCell(
-        Row(
-          children: [
-            Container(
-              height: 24,
-              width: 24,
-              decoration: BoxDecoration(
-                color: colors[index % colors.length],
-                shape: BoxShape.circle,
+        SizedBox(
+          width: 150,
+          child: Row(
+            children: [
+              Container(
+                height: 24,
+                width: 24,
+                decoration: BoxDecoration(
+                  color: colors[index % colors.length],
+                  shape: BoxShape.circle,
+                ),
+                child: Text(index.toString(), textAlign: TextAlign.center),
               ),
-              child: Text(index.toString(), textAlign: TextAlign.center),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(notificationInfo.title!),
-            ),
-          ],
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  notificationInfo.title!,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      DataCell(Text(notificationInfo.description ?? '')),
-      DataCell(Text(notificationInfo.createdAt ?? '')),
+      DataCell(
+        SizedBox(
+          width: 200,
+          child: Text(
+            notificationInfo.description ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: 100,
+          child: Text(
+            notificationInfo.createdAt ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();

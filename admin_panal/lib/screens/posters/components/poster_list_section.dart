@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../../models/poster.dart';
 import '../../../utility/constants.dart';
 
-
 class PosterListSection extends StatelessWidget {
   const PosterListSection({
     Key? key,
@@ -32,28 +31,31 @@ class PosterListSection extends StatelessWidget {
             width: double.infinity,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Category Name"),
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    columns: [
+                      DataColumn(
+                        label: Text("Category Name"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.posters.length,
+                      (index) => posterDataRow(dataProvider.posters[index],
+                          delete: () {
+                        context.posterProvider
+                            .deletePoster(dataProvider.posters[index]);
+                      }, edit: () {
+                        showAddPosterForm(context, dataProvider.posters[index]);
+                      }),
                     ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.posters.length,
-                    (index) => posterDataRow(dataProvider.posters[index], delete: () {
-                      context.posterProvider.deletePoster(dataProvider.posters[index]);
-
-                    }, edit: () {
-                      showAddPosterForm(context, dataProvider.posters[index]);
-                    }),
                   ),
                 );
               },
@@ -69,21 +71,29 @@ DataRow posterDataRow(Poster poster, {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
       DataCell(
-        Row(
-          children: [
-            Image.network(
-              poster.imageUrl ?? '',
-              height: 30,
-              width: 30,
-              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                return Icon(Icons.error);
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(poster.posterName ?? ''),
-            ),
-          ],
+        SizedBox(
+          width: 200,
+          child: Row(
+            children: [
+              Image.network(
+                poster.imageUrl ?? '',
+                height: 30,
+                width: 30,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Icon(Icons.error);
+                },
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  poster.posterName ?? '',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       DataCell(IconButton(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../../utility/constants.dart';
+import '../../../utility/responsive.dart';
 import '../../../providers/language_provider.dart';
 import '../../../utility/translations.dart' as AppTranslations;
 
@@ -11,27 +12,52 @@ class CouponCodeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
     return Consumer<LanguageProvider>(
       builder: (context, languageProvider, child) {
-        return Row(
-          children: [
-            Text(
-              AppTranslations.Translations.get(
-                'coupon_codes',
-                languageProvider.currentLanguageCode,
+        if (isMobile) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppTranslations.Translations.get(
+                  'coupon_codes',
+                  languageProvider.currentLanguageCode,
+                ),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            Spacer(flex: 2),
-            Expanded(
-              child: SearchField(
+              SizedBox(height: defaultPadding),
+              SearchField(
                 onChange: (val) {
                   context.dataProvider.filterCoupons(val);
                 },
               ),
-            ),
-            ProfileCard(),
-          ],
+              SizedBox(height: defaultPadding),
+              ProfileCard(),
+            ],
+          );
+        }
+        return ClipRect(
+          child: Row(
+            children: [
+              Text(
+                AppTranslations.Translations.get(
+                  'coupon_codes',
+                  languageProvider.currentLanguageCode,
+                ),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              Spacer(flex: 2),
+              Expanded(
+                child: SearchField(
+                  onChange: (val) {
+                    context.dataProvider.filterCoupons(val);
+                  },
+                ),
+              ),
+              ProfileCard(),
+            ],
+          ),
         );
       },
     );
@@ -43,10 +69,11 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
     return Consumer<LanguageProvider>(
       builder: (context, languageProvider, child) {
         return Container(
-          margin: EdgeInsets.only(left: defaultPadding),
+          margin: EdgeInsets.only(left: isMobile ? 0 : defaultPadding),
           padding: EdgeInsets.symmetric(
             horizontal: defaultPadding,
             vertical: defaultPadding / 2,
@@ -57,6 +84,7 @@ class ProfileCard extends StatelessWidget {
             border: Border.all(color: Colors.white10),
           ),
           child: Row(
+            mainAxisSize: isMobile ? MainAxisSize.max : MainAxisSize.min,
             children: [
               CircleAvatar(
                 radius: 12,

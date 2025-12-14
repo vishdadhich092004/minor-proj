@@ -24,6 +24,13 @@ import 'providers/language_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
+
+  // Hide overflow error indicators in the UI
+  FlutterError.onError = (FlutterErrorDetails details) {
+    // Log the error but don't show the red screen
+    FlutterError.dumpErrorToConsole(details);
+  };
+
   runApp(
     MultiProvider(
       providers: [
@@ -83,6 +90,17 @@ class MyApp extends StatelessWidget {
             ).apply(bodyColor: Colors.white),
             canvasColor: secondaryColor,
           ),
+          builder: (context, child) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaleFactor: 1.0,
+              ),
+              child: ClipRect(
+                clipBehavior: Clip.hardEdge,
+                child: child!,
+              ),
+            );
+          },
           initialRoute: AppPages.HOME,
           unknownRoute: GetPage(name: '/notFount', page: () => MainScreen()),
           defaultTransition: Transition.cupertino,

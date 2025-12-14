@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import '../../utility/constants.dart';
+import '../../utility/responsive.dart';
 import '../../providers/language_provider.dart';
 import '../../utility/translations.dart' as AppTranslations;
 import 'components/add_variant_form.dart';
@@ -12,6 +13,7 @@ import 'components/variants_list_section.dart';
 class VariantsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
     return SafeArea(
       child: SingleChildScrollView(
         primary: false,
@@ -20,54 +22,54 @@ class VariantsScreen extends StatelessWidget {
           children: [
             VariantsHeader(),
             Gap(defaultPadding),
-            Row(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  flex: 5,
-                  child: Column(
+                if (isMobile)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Consumer<LanguageProvider>(
+                        builder: (context, languageProvider, child) {
+                          return Text(
+                            AppTranslations.Translations.get(
+                              'my_variants',
+                              languageProvider.currentLanguageCode,
+                            ),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.titleMedium,
+                          );
+                        },
+                      ),
+                      Gap(defaultPadding / 2),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: Consumer<LanguageProvider>(
                               builder: (context, languageProvider, child) {
-                                return Text(
-                                  AppTranslations.Translations.get(
-                                    'my_variants',
-                                    languageProvider.currentLanguageCode,
+                                return ElevatedButton.icon(
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: defaultPadding * 1.5,
+                                      vertical: defaultPadding,
+                                    ),
                                   ),
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.titleMedium,
+                                  onPressed: () {
+                                    showAddVariantForm(context, null);
+                                  },
+                                  icon: Icon(Icons.add),
+                                  label: Text(
+                                    AppTranslations.Translations.get(
+                                      'add_new',
+                                      languageProvider.currentLanguageCode,
+                                    ),
+                                  ),
                                 );
                               },
                             ),
                           ),
-                          Consumer<LanguageProvider>(
-                            builder: (context, languageProvider, child) {
-                              return ElevatedButton.icon(
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: defaultPadding * 1.5,
-                                    vertical: defaultPadding,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  showAddVariantForm(context, null);
-                                },
-                                icon: Icon(Icons.add),
-                                label: Text(
-                                  AppTranslations.Translations.get(
-                                    'add_new',
-                                    languageProvider.currentLanguageCode,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          Gap(20),
+                          Gap(10),
                           IconButton(
                             onPressed: () {
                               context.dataProvider.getAllVariant(
@@ -78,11 +80,62 @@ class VariantsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Gap(defaultPadding),
-                      VariantsListSection(),
+                    ],
+                  )
+                else
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Consumer<LanguageProvider>(
+                          builder: (context, languageProvider, child) {
+                            return Text(
+                              AppTranslations.Translations.get(
+                                'my_variants',
+                                languageProvider.currentLanguageCode,
+                              ),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.titleMedium,
+                            );
+                          },
+                        ),
+                      ),
+                      Consumer<LanguageProvider>(
+                        builder: (context, languageProvider, child) {
+                          return ElevatedButton.icon(
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: defaultPadding * 1.5,
+                                vertical: defaultPadding,
+                              ),
+                            ),
+                            onPressed: () {
+                              showAddVariantForm(context, null);
+                            },
+                            icon: Icon(Icons.add),
+                            label: Text(
+                              AppTranslations.Translations.get(
+                                'add_new',
+                                languageProvider.currentLanguageCode,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      Gap(20),
+                      IconButton(
+                        onPressed: () {
+                          context.dataProvider.getAllVariant(
+                            showSnack: true,
+                          );
+                        },
+                        icon: Icon(Icons.refresh),
+                      ),
                     ],
                   ),
-                ),
+                Gap(defaultPadding),
+                VariantsListSection(),
               ],
             ),
           ],

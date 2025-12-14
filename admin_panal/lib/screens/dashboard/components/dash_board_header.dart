@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../../utility/constants.dart';
+import '../../../utility/responsive.dart';
 import '../../../providers/language_provider.dart';
 import '../../../utility/translations.dart' as AppTranslations;
 
@@ -11,27 +12,52 @@ class DashBoardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
     return Consumer<LanguageProvider>(
       builder: (context, languageProvider, child) {
-        return Row(
-          children: [
-            Text(
-              AppTranslations.Translations.get(
-                'dashboard',
-                languageProvider.currentLanguageCode,
+        if (isMobile) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppTranslations.Translations.get(
+                  'dashboard',
+                  languageProvider.currentLanguageCode,
+                ),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            Spacer(flex: 1),
-            Expanded(
-              child: SearchField(
+              SizedBox(height: defaultPadding),
+              SearchField(
                 onChange: (val) {
                   context.dataProvider.filterProducts(val);
                 },
               ),
-            ),
-            ProfileCard(),
-          ],
+              SizedBox(height: defaultPadding),
+              ProfileCard(),
+            ],
+          );
+        }
+        return ClipRect(
+          child: Row(
+            children: [
+              Text(
+                AppTranslations.Translations.get(
+                  'dashboard',
+                  languageProvider.currentLanguageCode,
+                ),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              Spacer(flex: 1),
+              Expanded(
+                child: SearchField(
+                  onChange: (val) {
+                    context.dataProvider.filterProducts(val);
+                  },
+                ),
+              ),
+              ProfileCard(),
+            ],
+          ),
         );
       },
     );
@@ -43,10 +69,11 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
     return Consumer<LanguageProvider>(
       builder: (context, languageProvider, child) {
         return Container(
-          margin: EdgeInsets.only(left: defaultPadding),
+          margin: EdgeInsets.only(left: isMobile ? 0 : defaultPadding),
           padding: EdgeInsets.symmetric(
             horizontal: defaultPadding,
             vertical: defaultPadding / 2,
@@ -56,25 +83,28 @@ class ProfileCard extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             border: Border.all(color: Colors.white10),
           ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 12, // Adjust size
-                backgroundImage: AssetImage('assets/images/profile.png'),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: defaultPadding / 2,
+          child: ClipRect(
+            child: Row(
+              mainAxisSize: isMobile ? MainAxisSize.max : MainAxisSize.min,
+              children: [
+                CircleAvatar(
+                  radius: 12,
+                  backgroundImage: AssetImage('assets/images/profile.png'),
                 ),
-                child: Text(
-                  AppTranslations.Translations.get(
-                    'team_iiit',
-                    languageProvider.currentLanguageCode,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: defaultPadding / 2,
+                  ),
+                  child: Text(
+                    AppTranslations.Translations.get(
+                      'team_iiit',
+                      languageProvider.currentLanguageCode,
+                    ),
                   ),
                 ),
-              ),
-              Icon(Icons.keyboard_arrow_down),
-            ],
+                Icon(Icons.keyboard_arrow_down),
+              ],
+            ),
           ),
         );
       },

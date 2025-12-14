@@ -32,41 +32,43 @@ class OrderListSection extends StatelessWidget {
             width: double.infinity,
             child: Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Customer Name"),
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columnSpacing: defaultPadding,
+                    columns: [
+                      DataColumn(
+                        label: Text("Customer Name"),
+                      ),
+                      DataColumn(
+                        label: Text("Order Amount"),
+                      ),
+                      DataColumn(
+                        label: Text("Payment"),
+                      ),
+                      DataColumn(
+                        label: Text("Status"),
+                      ),
+                      DataColumn(
+                        label: Text("Date"),
+                      ),
+                      DataColumn(
+                        label: Text("Edit"),
+                      ),
+                      DataColumn(
+                        label: Text("Delete"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      dataProvider.orders.length,
+                      (index) => orderDataRow(
+                          dataProvider.orders[index], index + 1, delete: () {
+                        context.orderProvider
+                            .deleteOrder(dataProvider.orders[index]);
+                      }, edit: () {
+                        showOrderForm(context, dataProvider.orders[index]);
+                      }),
                     ),
-                    DataColumn(
-                      label: Text("Order Amount"),
-                    ),
-                    DataColumn(
-                      label: Text("Payment"),
-                    ),
-                    DataColumn(
-                      label: Text("Status"),
-                    ),
-                    DataColumn(
-                      label: Text("Date"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.orders.length,
-                    (index) => orderDataRow(
-                        dataProvider.orders[index], index + 1, delete: () {
-                      context.orderProvider
-                          .deleteOrder(dataProvider.orders[index]);
-                    }, edit: () {
-                      showOrderForm(context, dataProvider.orders[index]);
-                    }),
                   ),
                 );
               },
@@ -83,28 +85,71 @@ DataRow orderDataRow(Order orderInfo, int index,
   return DataRow(
     cells: [
       DataCell(
-        Row(
-          children: [
-            Container(
-              height: 24,
-              width: 24,
-              decoration: BoxDecoration(
-                color: colors[index % colors.length],
-                shape: BoxShape.circle,
+        SizedBox(
+          width: 150,
+          child: Row(
+            children: [
+              Container(
+                height: 24,
+                width: 24,
+                decoration: BoxDecoration(
+                  color: colors[index % colors.length],
+                  shape: BoxShape.circle,
+                ),
+                child: Text(index.toString(), textAlign: TextAlign.center),
               ),
-              child: Text(index.toString(), textAlign: TextAlign.center),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(orderInfo.userID?.name ?? ''),
-            ),
-          ],
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  orderInfo.userID?.name ?? '',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      DataCell(Text('${orderInfo.orderTotal?.total}')),
-      DataCell(Text(orderInfo.paymentMethod ?? '')),
-      DataCell(Text(orderInfo.orderStatus ?? '')),
-      DataCell(Text(orderInfo.orderDate ?? '')),
+      DataCell(
+        SizedBox(
+          width: 100,
+          child: Text(
+            '${orderInfo.orderTotal?.total}',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: 100,
+          child: Text(
+            orderInfo.paymentMethod ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: 100,
+          child: Text(
+            orderInfo.orderStatus ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
+      DataCell(
+        SizedBox(
+          width: 100,
+          child: Text(
+            orderInfo.orderDate ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
       DataCell(IconButton(
           onPressed: () {
             if (edit != null) edit();
