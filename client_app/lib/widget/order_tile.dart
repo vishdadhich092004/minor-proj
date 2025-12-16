@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utility/app_color.dart';
 import 'translated_text.dart';
+import '../models/order.dart';
 
 class OrderTile extends StatelessWidget {
   final String items;
@@ -8,6 +9,8 @@ class OrderTile extends StatelessWidget {
   final String date;
   final String status;
   final VoidCallback? onTap;
+  final Order? order;
+  final VoidCallback? onDownloadInvoice;
 
   const OrderTile({
     super.key,
@@ -16,6 +19,8 @@ class OrderTile extends StatelessWidget {
     required this.date,
     required this.status,
     this.onTap,
+    this.order,
+    this.onDownloadInvoice,
   });
 
   @override
@@ -69,6 +74,23 @@ class OrderTile extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton.icon(
+                    onPressed: onDownloadInvoice,
+                    icon: const Icon(Icons.download, size: 18),
+                    label: const Text('Invoice'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor.darkOrange,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),
