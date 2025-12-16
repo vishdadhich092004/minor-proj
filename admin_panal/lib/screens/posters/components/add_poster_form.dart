@@ -10,16 +10,29 @@ import '../../../utility/translations.dart' as AppTranslations;
 import '../../../widgets/category_image_card.dart';
 import '../../../widgets/custom_text_field.dart';
 
-class PosterSubmitForm extends StatelessWidget {
+class PosterSubmitForm extends StatefulWidget {
   final Poster? poster;
 
   const PosterSubmitForm({super.key, this.poster});
 
   @override
+  State<PosterSubmitForm> createState() => _PosterSubmitFormState();
+}
+
+class _PosterSubmitFormState extends State<PosterSubmitForm> {
+  @override
+  void initState() {
+    super.initState();
+    // Call setDataForUpdatePoster only once when the widget is first created
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.posterProvider.setDataForUpdatePoster(widget.poster);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var isMobile = size.width < 950;
-    context.posterProvider.setDataForUpdatePoster(poster);
     return SingleChildScrollView(
       child: Form(
         key: context.posterProvider.addPosterFormKey,
@@ -38,7 +51,7 @@ class PosterSubmitForm extends StatelessWidget {
                       languageProvider.currentLanguageCode,
                     ),
                     imageFile: posterProvider.selectedImage,
-                    imageUrlForUpdateImage: poster?.imageUrl,
+                    imageUrlForUpdateImage: widget.poster?.imageUrl,
                     onTap: () {
                       posterProvider.pickImage();
                     },

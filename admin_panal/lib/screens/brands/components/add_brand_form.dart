@@ -11,16 +11,29 @@ import '../../../utility/translations.dart' as AppTranslations;
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_field.dart';
 
-class BrandSubmitForm extends StatelessWidget {
+class BrandSubmitForm extends StatefulWidget {
   final Brand? brand;
 
   const BrandSubmitForm({super.key, this.brand});
 
   @override
+  State<BrandSubmitForm> createState() => _BrandSubmitFormState();
+}
+
+class _BrandSubmitFormState extends State<BrandSubmitForm> {
+  @override
+  void initState() {
+    super.initState();
+    // Call setDataForUpdateBrand only once when the widget is first created
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.brandProvider.setDataForUpdateBrand(widget.brand);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var isMobile = size.width < 950;
-    context.brandProvider.setDataForUpdateBrand(brand);
     return SingleChildScrollView(
       child: Form(
         key: context.brandProvider.addBrandFormKey,

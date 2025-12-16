@@ -14,16 +14,29 @@ import '../../../widgets/custom_date_picker.dart';
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_field.dart';
 
-class CouponSubmitForm extends StatelessWidget {
+class CouponSubmitForm extends StatefulWidget {
   final Coupon? coupon;
 
   const CouponSubmitForm({Key? key, this.coupon}) : super(key: key);
 
   @override
+  State<CouponSubmitForm> createState() => _CouponSubmitFormState();
+}
+
+class _CouponSubmitFormState extends State<CouponSubmitForm> {
+  @override
+  void initState() {
+    super.initState();
+    // Call setDataForUpdateCoupon only once when the widget is first created
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.couponCodeProvider.setDataForUpdateCoupon(widget.coupon);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var isMobile = size.width < 950;
-    context.couponCodeProvider.setDataForUpdateCoupon(coupon);
     return SingleChildScrollView(
       child: Form(
         key: context.couponCodeProvider.addCouponFormKey,

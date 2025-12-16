@@ -10,16 +10,29 @@ import '../../../utility/translations.dart' as AppTranslations;
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_field.dart';
 
-class VariantSubmitForm extends StatelessWidget {
+class VariantSubmitForm extends StatefulWidget {
   final Variant? variant;
 
   const VariantSubmitForm({super.key, this.variant});
 
   @override
+  State<VariantSubmitForm> createState() => _VariantSubmitFormState();
+}
+
+class _VariantSubmitFormState extends State<VariantSubmitForm> {
+  @override
+  void initState() {
+    super.initState();
+    // Call setDataForUpdateVariant only once when the widget is first created
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.variantProvider.setDataForUpdateVariant(widget.variant);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var isMobile = size.width < 950;
-    context.variantProvider.setDataForUpdateVariant(variant);
     return SingleChildScrollView(
       child: Form(
         key: context.variantProvider.addVariantsFormKey,

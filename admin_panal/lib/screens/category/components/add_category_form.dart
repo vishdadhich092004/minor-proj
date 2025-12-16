@@ -10,16 +10,29 @@ import '../../../utility/translations.dart' as AppTranslations;
 import '../../../widgets/category_image_card.dart';
 import '../../../widgets/custom_text_field.dart';
 
-class CategorySubmitForm extends StatelessWidget {
+class CategorySubmitForm extends StatefulWidget {
   final Category? category;
 
   const CategorySubmitForm({super.key, this.category});
 
   @override
+  State<CategorySubmitForm> createState() => _CategorySubmitFormState();
+}
+
+class _CategorySubmitFormState extends State<CategorySubmitForm> {
+  @override
+  void initState() {
+    super.initState();
+    // Call setDataForUpdateCategory only once when the widget is first created
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.categoryProvider.setDataForUpdateCategory(widget.category);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var isMobile = size.width < 950;
-    context.categoryProvider.setDataForUpdateCategory(category);
     return SingleChildScrollView(
       child: Form(
         key: context.categoryProvider.addCategoryFormKey,
@@ -38,7 +51,7 @@ class CategorySubmitForm extends StatelessWidget {
                       languageProvider.currentLanguageCode,
                     ),
                     imageFile: catProvider.selectedImage,
-                    imageUrlForUpdateImage: category?.image,
+                    imageUrlForUpdateImage: widget.category?.image,
                     onTap: () {
                       catProvider.pickImage();
                     },

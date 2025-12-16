@@ -11,14 +11,27 @@ import '../../../utility/translations.dart' as AppTranslations;
 import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_field.dart';
 
-class SubCategorySubmitForm extends StatelessWidget {
+class SubCategorySubmitForm extends StatefulWidget {
   final SubCategory? subCategory;
 
   const SubCategorySubmitForm({super.key, this.subCategory});
 
   @override
+  State<SubCategorySubmitForm> createState() => _SubCategorySubmitFormState();
+}
+
+class _SubCategorySubmitFormState extends State<SubCategorySubmitForm> {
+  @override
+  void initState() {
+    super.initState();
+    // Call setDataForUpdateSubCategory only once when the widget is first created
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.subCategoryProvider.setDataForUpdateSubCategory(widget.subCategory);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    context.subCategoryProvider.setDataForUpdateSubCategory(subCategory);
     var size = MediaQuery.of(context).size;
     var isMobile = size.width < 950;
     return SingleChildScrollView(

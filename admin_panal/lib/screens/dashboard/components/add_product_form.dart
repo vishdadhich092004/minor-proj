@@ -15,16 +15,29 @@ import '../../../widgets/custom_dropdown.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../../../widgets/product_image_card.dart';
 
-class ProductSubmitForm extends StatelessWidget {
+class ProductSubmitForm extends StatefulWidget {
   final Product? product;
 
   const ProductSubmitForm({super.key, this.product});
 
   @override
+  State<ProductSubmitForm> createState() => _ProductSubmitFormState();
+}
+
+class _ProductSubmitFormState extends State<ProductSubmitForm> {
+  @override
+  void initState() {
+    super.initState();
+    // Call setDataForUpdateProduct only once when the widget is first created
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.dashBoardProvider.setDataForUpdateProduct(widget.product);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var isMobile = size.width < 950;
-    context.dashBoardProvider.setDataForUpdateProduct(product);
     return SingleChildScrollView(
       child: Form(
         key: context.dashBoardProvider.addProductFormKey,
@@ -49,7 +62,7 @@ class ProductSubmitForm extends StatelessWidget {
                               ),
                               imageFile: dashProvider.selectedMainImage,
                               imageUrlForUpdateImage:
-                                  product?.images.safeElementAt(0)?.url,
+                                  widget.product?.images.safeElementAt(0)?.url,
                               onTap: () {
                                 dashProvider.pickImage(imageCardNumber: 1);
                               },
@@ -71,7 +84,7 @@ class ProductSubmitForm extends StatelessWidget {
                               ),
                               imageFile: dashProvider.selectedSecondImage,
                               imageUrlForUpdateImage:
-                                  product?.images.safeElementAt(1)?.url,
+                                  widget.product?.images.safeElementAt(1)?.url,
                               onTap: () {
                                 dashProvider.pickImage(imageCardNumber: 2);
                               },
@@ -93,7 +106,7 @@ class ProductSubmitForm extends StatelessWidget {
                               ),
                               imageFile: dashProvider.selectedThirdImage,
                               imageUrlForUpdateImage:
-                                  product?.images.safeElementAt(2)?.url,
+                                  widget.product?.images.safeElementAt(2)?.url,
                               onTap: () {
                                 dashProvider.pickImage(imageCardNumber: 3);
                               },
@@ -115,7 +128,7 @@ class ProductSubmitForm extends StatelessWidget {
                               ),
                               imageFile: dashProvider.selectedFourthImage,
                               imageUrlForUpdateImage:
-                                  product?.images.safeElementAt(3)?.url,
+                                  widget.product?.images.safeElementAt(3)?.url,
                               onTap: () {
                                 dashProvider.pickImage(imageCardNumber: 4);
                               },
@@ -137,7 +150,7 @@ class ProductSubmitForm extends StatelessWidget {
                               ),
                               imageFile: dashProvider.selectedFifthImage,
                               imageUrlForUpdateImage:
-                                  product?.images.safeElementAt(4)?.url,
+                                  widget.product?.images.safeElementAt(4)?.url,
                               onTap: () {
                                 dashProvider.pickImage(imageCardNumber: 5);
                               },
@@ -165,7 +178,7 @@ class ProductSubmitForm extends StatelessWidget {
                               ),
                               imageFile: dashProvider.selectedMainImage,
                               imageUrlForUpdateImage:
-                                  product?.images.safeElementAt(0)?.url,
+                                  widget.product?.images.safeElementAt(0)?.url,
                               onTap: () {
                                 dashProvider.pickImage(imageCardNumber: 1);
                               },
@@ -186,7 +199,7 @@ class ProductSubmitForm extends StatelessWidget {
                               ),
                               imageFile: dashProvider.selectedSecondImage,
                               imageUrlForUpdateImage:
-                                  product?.images.safeElementAt(1)?.url,
+                                  widget.product?.images.safeElementAt(1)?.url,
                               onTap: () {
                                 dashProvider.pickImage(imageCardNumber: 2);
                               },
@@ -207,7 +220,7 @@ class ProductSubmitForm extends StatelessWidget {
                               ),
                               imageFile: dashProvider.selectedThirdImage,
                               imageUrlForUpdateImage:
-                                  product?.images.safeElementAt(2)?.url,
+                                  widget.product?.images.safeElementAt(2)?.url,
                               onTap: () {
                                 dashProvider.pickImage(imageCardNumber: 3);
                               },
@@ -228,7 +241,7 @@ class ProductSubmitForm extends StatelessWidget {
                               ),
                               imageFile: dashProvider.selectedFourthImage,
                               imageUrlForUpdateImage:
-                                  product?.images.safeElementAt(3)?.url,
+                                  widget.product?.images.safeElementAt(3)?.url,
                               onTap: () {
                                 dashProvider.pickImage(imageCardNumber: 4);
                               },
@@ -249,7 +262,7 @@ class ProductSubmitForm extends StatelessWidget {
                               ),
                               imageFile: dashProvider.selectedFifthImage,
                               imageUrlForUpdateImage:
-                                  product?.images.safeElementAt(4)?.url,
+                                  widget.product?.images.safeElementAt(4)?.url,
                               onTap: () {
                                 dashProvider.pickImage(imageCardNumber: 5);
                               },
