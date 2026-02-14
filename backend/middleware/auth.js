@@ -1,5 +1,9 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || 'replace_this_with_secure_secret';
+
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET is not defined in environment variables');
+}
+const JWT_SECRET = process.env.JWT_SECRET;
 
 function authenticate(req, res, next) {
   const authHeader = req.headers.authorization || '';

@@ -4,9 +4,29 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const asyncHandler = require('express-async-handler');
 const dotenv = require('dotenv');
+const morgan = require('morgan');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
 dotenv.config();
 
 const app = express();
+
+// Security Middleware
+app.use(helmet());
+
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+app.use(limiter);
+
+// Logging Middleware
+app.use(morgan('dev'));
+
 //?Middle wair
 app.use(cors({ origin: '*' }))
 app.use(bodyParser.json());
@@ -84,18 +104,18 @@ app.use('/api/image-proxy', require('./routes/imageProxy'));
 
 // Example route using asyncHandler directly in app.js
 app.get('/', asyncHandler(async (req, res) => {
-    res.json({ success: true, message: 'API working successfully', data: null });
+  res.json({ success: true, message: 'API working successfully', data: null });
 }));
 
 // Global error handler
 
 app.use((error, req, res, next) => {
-    res.status(500).json({ success: false, message: error.message, data: null });
+  res.status(500).json({ success: false, message: error.message, data: null });
 });
 
 
 app.listen(process.env.PORT, () => {
-    console.log(`Server running on port ${process.env.PORT}`);
+  console.log(`Server running on port ${process.env.PORT}`);
 });
 
 
