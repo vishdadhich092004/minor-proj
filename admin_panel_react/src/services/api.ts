@@ -1,9 +1,8 @@
 import axios from 'axios';
 
 // Backend base URL from Flutter constants.dart
-// const MAIN_URL = 'https://minor-proj-tau.vercel.app';
+const MAIN_URL = import.meta.env.DEV ? 'http://localhost:7070' : 'https://minor-proj-tau.vercel.app'
 
-const MAIN_URL = "http://localhost:7070";
 
 const api = axios.create({
     baseURL: MAIN_URL,
