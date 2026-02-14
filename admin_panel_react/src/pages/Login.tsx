@@ -22,7 +22,7 @@ const Login: React.FC = () => {
       const response = await api.post('/users/login', { email, password });
       
       if (response.data.success) {
-        login('', response.data.data); // No token in response based on review, passing empty string
+        login(response.data.data); // No token in response based on review, passing empty string
         navigate('/dashboard');
       } else {
         setError(response.data.message || 'Login failed');

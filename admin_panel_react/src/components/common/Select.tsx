@@ -1,4 +1,4 @@
-import React, { SelectHTMLAttributes } from 'react';
+import React, {type SelectHTMLAttributes } from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -12,6 +12,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   options: Option[];
   error?: string;
   containerClassName?: string;
+  placeholder?: string;
 }
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(

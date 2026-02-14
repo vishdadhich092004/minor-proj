@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import api from '../services/api';
-
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
 interface User {
   _id: string;
   name: string;
@@ -11,7 +10,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (token: string, userData: User) => void; // Token might be unused if backend doesn't send one, but good for future
+  login: ( userData: User) => void; // Token might be unused if backend doesn't send one, but good for future
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -37,7 +36,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsLoading(false);
   }, []);
 
-  const login = (token: string, userData: User) => {
+  const login = ( userData: User) => {
     // If backend provided a token, we'd store it. 
     // storage.setItem('token', token); 
     // For now, we assume the backend might not send a standard JWT based on the code analysis, 

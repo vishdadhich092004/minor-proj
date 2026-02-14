@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 import { useNavigate, useParams } from 'react-router-dom';
-import { type Product, type Category, type SubCategory, type Brand, type VariantType, type Variant } from '../../types';
+import {type SubCategory, type Brand, type Variant } from '../../types';
 import Input from '../../components/common/Input';
 import Select from '../../components/common/Select';
 import Button from '../../components/common/Button';
