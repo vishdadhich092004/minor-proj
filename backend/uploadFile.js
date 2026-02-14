@@ -11,19 +11,19 @@ const fileFilter = (req, file, cb) => {
   const ext = path.extname(file.originalname).toLowerCase();
   // Remove the dot for matching
   const extWithoutDot = ext.replace('.', '');
-  
+
   // Allowed file extensions
   const allowedExtensions = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
-  
+
   // Check if extension is allowed
   const isValidExtension = allowedExtensions.includes(extWithoutDot);
-  
+
   // Check MIME type - should be image/* and match the extension
   const mimeType = file.mimetype.toLowerCase();
-  const isValidMimeType = mimeType.startsWith('image/') && 
-    (mimeType.includes('jpeg') || mimeType.includes('jpg') || 
-     mimeType.includes('png') || mimeType.includes('gif') || 
-     mimeType.includes('webp'));
+  const isValidMimeType = mimeType.startsWith('image/') &&
+    (mimeType.includes('jpeg') || mimeType.includes('jpg') ||
+      mimeType.includes('png') || mimeType.includes('gif') ||
+      mimeType.includes('webp'));
 
   if (isValidExtension && isValidMimeType) {
     return cb(null, true);
@@ -60,12 +60,13 @@ const uploadToCloudinary = (file, folder) => {
   return new Promise((resolve, reject) => {
     // Convert buffer to base64 data URI
     const base64Data = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
-    
+
     cloudinary.uploader.upload(
       base64Data,
       {
         folder: folder,
         resource_type: 'auto', // Automatically detect image/video
+        timeout: 120000, // 2 minutes timeout
         transformation: [
           { quality: 'auto' }, // Auto optimize quality
           { fetch_format: 'auto' } // Auto format (webp when supported)

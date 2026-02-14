@@ -6,7 +6,7 @@ const asyncHandler = require('express-async-handler');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
+// const rateLimit = require('express-rate-limit');
 
 dotenv.config();
 
@@ -15,14 +15,14 @@ const app = express();
 // Security Middleware
 app.use(helmet());
 
-// Rate Limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
-app.use(limiter);
+// // Rate Limiting
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 1000, // Limit each IP to 100 requests per windowMs
+//   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+//   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+// });
+// app.use(limiter);
 
 // Logging Middleware
 app.use(morgan('dev'));
@@ -41,25 +41,10 @@ const URL = process.env.MONGO_URL;
 // Improved MongoDB connection with better error handling for serverless environments
 const connectDB = async () => {
   try {
-    const mongooseOptions = {
-      serverSelectionTimeoutMS: 10000, // 10 seconds timeout
-      socketTimeoutMS: 45000, // 45 seconds socket timeout
-      maxPoolSize: 10, // Maintain up to 10 socket connections
-      minPoolSize: 1,
-      maxIdleTimeMS: 30000, // Close connections after 30 seconds of inactivity
-      retryWrites: true,
-      w: 'majority',
-    };
-
-    await mongoose.connect(URL, mongooseOptions);
+    await mongoose.connect(URL);
     console.log('✅ Connected to Database successfully');
   } catch (error) {
     console.error('❌ Database connection error:', error.message);
-    // Don't exit process in serverless - let it retry on next request
-    if (process.env.NODE_ENV !== 'production') {
-      // Only exit in development
-      // process.exit(1);
-    }
   }
 };
 
