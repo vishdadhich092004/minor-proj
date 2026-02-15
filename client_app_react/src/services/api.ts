@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Backend base URL
-const MAIN_URL = import.meta.env.DEV ? 'http://localhost:7070' : 'https://minor-proj-tau.vercel.app'
+const MAIN_URL = import.meta.env.DEV ? 'http://localhost:7070' : 'https://minor-proj-omega.vercel.app'
 
 
 const api = axios.create({
