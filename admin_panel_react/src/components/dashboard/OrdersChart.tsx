@@ -16,11 +16,11 @@ interface OrdersChartProps {
 const OrdersChart: React.FC<OrdersChartProps> = ({ ordersByStatus, totalOrders }) => {
   const { t } = useTranslation();
   const data = [
-    { name: t('common.status.pending'), value: ordersByStatus.pending, color: '#FCD34D' }, // yellow-300
-    { name: t('common.status.processing'), value: ordersByStatus.processing, color: '#9CA3AF' }, // gray-400
-    { name: t('common.status.shipped'), value: ordersByStatus.shipped, color: '#3B82F6' }, // blue-500
-    { name: t('common.status.delivered'), value: ordersByStatus.delivered, color: '#22C55E' }, // green-500
-    { name: t('common.status.cancelled'), value: ordersByStatus.cancelled, color: '#EF4444' }, // red-500
+    { name: t('status.pending'), value: ordersByStatus.pending, color: '#FCD34D' }, // yellow-300
+    { name: t('status.processing'), value: ordersByStatus.processing, color: '#9CA3AF' }, // gray-400
+    { name: t('status.shipped'), value: ordersByStatus.shipped, color: '#3B82F6' }, // blue-500
+    { name: t('status.delivered'), value: ordersByStatus.delivered, color: '#22C55E' }, // green-500
+    { name: t('status.cancelled'), value: ordersByStatus.cancelled, color: '#EF4444' }, // red-500
   ].filter(item => item.value > 0);
 
   return (
