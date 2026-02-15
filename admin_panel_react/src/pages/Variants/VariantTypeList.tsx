@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useVariantTypes } from '../../hooks/useVariantTypes';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import Button from '../../components/common/Button';
 
 const VariantTypeList: React.FC = () => {
+    const { t } = useTranslation();
     const { variantTypes, loading, error, deleteVariantType } = useVariantTypes();
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -13,16 +15,16 @@ const VariantTypeList: React.FC = () => {
         vt.type.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) return <div className="p-10 text-center">Loading variant types...</div>;
-    if (error) return <div className="p-10 text-center text-red-600">Error: {error}</div>;
+    if (loading) return <div className="p-10 text-center">{t('variant_types.loading')}</div>;
+    if (error) return <div className="p-10 text-center text-red-600">{t('common.error')}: {error}</div>;
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Variant Types</h1>
+                <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{t('variant_types.title')}</h1>
                 <Link to="/variant-types/new">
                     <Button>
-                        <Plus className="mr-2 h-4 w-4" /> Add Variant Type
+                        <Plus className="mr-2 h-4 w-4" /> {t('variant_types.add_new')}
                     </Button>
                 </Link>
             </div>
@@ -31,7 +33,7 @@ const VariantTypeList: React.FC = () => {
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                     <input 
                         type="text" 
-                        placeholder="Search variant types..." 
+                        placeholder={t('variant_types.search_placeholder')} 
                         className="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
@@ -41,9 +43,9 @@ const VariantTypeList: React.FC = () => {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('variant_types.table.name')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('variant_types.table.type')}</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('variant_types.table.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -67,7 +69,7 @@ const VariantTypeList: React.FC = () => {
                             ))}
                              {filteredVariantTypes.length === 0 && (
                                 <tr>
-                                    <td colSpan={3} className="px-6 py-4 text-center text-sm text-gray-500">No variant types found</td>
+                                    <td colSpan={3} className="px-6 py-4 text-center text-sm text-gray-500">{t('variant_types.no_types')}</td>
                                 </tr>
                             )}
                         </tbody>

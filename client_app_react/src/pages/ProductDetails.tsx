@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDataStore } from '../store/useDataStore';
 import { useCartStore } from '../store/useCartStore';
 import Navbar from '../components/Navbar';
@@ -7,6 +8,7 @@ import { ArrowLeft, ShoppingBag, Share2 } from 'lucide-react';
 import type { Product } from '../types';
 
 const ProductDetails = () => {
+    const { t } = useTranslation();
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { products, variants, fetchAll, isLoading } = useDataStore();
@@ -39,7 +41,7 @@ const ProductDetails = () => {
         
         // Check variant if applicable
         if (product.proVariantId && product.proVariantId.length > 0 && !selectedVariant) {
-            alert('Please select a variant'); // Use toast later
+            alert(t('product.select_variant')); // Use toast later
             return;
         }
 
@@ -53,7 +55,7 @@ const ProductDetails = () => {
         });
         
         // Feedback
-        alert('Added to cart');
+        alert(t('product.added_to_cart'));
     };
 
     if (isLoading || (!product && products.length === 0)) {
@@ -67,8 +69,8 @@ const ProductDetails = () => {
     if (!product) {
         return (
              <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-                <p>Product not found.</p>
-                <button onClick={() => navigate('/')} className="mt-4 text-primary underline">Go Home</button>
+                <p>{t('product.not_found')}</p>
+                <button onClick={() => navigate('/')} className="mt-4 text-primary underline">{t('product.go_home')}</button>
             </div>
         );
     }
@@ -86,7 +88,7 @@ const ProductDetails = () => {
                     onClick={() => navigate(-1)} 
                     className="flex items-center text-gray-600 hover:text-primary mb-6"
                 >
-                    <ArrowLeft className="h-5 w-5 mr-1" /> Back
+                    <ArrowLeft className="h-5 w-5 mr-1" /> {t('product.back')}
                 </button>
 
                 <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
@@ -140,7 +142,7 @@ const ProductDetails = () => {
                             </div>
 
                             <div className="mt-8">
-                                <h3 className="text-sm font-medium text-gray-900 mb-2">Description</h3>
+                                <h3 className="text-sm font-medium text-gray-900 mb-2">{t('product.description')}</h3>
                                 <p className="text-gray-600 leading-relaxed text-sm">
                                     {product.description}
                                 </p>
@@ -149,7 +151,7 @@ const ProductDetails = () => {
                             {/* Variants - Dynamic Placeholder */}
                             {product.proVariantId && product.proVariantId.length > 0 && (
                                 <div className="mt-8">
-                                    <h3 className="text-sm font-medium text-gray-900 mb-2">Available Options</h3>
+                                    <h3 className="text-sm font-medium text-gray-900 mb-2">{t('product.available_options')}</h3>
                                     <div className="flex flex-wrap gap-2">
                                         {/* Map variant IDs to names */}
                                         {product.proVariantId.map((variantId, index) => {
@@ -181,7 +183,7 @@ const ProductDetails = () => {
                                         className="flex-1 bg-primary hover:bg-orange-600 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
                                      >
                                         <ShoppingBag className="h-5 w-5" />
-                                        Add to Cart
+                                        {t('product.add_to_cart')}
                                      </button>
                                      {/* Favorite Button Placeholder */}
                                      {/* <button className="px-4 py-4 border border-gray-200 rounded-xl text-gray-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-colors">

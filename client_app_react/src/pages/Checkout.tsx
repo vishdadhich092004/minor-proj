@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -31,6 +32,7 @@ const checkoutSchema = z.object({
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
 const Checkout = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { items, coupon, applyCoupon, removeCoupon, placeOrder, createRazorpayOrder, verifyRazorpayPayment, getSubtotal, getTotal } = useCartStore();
     const { user } = useAuth();
@@ -56,9 +58,9 @@ const Checkout = () => {
         if (!couponCode) return;
         const success = await applyCoupon(couponCode);
         if (success) {
-            alert('Coupon applied!');
+            alert(t('checkout.coupon_applied'));
         } else {
-            alert('Invalid coupon');
+            alert('Invalid coupon'); // TODO: Translate
         }
     };
 
@@ -92,7 +94,7 @@ const Checkout = () => {
 
                 const orderId = await placeOrder(orderData);
                 if (orderId) {
-                    alert('Order placed successfully!');
+                    alert(t('checkout.order_success'));
                     navigate(`/order/${orderId}`);
                 } else {
                     alert('Failed to place order');
@@ -150,7 +152,7 @@ const Checkout = () => {
                             };
                             const orderId = await placeOrder(orderData);
                             if (orderId) {
-                                alert('Payment successful and order placed!');
+                                alert(t('checkout.payment_success'));
                                 navigate(`/order/${orderId}`);
                             } else {
                                 alert('Order creation failed after payment');
@@ -174,7 +176,7 @@ const Checkout = () => {
             }
         } catch (error) {
             console.error(error);
-            alert('Something went wrong');
+            alert(t('checkout.something_wrong'));
         } finally {
             setIsProcessing(false);
         }
@@ -193,45 +195,45 @@ const Checkout = () => {
                     onClick={() => navigate(-1)} 
                     className="flex items-center text-gray-600 hover:text-primary mb-6"
                 >
-                    <ArrowLeft className="h-5 w-5 mr-1" /> Back to Cart
+                    <ArrowLeft className="h-5 w-5 mr-1" /> {t('checkout.back_to_cart')}
                 </button>
                 
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">Checkout</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('checkout.title')}</h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                      {/* Form Section */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Shipping Address */}
                         <div className="bg-white p-6 rounded-xl shadow-sm">
-                            <h2 className="text-lg font-bold text-gray-900 mb-4">Shipping Address</h2>
+                            <h2 className="text-lg font-bold text-gray-900 mb-4">{t('checkout.shipping_address')}</h2>
                             <form id="checkout-form" onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-1">
-                                    <label className="text-sm font-medium text-gray-700">Phone</label>
+                                    <label className="text-sm font-medium text-gray-700">{t('checkout.phone')}</label>
                                     <input {...register('phone')} className="w-full p-2 border rounded-lg focus:ring-primary focus:border-primary" />
                                     {errors.phone && <span className="text-red-500 text-xs">{errors.phone.message}</span>}
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-sm font-medium text-gray-700">Street</label>
+                                    <label className="text-sm font-medium text-gray-700">{t('checkout.street')}</label>
                                     <input {...register('street')} className="w-full p-2 border rounded-lg focus:ring-primary focus:border-primary" />
                                     {errors.street && <span className="text-red-500 text-xs">{errors.street.message}</span>}
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-sm font-medium text-gray-700">City</label>
+                                    <label className="text-sm font-medium text-gray-700">{t('checkout.city')}</label>
                                     <input {...register('city')} className="w-full p-2 border rounded-lg focus:ring-primary focus:border-primary" />
                                     {errors.city && <span className="text-red-500 text-xs">{errors.city.message}</span>}
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-sm font-medium text-gray-700">State</label>
+                                    <label className="text-sm font-medium text-gray-700">{t('checkout.state')}</label>
                                     <input {...register('state')} className="w-full p-2 border rounded-lg focus:ring-primary focus:border-primary" />
                                     {errors.state && <span className="text-red-500 text-xs">{errors.state.message}</span>}
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-sm font-medium text-gray-700">Postal Code</label>
+                                    <label className="text-sm font-medium text-gray-700">{t('checkout.postal_code')}</label>
                                     <input {...register('postalCode')} className="w-full p-2 border rounded-lg focus:ring-primary focus:border-primary" />
                                     {errors.postalCode && <span className="text-red-500 text-xs">{errors.postalCode.message}</span>}
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-sm font-medium text-gray-700">Country</label>
+                                    <label className="text-sm font-medium text-gray-700">{t('checkout.country')}</label>
                                     <input {...register('country')} className="w-full p-2 border rounded-lg focus:ring-primary focus:border-primary" />
                                     {errors.country && <span className="text-red-500 text-xs">{errors.country.message}</span>}
                                 </div>
@@ -240,7 +242,7 @@ const Checkout = () => {
 
                         {/* Payment Method */}
                         <div className="bg-white p-6 rounded-xl shadow-sm">
-                             <h2 className="text-lg font-bold text-gray-900 mb-4">Payment Method</h2>
+                             <h2 className="text-lg font-bold text-gray-900 mb-4">{t('checkout.payment_method')}</h2>
                              <div className="space-y-3">
                                 <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-colors ${paymentMethod === 'prepaid' ? 'border-primary bg-primary/5' : 'hover:bg-gray-50'}`}>
                                     <input 
@@ -253,7 +255,7 @@ const Checkout = () => {
                                     />
                                     <div className="ml-3 flex items-center gap-2">
                                         <CreditCard className="h-5 w-5 text-gray-600" />
-                                        <span className="font-medium text-gray-900">Pay Online (Razorpay)</span>
+                                        <span className="font-medium text-gray-900">{t('checkout.pay_online')}</span>
                                     </div>
                                 </label>
                                 <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-colors ${paymentMethod === 'cod' ? 'border-primary bg-primary/5' : 'hover:bg-gray-50'}`}>
@@ -267,7 +269,7 @@ const Checkout = () => {
                                     />
                                     <div className="ml-3 flex items-center gap-2">
                                         <Banknote className="h-5 w-5 text-gray-600" />
-                                        <span className="font-medium text-gray-900">Cash on Delivery</span>
+                                        <span className="font-medium text-gray-900">{t('checkout.cod')}</span>
                                     </div>
                                 </label>
                              </div>
@@ -277,45 +279,45 @@ const Checkout = () => {
                     {/* Order Summary */}
                     <div className="lg:col-span-1">
                         <div className="bg-white p-6 rounded-xl shadow-sm sticky top-24">
-                            <h2 className="text-lg font-bold text-gray-900 mb-4">Summary</h2>
+                            <h2 className="text-lg font-bold text-gray-900 mb-4">{t('checkout.summary')}</h2>
                             
                             {/* Coupon */}
                             <div className="mb-6">
                                 <div className="flex gap-2">
                                     <input 
                                         type="text" 
-                                        placeholder="Coupon Code" 
+                                        placeholder={t('checkout.coupon_code')}
                                         value={couponCode}
                                         onChange={(e) => setCouponCode(e.target.value)}
                                         className="flex-1 p-2 border rounded-lg text-sm"
                                         disabled={!!coupon}
                                     />
                                     {coupon ? (
-                                        <button onClick={removeCoupon} className="px-3 py-2 bg-red-100 text-red-600 rounded-lg text-sm font-medium">Remove</button>
+                                        <button onClick={removeCoupon} className="px-3 py-2 bg-red-100 text-red-600 rounded-lg text-sm font-medium">{t('checkout.remove')}</button>
                                     ) : (
-                                        <button onClick={handleApplyCoupon} className="px-3 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium">Apply</button>
+                                        <button onClick={handleApplyCoupon} className="px-3 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium">{t('checkout.apply')}</button>
                                     )}
                                 </div>
-                                {coupon && <p className="text-green-600 text-xs mt-1">Coupon applied successfully!</p>}
+                                {coupon && <p className="text-green-600 text-xs mt-1">{t('checkout.coupon_applied')}</p>}
                             </div>
 
                             <div className="space-y-3 mb-6">
                                 <div className="flex justify-between text-gray-600">
-                                    <span>Subtotal</span>
+                                    <span>{t('cart.subtotal')}</span>
                                     <span>₹{calculatedSubtotal}</span>
                                 </div>
                                 {coupon && (
                                     <div className="flex justify-between text-green-600">
-                                        <span>Discount</span>
+                                        <span>{t('checkout.discount')}</span>
                                         <span>-₹{calculatedDiscount}</span>
                                     </div>
                                 )}
                                 <div className="flex justify-between text-gray-600">
-                                    <span>Shipping</span>
-                                    <span className="text-green-600">Free</span>
+                                    <span>{t('cart.shipping')}</span>
+                                    <span className="text-green-600">{t('cart.free')}</span>
                                 </div>
                                 <div className="border-t pt-3 flex justify-between font-bold text-lg text-gray-900">
-                                    <span>Total</span>
+                                    <span>{t('cart.total')}</span>
                                     <span>₹{finalTotal}</span>
                                 </div>
                             </div>
@@ -326,7 +328,7 @@ const Checkout = () => {
                                 disabled={isProcessing}
                                 className="w-full bg-primary hover:bg-orange-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                             >
-                                {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : (paymentMethod === 'cod' ? 'Place Order' : 'Pay Now')}
+                                {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : (paymentMethod === 'cod' ? t('checkout.place_order') : t('checkout.pay_now'))}
                             </button>
                         </div>
                     </div>

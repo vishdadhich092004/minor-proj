@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDataStore } from '../store/useDataStore';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
@@ -8,6 +9,7 @@ import ProductCard from '../components/ProductCard';
 import { Loader2 } from 'lucide-react';
 
 const Home = () => {
+    const { t } = useTranslation();
     const { 
         products, 
         categories, 
@@ -32,6 +34,7 @@ const Home = () => {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <span className="ml-2 text-primary">{t('common.loading')}</span>
             </div>
         );
     }
@@ -39,8 +42,8 @@ const Home = () => {
     if (error) {
         return (
              <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
-                <p className="text-red-500 mb-4">Error loading data: {error}</p>
-                <button onClick={() => fetchAll()} className="px-4 py-2 bg-primary text-white rounded-lg">Retry</button>
+                <p className="text-red-500 mb-4">{t('common.error')}: {error}</p>
+                <button onClick={() => fetchAll()} className="px-4 py-2 bg-primary text-white rounded-lg">{t('common.retry')}</button>
             </div>
         );
     }
@@ -53,9 +56,9 @@ const Home = () => {
                 {/* Welcome Section */}
                 <div>
                      <h1 className="text-2xl font-bold text-gray-900">
-                        Hello, {user ? user.name.split(' ')[0] : 'Guest'}!
+                        {t('home.hello')}, {user ? user.name.split(' ')[0] : t('home.guest')}!
                      </h1>
-                     <p className="text-gray-500">Let's get something...</p>
+                     <p className="text-gray-500">{t('home.subtitle')}</p>
                 </div>
 
                 {/* Posters */}
@@ -64,8 +67,8 @@ const Home = () => {
                 {/* Categories */}
                 <section>
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-bold text-gray-800">Top Categories</h2>
-                        <button className="text-sm text-primary font-medium hover:underline">See All</button>
+                        <h2 className="text-lg font-bold text-gray-800">{t('home.top_categories')}</h2>
+                        <button className="text-sm text-primary font-medium hover:underline">{t('home.see_all')}</button>
                     </div>
                     <CategorySelector 
                         categories={categories} 
@@ -77,7 +80,7 @@ const Home = () => {
                 {/* Products Grid */}
                 <section>
                      <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-bold text-gray-800">All Products</h2>
+                        <h2 className="text-lg font-bold text-gray-800">{t('home.all_products')}</h2>
                      </div>
                      
                      {filteredProducts.length > 0 ? (
@@ -88,7 +91,7 @@ const Home = () => {
                         </div>
                      ) : (
                          <div className="text-center py-10 text-gray-500">
-                             No products found in this category.
+                             {t('home.no_products')}
                          </div>
                      )}
                 </section>

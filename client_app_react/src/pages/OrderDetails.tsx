@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useOrderStore } from '../store/useOrderStore';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
@@ -8,6 +9,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 const OrderDetails = () => {
+    const { t } = useTranslation();
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -49,8 +51,8 @@ const OrderDetails = () => {
                          <Loader2 className="h-8 w-8 animate-spin text-primary" />
                      ) : (
                         <>
-                            <p>Order not found.</p>
-                            <button onClick={() => navigate('/orders')} className="mt-4 text-primary">Go to My Orders</button>
+                            <p>{t('order_details.not_found')}</p>
+                            <button onClick={() => navigate('/orders')} className="mt-4 text-primary">{t('order_details.go_to_orders')}</button>
                         </>
                      )}
                 </div>
@@ -110,16 +112,16 @@ const OrderDetails = () => {
                     onClick={() => navigate('/orders')} 
                     className="flex items-center text-gray-600 hover:text-primary mb-6"
                 >
-                    <ArrowLeft className="h-5 w-5 mr-1" /> Back to Orders
+                    <ArrowLeft className="h-5 w-5 mr-1" /> {t('order_details.back_to_orders')}
                 </button>
                 
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900">Order Details</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">{t('order_details.title')}</h1>
                     <button 
                         onClick={downloadInvoice}
                         className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                     >
-                        <Printer className="h-4 w-4" /> Download Invoice
+                        <Printer className="h-4 w-4" /> {t('order_details.download_invoice')}
                     </button>
                 </div>
 
@@ -127,18 +129,18 @@ const OrderDetails = () => {
                     <div className="p-6 border-b border-gray-100">
                         <div className="flex flex-col sm:flex-row justify-between mb-4">
                             <div>
-                                <p className="text-sm text-gray-500">Order placed on</p>
+                                <p className="text-sm text-gray-500">{t('order_details.placed_on')}</p>
                                 <p className="font-medium text-gray-900">{new Date(order.orderDate || order.createdAt).toLocaleDateString()}</p>
                             </div>
                             <div className="mt-4 sm:mt-0">
-                                <p className="text-sm text-gray-500">Order ID</p>
+                                <p className="text-sm text-gray-500">{t('orders.order_id')}</p>
                                 <p className="font-medium text-gray-900">#{order._id.slice(-6).toUpperCase()}</p>
                             </div>
                         </div>
                     </div>
 
                     <div className="p-6">
-                        <h3 className="text-lg font-medium text-gray-900 mb-4">Items</h3>
+                        <h3 className="text-lg font-medium text-gray-900 mb-4">{t('order_details.items')}</h3>
                         <div className="space-y-4">
                             {order.items.map((item, idx) => (
                                 <div key={idx} className="flex justify-between items-center border-b border-gray-50 pb-4 last:border-0 last:pb-0">
@@ -158,22 +160,22 @@ const OrderDetails = () => {
                     </div>
 
                     <div className="bg-gray-50 p-6">
-                        <h3 className="text-lg font-medium text-gray-900 mb-4">Order Summary</h3>
+                        <h3 className="text-lg font-medium text-gray-900 mb-4">{t('order_details.summary')}</h3>
                         <div className="space-y-2 text-sm">
                             <div className="flex justify-between text-gray-600">
-                                <span>Subtotal</span>
+                                <span>{t('order_details.subtotal')}</span>
                                 <span>₹{order.orderTotal.subtotal}</span>
                             </div>
                              <div className="flex justify-between text-gray-600">
-                                <span>Discount</span>
+                                <span>{t('order_details.discount')}</span>
                                 <span className="text-green-600">-₹{order.orderTotal.discount}</span>
                             </div>
                              <div className="flex justify-between text-gray-600">
-                                <span>Shipping</span>
-                                <span>Free</span>
+                                <span>{t('order_details.shipping')}</span>
+                                <span>{t('order_details.free')}</span>
                             </div>
                             <div className="flex justify-between text-gray-900 font-bold text-base pt-2 border-t border-gray-200">
-                                <span>Total</span>
+                                <span>{t('order_details.total')}</span>
                                 <span>₹{order.orderTotal.total}</span>
                             </div>
                         </div>

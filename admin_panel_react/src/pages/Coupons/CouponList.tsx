@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCoupons } from '../../hooks/useCoupons';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import Button from '../../components/common/Button';
 
 const CouponList: React.FC = () => {
+    const { t } = useTranslation();
     const { coupons, loading, error, deleteCoupon } = useCoupons();
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -12,16 +14,16 @@ const CouponList: React.FC = () => {
         c.couponCode.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) return <div className="p-10 text-center">Loading coupons...</div>;
-    if (error) return <div className="p-10 text-center text-red-600">Error: {error}</div>;
+    if (loading) return <div className="p-10 text-center">{t('coupons.loading')}</div>;
+    if (error) return <div className="p-10 text-center text-red-600">{t('common.error')}: {error}</div>;
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Coupons</h1>
+                <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{t('coupons.title')}</h1>
                 <Link to="/coupons/new">
                     <Button>
-                        <Plus className="mr-2 h-4 w-4" /> Add Coupon
+                        <Plus className="mr-2 h-4 w-4" /> {t('coupons.add_new')}
                     </Button>
                 </Link>
             </div>
@@ -30,7 +32,7 @@ const CouponList: React.FC = () => {
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                     <input 
                         type="text" 
-                        placeholder="Search coupons..." 
+                        placeholder={t('coupons.search_placeholder')} 
                         className="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
@@ -40,11 +42,11 @@ const CouponList: React.FC = () => {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Code</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('coupons.table.code')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('coupons.table.type')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('coupons.table.amount')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('coupons.table.status')}</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('coupons.table.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -76,7 +78,7 @@ const CouponList: React.FC = () => {
                             ))}
                              {filteredCoupons.length === 0 && (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">No coupons found</td>
+                                    <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">{t('coupons.no_coupons')}</td>
                                 </tr>
                             )}
                         </tbody>

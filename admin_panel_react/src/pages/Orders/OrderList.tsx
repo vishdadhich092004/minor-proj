@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useOrders } from '../../hooks/useOrders';
 import { Eye, Trash2, Search, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -6,6 +7,7 @@ import Select from '../../components/common/Select';
 
 
 const OrderList: React.FC = () => {
+    const { t } = useTranslation();
     const { orders, loading, error, deleteOrder } = useOrders();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -28,12 +30,12 @@ const OrderList: React.FC = () => {
         }
     };
 
-    if (loading) return <div className="p-10 text-center">Loading orders...</div>;
-    if (error) return <div className="p-10 text-center text-red-600">Error: {error}</div>;
+    if (loading) return <div className="p-10 text-center">{t('common.loading')}</div>;
+    if (error) return <div className="p-10 text-center text-red-600">{t('common.error')}: {error}</div>;
 
     return (
         <div className="space-y-6">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Orders</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{t('orders_page.title')}</h1>
 
             <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row gap-4 justify-between items-center">
@@ -43,7 +45,7 @@ const OrderList: React.FC = () => {
                         </div>
                         <input 
                             type="text" 
-                            placeholder="Search order ID or user..." 
+                            placeholder={t('orders_page.search_placeholder')} 
                             className="w-full pl-10 pr-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
@@ -54,12 +56,12 @@ const OrderList: React.FC = () => {
                         <Filter className="h-5 w-5 text-gray-500" />
                         <Select 
                             options={[
-                                { label: 'All Status', value: 'all' },
-                                { label: 'Pending', value: 'pending' },
-                                { label: 'Processing', value: 'processing' },
-                                { label: 'Shipped', value: 'shipped' },
-                                { label: 'Delivered', value: 'delivered' },
-                                { label: 'Cancelled', value: 'cancelled' },
+                                { label: t('orders_page.filter_status_label'), value: 'all' },
+                                { label: t('status.pending'), value: 'pending' },
+                                { label: t('status.processing'), value: 'processing' },
+                                { label: t('status.shipped'), value: 'shipped' },
+                                { label: t('status.delivered'), value: 'delivered' },
+                                { label: t('status.cancelled'), value: 'cancelled' },
                             ]}
                             value={statusFilter}
                             onChange={e => setStatusFilter(e.target.value)}
@@ -72,12 +74,12 @@ const OrderList: React.FC = () => {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Order ID</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Customer</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('orders_page.table.order_id')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('orders_page.table.customer')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('orders_page.table.total')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('orders_page.table.status')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('orders_page.table.date')}</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('orders_page.table.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -112,7 +114,7 @@ const OrderList: React.FC = () => {
                             ))}
                              {filteredOrders.length === 0 && (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">No orders found</td>
+                                    <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">{t('orders_page.no_orders')}</td>
                                 </tr>
                             )}
                         </tbody>

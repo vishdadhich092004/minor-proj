@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, User, Search, Menu, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { useCartStore } from '../store/useCartStore';
 
 const Navbar = () => {
+    const { t, i18n } = useTranslation();
     const { user, logout } = useAuth();
     const cartItems = useCartStore((state) => state.items);
     const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -36,13 +38,22 @@ const Navbar = () => {
                         </div>
                         <input
                             type="text"
-                            placeholder="Search products..."
+                            placeholder={t('common.search')}
                             className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm"
                         />
                     </div>
 
                     {/* Right Actions */}
                     <div className="flex items-center gap-4">
+                        <select
+                            className="p-2 rounded-md border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                            onChange={(e) => i18n.changeLanguage(e.target.value)}
+                            value={i18n.language}
+                        >
+                            <option value="en">Eng</option>
+                            <option value="hi">हिं</option>
+                            <option value="bn">বাং</option>
+                        </select>
                         <Link to="/cart" className="p-2 text-gray-500 hover:text-primary relative">
                             <ShoppingBag className="h-6 w-6" />
                             {cartCount > 0 && (
@@ -82,14 +93,14 @@ const Navbar = () => {
                                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                 onClick={() => setIsProfileOpen(false)}
                                             >
-                                                Your Profile
+                                                {t('common.your_profile')}
                                             </Link>
                                             <Link 
                                                 to="/orders" 
                                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                 onClick={() => setIsProfileOpen(false)}
                                             >
-                                                Orders
+                                                {t('common.orders')}
                                             </Link>
                                             <button 
                                                 onClick={() => {
@@ -98,7 +109,7 @@ const Navbar = () => {
                                                 }}
                                                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                             >
-                                                Sign out
+                                                {t('common.sign_out')}
                                             </button>
                                         </div>
                                     </>
@@ -107,7 +118,7 @@ const Navbar = () => {
                         ) : (
                             <Link to="/login" className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary">
                                 <User className="h-6 w-6" />
-                                <span className="hidden md:block">Login</span>
+                                <span className="hidden md:block">{t('common.login')}</span>
                             </Link>
                         )}
                     </div>
@@ -121,7 +132,7 @@ const Navbar = () => {
                         </div>
                         <input
                             type="text"
-                            placeholder="Search..."
+                            placeholder={t('common.search')}
                             className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary text-sm"
                         />
                     </div>
@@ -167,14 +178,14 @@ const Navbar = () => {
                                             className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-gray-700 font-medium"
                                             onClick={() => setIsSidebarOpen(false)}
                                         >
-                                            Profile
+                                            {t('common.profile')}
                                         </Link>
                                         <Link 
                                             to="/orders" 
                                             className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-gray-700 font-medium"
                                             onClick={() => setIsSidebarOpen(false)}
                                         >
-                                            My Orders
+                                            {t('common.my_orders')}
                                         </Link>
                                     </nav>
                                 </div>
@@ -184,13 +195,13 @@ const Navbar = () => {
                                     className="block w-full text-center px-4 py-2 border border-primary text-primary rounded-lg font-bold hover:bg-primary hover:text-white transition-colors"
                                     onClick={() => setIsSidebarOpen(false)}
                                 >
-                                    Login / Sign Up
+                                    {t('common.login_signup')}
                                 </Link>
                             )}
 
                             <div>
                                 <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                                    Shop
+                                    {t('common.shop')}
                                 </h3>
                                 <div className="space-y-1">
                                     <Link 
@@ -198,14 +209,14 @@ const Navbar = () => {
                                         className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-gray-700 font-medium"
                                         onClick={() => setIsSidebarOpen(false)}
                                     >
-                                        All Products
+                                        {t('common.all_products')}
                                     </Link>
                                     <Link 
                                         to="/cart" 
                                         className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-gray-700 font-medium"
                                         onClick={() => setIsSidebarOpen(false)}
                                     >
-                                        Cart ({cartCount})
+                                        {t('common.cart')} ({cartCount})
                                     </Link>
                                 </div>
                             </div>
@@ -220,7 +231,7 @@ const Navbar = () => {
                                     }}
                                     className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50"
                                 >
-                                    Sign out
+                                    {t('common.sign_out')}
                                 </button>
                             </div>
                         )}

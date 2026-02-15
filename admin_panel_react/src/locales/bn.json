@@ -1,0 +1,348 @@
+{
+    "common": {
+        "dashboard": "ড্যাশবোর্ড",
+        "orders": "অর্ডার",
+        "products": "পণ্য",
+        "users": "ব্যবহারকারী",
+        "settings": "সেটিংস",
+        "logout": "লগ আউট",
+        "welcome": "স্বাগতম",
+        "language": "ভাষা",
+        "english": "ইংরেজি",
+        "hindi": "হিন্দি",
+        "bengali": "বাংলা",
+        "loading": "লোড হচ্ছে...",
+        "error": "ত্রুটি",
+        "retry": "আবার চেষ্টা করুন",
+        "save": "সেভ করুন",
+        "delete": "মুছুন",
+        "edit": "সম্পাদনা করুন",
+        "cancel": "বাতিল করুন",
+        "confirm": "নিশ্চিত করুন",
+        "back": "ফিরে যান",
+        "submit": "জমা দিন"
+    },
+    "login": {
+        "welcome": "স্বাগতম",
+        "subtitle": "আপনার অ্যাডমিন অ্যাকাউন্টে সাইন ইন করুন",
+        "email": "ইমেল ঠিকানা",
+        "password": "পাসওয়ার্ড",
+        "sign_in": "সাইন ইন করুন",
+        "signing_in": "সাইন ইন হচ্ছে...",
+        "email_label": "ইমেল ঠিকানা",
+        "failed": "লগইন ব্যর্থ হয়েছে",
+        "unexpected_error": "একটি অপ্রত্যাশিত ত্রুটি ঘটেছে। আবার চেষ্টা করুন."
+    },
+    "products": {
+        "title": "পণ্য",
+        "add_new": "পণ্য যোগ করুন",
+        "edit_title": "পণ্য সম্পাদনা করুন",
+        "add_title": "নতুন পণ্য যোগ করুন",
+        "back_to_list": "পণ্যের তালিকায় ফিরে যান",
+        "search_placeholder": "পণ্য অনুসন্ধান করুন...",
+        "loading": "পণ্য লোড হচ্ছে...",
+        "form_loading": "ফর্ম ডেটা লোড হচ্ছে...",
+        "no_products": "কোন পণ্য পাওয়া যায়নি",
+        "table": {
+            "product": "পণ্য",
+            "category": "বিভাগ",
+            "price": "দাম",
+            "qty": "পরিমাণ",
+            "actions": "ক্রিয়া"
+        },
+        "form": {
+            "images_label": "পণ্যের ছবি (৫টি পর্যন্ত)",
+            "name": "পণ্যের নাম",
+            "description": "বিবরণ",
+            "price": "দাম",
+            "offer_price": "অফার দাম",
+            "quantity": "পরিমাণ",
+            "category": "বিভাগ",
+            "sub_category": "উপ বিভাগ",
+            "brand": "ব্র্যান্ড",
+            "variant_type": "ভেরিয়েন্ট টাইপ",
+            "variants": "ভেরিয়েন্ট",
+            "select_variant_hint": "বিকল্প দেখতে একটি ভেরিয়েন্ট টাইপ নির্বাচন করুন",
+            "update_btn": "পণ্য আপডেট করুন",
+            "create_btn": "পণ্য তৈরি করুন"
+        }
+    },
+    "categories": {
+        "title": "বিভাগ",
+        "add_new": "বিভাগ যোগ করুন",
+        "edit_title": "বিভাগ সম্পাদনা করুন",
+        "add_title": "নতুন বিভাগ যোগ করুন",
+        "back_to_list": "বিভাগে ফিরে যান",
+        "search_placeholder": "বিভাগ অনুসন্ধান করুন...",
+        "loading": "বিভাগ লোড হচ্ছে...",
+        "no_categories": "কোন বিভাগ পাওয়া যায়নি",
+        "table": {
+            "image": "ছবি",
+            "name": "নাম",
+            "actions": "ক্রিয়া"
+        },
+        "form": {
+            "image_label": "বিভাগের ছবি",
+            "name_label": "বিভাগের নাম",
+            "change_image": "পরিবর্তন করুন",
+            "remove_image": "মুছুন",
+            "no_image": "কোন ছবি নেই",
+            "update_btn": "বিভাগ আপডেট করুন",
+            "create_btn": "বিভাগ তৈরি করুন"
+        }
+    },
+    "sub_categories": {
+        "title": "উপ-বিভাগ",
+        "add_new": "উপ-বিভাগ যোগ করুন",
+        "edit_title": "উপ-বিভাগ সম্পাদনা করুন",
+        "add_title": "নতুন উপ-বিভাগ যোগ করুন",
+        "back_to_list": "উপ-বিভাগে ফিরে যান",
+        "search_placeholder": "উপ-বিভাগ অনুসন্ধান করুন...",
+        "loading": "উপ-বিভাগ লোড হচ্ছে...",
+        "no_sub_categories": "কোন উপ-বিভাগ পাওয়া যায়নি",
+        "table": {
+            "name": "নাম",
+            "parent_category": "মূল বিভাগ",
+            "actions": "ক্রিয়া"
+        },
+        "form": {
+            "name_label": "উপ-বিভাগের নাম",
+            "parent_label": "মূল বিভাগ",
+            "update_btn": "উপ-বিভাগ আপডেট করুন",
+            "create_btn": "উপ-বিভাগ তৈরি করুন"
+        }
+    },
+    "status": {
+        "pending": "অপেক্ষমাণ",
+        "processing": "প্রক্রিয়াকরণ",
+        "shipped": "শিপ করা হয়েছে",
+        "delivered": "বিতরণ করা হয়েছে",
+        "cancelled": "বাতিল"
+    },
+    "dashboard": {
+        "overview": "ড্যাশবোর্ড ওভারভিউ",
+        "stats": {
+            "all_products": "সব পণ্য",
+            "out_of_stock": "স্টক শেষ",
+            "limited_stock": "সীমিত স্টক",
+            "other_stock": "অন্যান্য স্টক"
+        },
+        "chart": {
+            "orders_overview": "অর্ডার ওভারভিউ",
+            "total_orders": "মোট অর্ডার"
+        },
+        "recent_orders": {
+            "title": "সাম্প্রতিক অর্ডার",
+            "order_id": "অর্ডার আইডি",
+            "customer": "গ্রাহক",
+            "total": "মোট",
+            "status": "অবস্থা",
+            "no_orders": "কোন সাম্প্রতিক অর্ডার নেই"
+        }
+    },
+    "brands": {
+        "title": "ব্র্যান্ড",
+        "add_new": "ব্র্যান্ড যোগ করুন",
+        "edit_title": "ব্র্যান্ড সম্পাদনা করুন",
+        "add_title": "নতুন ব্র্যান্ড যোগ করুন",
+        "back_to_list": "ব্র্যান্ডে ফিরে যান",
+        "search_placeholder": "ব্র্যান্ড অনুসন্ধান করুন...",
+        "loading": "ব্র্যান্ড লোড হচ্ছে...",
+        "no_brands": "কোন ব্র্যান্ড পাওয়া যায়নি",
+        "table": {
+            "name": "নাম",
+            "sub_category": "উপ-বিভাগ",
+            "actions": "ক্রিয়া"
+        },
+        "form": {
+            "name_label": "ব্র্যান্ডের নাম",
+            "sub_category_label": "উপ-বিভাগ",
+            "update_btn": "ব্র্যান্ড আপডেট করুন",
+            "create_btn": "ব্র্যান্ড তৈরি করুন"
+        }
+    },
+    "coupons": {
+        "title": "কুপন",
+        "add_new": "কুপন যোগ করুন",
+        "edit_title": "কুপন সম্পাদনা করুন",
+        "add_title": "নতুন কুপন যোগ করুন",
+        "back_to_list": "কুপনে ফিরে যান",
+        "search_placeholder": "কুপন অনুসন্ধান করুন...",
+        "loading": "কুপন লোড হচ্ছে...",
+        "no_coupons": "কোন কুপন পাওয়া যায়নি",
+        "table": {
+            "code": "কোড",
+            "type": "ধরণ",
+            "amount": "পরিমাণ",
+            "status": "অবস্থা",
+            "actions": "ক্রিয়া"
+        },
+        "form": {
+            "code_label": "কুপন কোড",
+            "type_label": "ছাড়ের ধরণ",
+            "amount_label": "ছাড়ের পরিমাণ",
+            "min_purchase_label": "ন্যূনতম ক্রয়ের পরিমাণ",
+            "end_date_label": "শেষ তারিখ",
+            "status_label": "অবস্থা",
+            "applicability_title": "প্রযোজ্যতা (ঐচ্ছিক)",
+            "applicable_category_label": "প্রযোজ্য বিভাগ",
+            "applicable_sub_category_label": "প্রযোজ্য উপ-বিভাগ",
+            "applicable_product_label": "প্রযোজ্য পণ্য",
+            "none_option": "কিছুই না",
+            "update_btn": "কুপন আপডেট করুন",
+            "create_btn": "কুপন তৈরি করুন"
+        },
+        "type": {
+            "fixed": "নির্দিষ্ট",
+            "percentage": "শতাংশ"
+        },
+        "status": {
+            "active": "সক্রিয়",
+            "inactive": "নিষ্ক্রিয়"
+        }
+    },
+    "orders_page": {
+        "title": "অর্ডার",
+        "search_placeholder": "অর্ডার আইডি বা ব্যবহারকারী অনুসন্ধান করুন...",
+        "filter_status_label": "সব অবস্থা",
+        "status_all": "সব অবস্থা",
+        "table": {
+            "order_id": "অর্ডার আইডি",
+            "customer": "গ্রাহক",
+            "total": "মোট",
+            "status": "অবস্থা",
+            "date": "তারিখ",
+            "actions": "ক্রিয়া"
+        },
+        "details": {
+            "title": "অর্ডার বিবরণ",
+            "back_to_list": "অর্ডারে ফিরে যান",
+            "items_title": "অর্ডার আইটেম",
+            "total_amount": "মোট পরিমাণ",
+            "status_title": "অর্ডারের অবস্থা",
+            "update_status_label": "অবস্থা আপডেট করুন",
+            "tracking_url_label": "ট্র্যাকিং ইউআরএল",
+            "update_btn": "অর্ডার আপডেট করুন",
+            "customer_title": "গ্রাহক",
+            "shipping_address_title": "শিপিং ঠিকানা",
+            "loading": "অর্ডার বিবরণ লোড হচ্ছে...",
+            "not_found": "অর্ডার পাওয়া যায়নি",
+            "success_msg": "অর্ডার সফলভাবে আপডেট করা হয়েছে"
+        },
+        "no_orders": "কোন অর্ডার পাওয়া যায়নি"
+    },
+    "users_page": {
+        "title": "ব্যবহারকারী",
+        "search_placeholder": "ব্যবহারকারী অনুসন্ধান করুন...",
+        "loading": "ব্যবহারকারী লোড হচ্ছে...",
+        "no_users": "কোন ব্যবহারকারী পাওয়া যায়নি",
+        "table": {
+            "name": "নাম",
+            "email": "ইমেল",
+            "phone": "ফোন",
+            "actions": "ক্রিয়া"
+        }
+    },
+    "notifications_page": {
+        "title": "বিজ্ঞপ্তি",
+        "send_new": "বিজ্ঞপ্তি পাঠান",
+        "search_placeholder": "বিজ্ঞপ্তি অনুসন্ধান করুন...",
+        "loading": "বিজ্ঞপ্তি লোড হচ্ছে...",
+        "no_notifications": "কোন বিজ্ঞপ্তি পাওয়া যায়নি",
+        "table": {
+            "title": "শিরোনাম",
+            "description": "বিবরণ",
+            "actions": "ক্রিয়া"
+        },
+        "form": {
+            "title": "বিজ্ঞপ্তি পাঠান",
+            "back_to_list": "বিজ্ঞপ্তিতে ফিরে যান",
+            "title_label": "শিরোনাম",
+            "description_label": "বিবরণ",
+            "image_url_label": "ছবির ইউআরএল (ঐচ্ছিক)",
+            "send_btn": "বিজ্ঞপ্তি পাঠান",
+            "success_msg": "বিজ্ঞপ্তি সফলভাবে পাঠানো হয়েছে"
+        }
+    },
+    "variant_types": {
+        "title": "ভেরিয়েন্ট প্রকার",
+        "add_new": "ভেরিয়েন্ট প্রকার যোগ করুন",
+        "edit_title": "ভেরিয়েন্ট প্রকার সম্পাদনা করুন",
+        "add_title": "নতুন ভেরিয়েন্ট প্রকার যোগ করুন",
+        "back_to_list": "ভেরিয়েন্ট প্রকারে ফিরে যান",
+        "search_placeholder": "ভেরিয়েন্ট প্রকার অনুসন্ধান করুন...",
+        "loading": "ভেরিয়েন্ট প্রকার লোড হচ্ছে...",
+        "no_types": "কোন ভেরিয়েন্ট প্রকার পাওয়া যায়নি",
+        "table": {
+            "name": "নাম",
+            "type": "প্রকার",
+            "actions": "ক্রিয়া"
+        },
+        "form": {
+            "name_label": "ভেরিয়েন্ট নাম (উদাঃ রঙ)",
+            "type_label": "ভেরিয়েন্ট প্রকার (উদাঃ color)",
+            "update_btn": "ভেরিয়েন্ট প্রকার আপডেট করুন",
+            "create_btn": "ভেরিয়েন্ট প্রকার তৈরি করুন"
+        }
+    },
+    "variants": {
+        "title": "ভেরিয়েন্ট",
+        "add_new": "ভেরিয়েন্ট যোগ করুন",
+        "edit_title": "ভেরিয়েন্ট সম্পাদনা করুন",
+        "add_title": "নতুন ভেরিয়েন্ট যোগ করুন",
+        "back_to_list": "ভেরিয়েন্টে ফিরে যান",
+        "search_placeholder": "ভেরিয়েন্ট অনুসন্ধান করুন...",
+        "filter_type_label": "সব প্রকার",
+        "loading": "ভেরিয়েন্ট লোড হচ্ছে...",
+        "no_variants": "কোন ভেরিয়েন্ট পাওয়া যায়নি",
+        "table": {
+            "value": "ভেরিয়েন্ট মান",
+            "type": "ভেরিয়েন্ট প্রকার",
+            "actions": "ক্রিয়া"
+        },
+        "form": {
+            "value_label": "ভেরিয়েন্ট মান (উদাঃ লাল, XL)",
+            "type_label": "ভেরিয়েন্ট প্রকার",
+            "update_btn": "ভেরিয়েন্ট আপডেট করুন",
+            "create_btn": "ভেরিয়েন্ট তৈরি করুন"
+        }
+    },
+    "posters": {
+        "title": "পোস্টার",
+        "add_new": "পোস্টার যোগ করুন",
+        "edit_title": "পোস্টার সম্পাদনা করুন",
+        "add_title": "নতুন পোস্টার যোগ করুন",
+        "back_to_list": "পোস্টারে ফিরে যান",
+        "search_placeholder": "পোস্টার অনুসন্ধান করুন...",
+        "loading": "পোস্টার লোড হচ্ছে...",
+        "no_posters": "কোন পোস্টার পাওয়া যায়নি",
+        "table": {
+            "image": "ছবি",
+            "name": "নাম",
+            "actions": "ক্রিয়া"
+        },
+        "form": {
+            "name_label": "পোস্টারের নাম",
+            "image_label": "পোস্টার ছবি",
+            "upload_hint": "আপলোড করতে ক্লিক করুন",
+            "upload_subhint": "PNG, JPG বা WEBP",
+            "update_btn": "পোস্টার আপডেট করুন",
+            "create_btn": "পোস্টার তৈরি করুন"
+        }
+    },
+    "sidebar": {
+        "dashboard": "ড্যাশবোর্ড",
+        "orders": "অর্ডার",
+        "products": "পণ্য",
+        "categories": "বিভাগ",
+        "sub_categories": "উপ-বিভাগ",
+        "brands": "ব্র্যান্ড",
+        "variant_types": "ভেরিয়েন্ট ধরণ",
+        "variants": "ভেরিয়েন্ট",
+        "coupons": "কুপন",
+        "posters": "পোস্টার",
+        "notifications": "বিজ্ঞপ্তি",
+        "users": "ব্যবহারকারী",
+        "settings": "সেটিংস"
+    }
+}

@@ -1,9 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useCartStore } from '../store/useCartStore';
 import Navbar from '../components/Navbar';
 import { Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 
 const Cart = () => {
+    const { t } = useTranslation();
     const { items, updateQuantity, removeFromCart, getSubtotal } = useCartStore();
     const navigate = useNavigate();
     const subtotal = getSubtotal();
@@ -14,10 +16,10 @@ const Cart = () => {
                 <Navbar />
                 <div className="flex-1 flex flex-col items-center justify-center p-4">
                     <img src="/empty-cart.png" alt="Empty Cart" className="w-48 h-48 opacity-50 mb-4" onError={(e) => e.currentTarget.style.display = 'none'} />
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Your Cart is Empty</h2>
-                    <p className="text-gray-500 mb-6">Looks like you haven't added anything yet.</p>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('cart.empty_title')}</h2>
+                    <p className="text-gray-500 mb-6">{t('cart.empty_subtitle')}</p>
                     <Link to="/" className="px-6 py-3 bg-primary text-white rounded-xl font-bold hover:bg-orange-600 transition-colors">
-                        Start Shopping
+                        {t('cart.start_shopping')}
                     </Link>
                 </div>
             </div>
@@ -29,7 +31,7 @@ const Cart = () => {
             <Navbar />
             
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">My Cart</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('cart.title')}</h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Cart Items */}
@@ -42,7 +44,7 @@ const Cart = () => {
                                 <div className="flex-1 flex flex-col justify-between">
                                     <div>
                                         <h3 className="font-medium text-gray-900 line-clamp-1">{item.name}</h3>
-                                        {item.variant && <p className="text-sm text-gray-500">Variant: {item.variant}</p>}
+                                        {item.variant && <p className="text-sm text-gray-500">{t('cart.variant')}: {item.variant}</p>}
                                         <p className="font-bold text-primary mt-1">₹{item.price}</p>
                                     </div>
                                     <div className="flex justify-between items-center">
@@ -76,18 +78,18 @@ const Cart = () => {
                     {/* Summary */}
                     <div className="lg:col-span-1">
                         <div className="bg-white p-6 rounded-xl shadow-sm sticky top-24">
-                            <h2 className="text-lg font-bold text-gray-900 mb-4">Order Summary</h2>
+                            <h2 className="text-lg font-bold text-gray-900 mb-4">{t('cart.order_summary')}</h2>
                             <div className="space-y-3 mb-6">
                                 <div className="flex justify-between text-gray-600">
-                                    <span>Subtotal</span>
+                                    <span>{t('cart.subtotal')}</span>
                                     <span>₹{subtotal}</span>
                                 </div>
                                 <div className="flex justify-between text-gray-600">
-                                    <span>Shipping</span>
-                                    <span className="text-green-600">Free</span>
+                                    <span>{t('cart.shipping')}</span>
+                                    <span className="text-green-600">{t('cart.free')}</span>
                                 </div>
                                 <div className="border-t pt-3 flex justify-between font-bold text-lg text-gray-900">
-                                    <span>Total</span>
+                                    <span>{t('cart.total')}</span>
                                     <span>₹{subtotal}</span>
                                 </div>
                             </div>
@@ -95,7 +97,7 @@ const Cart = () => {
                                 onClick={() => navigate('/checkout')}
                                 className="w-full bg-primary hover:bg-orange-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
                             >
-                                Check Out <ArrowRight className="h-5 w-5" />
+                                {t('cart.checkout')} <ArrowRight className="h-5 w-5" />
                             </button>
                         </div>
                     </div>

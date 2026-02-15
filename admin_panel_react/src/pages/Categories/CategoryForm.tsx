@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCategories } from '../../hooks/useCategories';
 import { useNavigate, useParams } from 'react-router-dom';
 import Input from '../../components/common/Input';
@@ -6,6 +7,7 @@ import Button from '../../components/common/Button';
 import { ArrowLeft } from 'lucide-react';
 
 const CategoryForm: React.FC = () => {
+    const { t } = useTranslation();
     const { id } = useParams();
     const navigate = useNavigate();
     const { categories, submitCategory, loading: hooksLoading } = useCategories();
@@ -70,31 +72,31 @@ const CategoryForm: React.FC = () => {
         }
     };
 
-    if (hooksLoading && !categories.length) return <div className="p-10">Loading form data...</div>;
+    if (hooksLoading && !categories.length) return <div className="p-10">{t('categories.loading')}</div>;
 
     return (
         <div className="max-w-xl mx-auto pb-10">
             <button onClick={() => navigate('/categories')} className="mb-4 flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900">
-                <ArrowLeft className="h-4 w-4 mr-1" /> Back to Categories
+                <ArrowLeft className="h-4 w-4 mr-1" /> {t('categories.back_to_list')}
             </button>
             
             <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">{isEditMode ? 'Edit Category' : 'Add New Category'}</h1>
+                <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">{isEditMode ? t('categories.edit_title') : t('categories.add_title')}</h1>
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Image Section */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Category Image</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('categories.form.image_label')}</label>
                         <div className="flex items-center space-x-6">
                             <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-700 overflow-hidden">
                                 {imageUrl ? (
                                     <img src={imageUrl} alt="Category" className="w-full h-full object-cover" />
                                 ) : (
-                                    <span className="text-gray-400 text-xs">No Image</span>
+                                    <span className="text-gray-400 text-xs">{t('categories.form.no_image')}</span>
                                 )}
                             </div>
                             <label className="cursor-pointer bg-white px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600">
-                                <span>Change</span>
+                                <span>{t('categories.form.change_image')}</span>
                                 <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
                             </label>
                              {imageUrl && (
@@ -103,18 +105,19 @@ const CategoryForm: React.FC = () => {
                                     onClick={() => { setImageUrl(null); setImageFile(null); }}
                                     className="text-red-600 hover:text-red-900 text-sm"
                                 >
-                                    Remove
+                                    {t('categories.form.remove_image')}
                                 </button>
                             )}
                         </div>
                     </div>
 
-                    <Input label="Category Name" value={name} onChange={e => setName(e.target.value)} required />
+
+                    <Input label={t('categories.form.name_label')} value={name} onChange={e => setName(e.target.value)} required />
 
                     <div className="flex justify-end space-x-3 pt-4 border-t">
-                        <Button type="button" variant="secondary" onClick={() => navigate('/categories')}>Cancel</Button>
+                        <Button type="button" variant="secondary" onClick={() => navigate('/categories')}>{t('common.cancel')}</Button>
                         <Button type="submit" isLoading={loading}>
-                            {isEditMode ? 'Update Category' : 'Create Category'}
+                            {isEditMode ? t('categories.form.update_btn') : t('categories.form.create_btn')}
                         </Button>
                     </div>
                 </form>

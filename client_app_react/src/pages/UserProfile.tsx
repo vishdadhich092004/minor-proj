@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
-import { Package, MapPin, Globe, LogOut, ChevronRight, Plus, Trash2, X, Check } from 'lucide-react';
+import { Package, MapPin, LogOut, ChevronRight, Plus, Trash2, X } from 'lucide-react';
 
 interface Address {
     id: string;
@@ -14,16 +15,17 @@ interface Address {
 }
 
 const UserProfile = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { user, logout } = useAuth();
     
     // State for modals
     const [showAddressModal, setShowAddressModal] = useState(false);
-    const [showLanguageModal, setShowLanguageModal] = useState(false);
+
     
     // State for Features
     const [addresses, setAddresses] = useState<Address[]>([]);
-    const [language, setLanguage] = useState('English');
+
     const [newAddress, setNewAddress] = useState<Partial<Address>>({});
     const [isAddingAddress, setIsAddingAddress] = useState(false);
 
@@ -34,10 +36,7 @@ const UserProfile = () => {
             setAddresses(JSON.parse(storedAddresses));
         }
         
-        const storedLanguage = localStorage.getItem('app_language');
-        if (storedLanguage) {
-            setLanguage(storedLanguage);
-        }
+
     }, []);
 
     // Save to localStorage when changed
@@ -45,9 +44,7 @@ const UserProfile = () => {
         localStorage.setItem('user_addresses', JSON.stringify(addresses));
     }, [addresses]);
 
-    useEffect(() => {
-        localStorage.setItem('app_language', language);
-    }, [language]);
+
 
     if (!user) {
         navigate('/login');
@@ -80,19 +77,14 @@ const UserProfile = () => {
         setAddresses(addresses.filter(a => a.id !== id));
     };
 
-    const languages = [
-        { code: 'en', name: 'English' },
-        { code: 'hi', name: 'Hindi' },
-        { code: 'es', name: 'Spanish' },
-        { code: 'fr', name: 'French' }
-    ];
+
 
     return (
         <div className="min-h-screen bg-gray-50 pb-20">
             <Navbar />
             
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">Profile</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('profile.title')}</h1>
 
                 <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
                     <div className="p-6 flex flex-col items-center">
@@ -114,7 +106,7 @@ const UserProfile = () => {
                                 <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
                                     <Package className="h-5 w-5" />
                                 </div>
-                                <span className="font-medium text-gray-900">My Orders</span>
+                                <span className="font-medium text-gray-900">{t('profile.my_orders')}</span>
                             </div>
                             <ChevronRight className="h-5 w-5 text-gray-400" />
                         </button>
@@ -127,29 +119,15 @@ const UserProfile = () => {
                                 <div className="p-2 bg-green-50 text-green-600 rounded-lg">
                                     <MapPin className="h-5 w-5" />
                                 </div>
-                                <span className="font-medium text-gray-900">My Addresses</span>
+                                <span className="font-medium text-gray-900">{t('profile.my_addresses')}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="text-sm text-gray-500">{addresses.length} Saved</span>
+                                <span className="text-sm text-gray-500">{addresses.length} {t('profile.saved')}</span>
                                 <ChevronRight className="h-5 w-5 text-gray-400" />
                             </div>
                         </button>
 
-                         <button 
-                            onClick={() => setShowLanguageModal(true)}
-                            className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
-                                    <Globe className="h-5 w-5" />
-                                </div>
-                                <span className="font-medium text-gray-900">Language</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm text-gray-500">{language}</span>
-                                <ChevronRight className="h-5 w-5 text-gray-400" />
-                            </div>
-                        </button>
+
 
                          <button 
                             onClick={handleLogout}
@@ -159,7 +137,7 @@ const UserProfile = () => {
                                 <div className="p-2 bg-red-50 text-red-600 rounded-lg group-hover:bg-red-100">
                                     <LogOut className="h-5 w-5" />
                                 </div>
-                                <span className="font-medium text-red-600">Logout</span>
+                                <span className="font-medium text-red-600">{t('profile.logout')}</span>
                             </div>
                         </button>
                     </div>
@@ -172,7 +150,7 @@ const UserProfile = () => {
                     <div className="fixed inset-0 bg-black/50" onClick={() => setShowAddressModal(false)}></div>
                     <div className="relative bg-white rounded-2xl w-full max-w-md p-6 shadow-xl max-h-[80vh] overflow-y-auto">
                         <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold">My Addresses</h3>
+                            <h3 className="text-xl font-bold">{t('profile.address_modal_title')}</h3>
                             <button onClick={() => setShowAddressModal(false)} className="p-1 hover:bg-gray-100 rounded-full">
                                 <X className="h-6 w-6 text-gray-500" />
                             </button>
@@ -181,33 +159,33 @@ const UserProfile = () => {
                         {isAddingAddress ? (
                             <div className="space-y-4">
                                 <input 
-                                    placeholder="Address Label (e.g., Home, Work)" 
+                                    placeholder={t('profile.address_label')}
                                     className="w-full p-2 border rounded-lg"
                                     value={newAddress.type || ''}
                                     onChange={e => setNewAddress({...newAddress, type: e.target.value})}
                                 />
                                 <input 
-                                    placeholder="Street Address" 
+                                    placeholder={t('profile.street_address')}
                                     className="w-full p-2 border rounded-lg"
                                     value={newAddress.street || ''}
                                     onChange={e => setNewAddress({...newAddress, street: e.target.value})}
                                 />
                                 <div className="grid grid-cols-2 gap-4">
                                     <input 
-                                        placeholder="City" 
+                                        placeholder={t('profile.city')}
                                         className="w-full p-2 border rounded-lg"
                                         value={newAddress.city || ''}
                                         onChange={e => setNewAddress({...newAddress, city: e.target.value})}
                                     />
                                     <input 
-                                        placeholder="State" 
+                                        placeholder={t('profile.state')}
                                         className="w-full p-2 border rounded-lg"
                                         value={newAddress.state || ''}
                                         onChange={e => setNewAddress({...newAddress, state: e.target.value})}
                                     />
                                 </div>
                                 <input 
-                                    placeholder="ZIP Code" 
+                                    placeholder={t('profile.zip_code')} 
                                     className="w-full p-2 border rounded-lg"
                                     value={newAddress.zip || ''}
                                     onChange={e => setNewAddress({...newAddress, zip: e.target.value})}
@@ -217,13 +195,13 @@ const UserProfile = () => {
                                         onClick={() => setIsAddingAddress(false)}
                                         className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700"
                                     >
-                                        Cancel
+                                        {t('profile.cancel')}
                                     </button>
                                     <button 
                                         onClick={handleAddAddress}
                                         className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-orange-600"
                                     >
-                                        Save Address
+                                        {t('profile.save_address')}
                                     </button>
                                 </div>
                             </div>
@@ -231,7 +209,7 @@ const UserProfile = () => {
                             <>
                                 <div className="space-y-3 mb-6">
                                     {addresses.length === 0 ? (
-                                        <p className="text-center text-gray-500 py-4">No addresses saved yet.</p>
+                                        <p className="text-center text-gray-500 py-4">{t('profile.no_addresses')}</p>
                                     ) : (
                                         addresses.map(addr => (
                                             <div key={addr.id} className="p-3 border rounded-xl flex justify-between items-center bg-gray-50">
@@ -257,7 +235,7 @@ const UserProfile = () => {
                                     className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center gap-2 text-gray-500 hover:border-primary hover:text-primary transition-colors"
                                 >
                                     <Plus className="h-5 w-5" />
-                                    Add New Address
+                                    {t('profile.add_new_address')}
                                 </button>
                             </>
                         )}
@@ -265,39 +243,7 @@ const UserProfile = () => {
                 </div>
             )}
 
-            {/* Language Modal */}
-            {showLanguageModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                     <div className="fixed inset-0 bg-black/50" onClick={() => setShowLanguageModal(false)}></div>
-                    <div className="relative bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl">
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold">Select Language</h3>
-                            <button onClick={() => setShowLanguageModal(false)} className="p-1 hover:bg-gray-100 rounded-full">
-                                <X className="h-6 w-6 text-gray-500" />
-                            </button>
-                        </div>
-                        <div className="space-y-2">
-                            {languages.map(lang => (
-                                <button
-                                    key={lang.code}
-                                    onClick={() => {
-                                        setLanguage(lang.name);
-                                        setShowLanguageModal(false);
-                                    }}
-                                    className={`w-full flex items-center justify-between p-3 rounded-xl transition-colors ${
-                                        language === lang.name 
-                                            ? 'bg-primary/5 border border-primary text-primary' 
-                                            : 'hover:bg-gray-50 border border-transparent'
-                                    }`}
-                                >
-                                    <span className="font-medium">{lang.name}</span>
-                                    {language === lang.name && <Check className="h-5 w-5" />}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            )}
+
         </div>
     );
 };

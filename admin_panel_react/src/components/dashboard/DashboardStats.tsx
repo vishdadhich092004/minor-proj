@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Package, AlertTriangle, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface StatCardProps {
@@ -34,28 +35,29 @@ interface DashboardStatsProps {
 }
 
 const DashboardStats: React.FC<DashboardStatsProps> = ({ metrics }) => {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
       <StatCard 
-        title="All Products" 
+        title={t('dashboard.stats.all_products')} 
         count={metrics.totalProducts} 
         icon={<Package className="h-6 w-6 text-blue-600" />} 
         color="bg-blue-600"
       />
       <StatCard 
-        title="Out of Stock" 
+        title={t('dashboard.stats.out_of_stock')} 
         count={metrics.outOfStock} 
         icon={<AlertCircle className="h-6 w-6 text-red-600" />} 
         color="bg-red-600"
       />
       <StatCard 
-        title="Limited Stock" 
+        title={t('dashboard.stats.limited_stock')} 
         count={metrics.limitedStock} 
         icon={<AlertTriangle className="h-6 w-6 text-yellow-500" />} 
         color="bg-yellow-500"
       />
       <StatCard 
-        title="Other Stock" 
+        title={t('dashboard.stats.other_stock')} 
         count={metrics.otherStock} 
         icon={<CheckCircle className="h-6 w-6 text-green-500" />} 
         color="bg-green-500"

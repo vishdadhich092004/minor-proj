@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 interface OrdersChartProps {
@@ -13,17 +14,18 @@ interface OrdersChartProps {
 }
 
 const OrdersChart: React.FC<OrdersChartProps> = ({ ordersByStatus, totalOrders }) => {
+  const { t } = useTranslation();
   const data = [
-    { name: 'Pending', value: ordersByStatus.pending, color: '#FCD34D' }, // yellow-300
-    { name: 'Processing', value: ordersByStatus.processing, color: '#9CA3AF' }, // gray-400
-    { name: 'Shipped', value: ordersByStatus.shipped, color: '#3B82F6' }, // blue-500
-    { name: 'Delivered', value: ordersByStatus.delivered, color: '#22C55E' }, // green-500
-    { name: 'Cancelled', value: ordersByStatus.cancelled, color: '#EF4444' }, // red-500
+    { name: t('common.status.pending'), value: ordersByStatus.pending, color: '#FCD34D' }, // yellow-300
+    { name: t('common.status.processing'), value: ordersByStatus.processing, color: '#9CA3AF' }, // gray-400
+    { name: t('common.status.shipped'), value: ordersByStatus.shipped, color: '#3B82F6' }, // blue-500
+    { name: t('common.status.delivered'), value: ordersByStatus.delivered, color: '#22C55E' }, // green-500
+    { name: t('common.status.cancelled'), value: ordersByStatus.cancelled, color: '#EF4444' }, // red-500
   ].filter(item => item.value > 0);
 
   return (
     <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-      <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4">Orders Overview</h3>
+      <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4">{t('dashboard.chart.orders_overview')}</h3>
       <div className="h-64 relative">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -47,7 +49,7 @@ const OrdersChart: React.FC<OrdersChartProps> = ({ ordersByStatus, totalOrders }
         {/* Center Text */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none mb-8">
             <span className="text-3xl font-bold text-gray-900 dark:text-white block">{totalOrders}</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">Total Orders</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{t('dashboard.chart.total_orders')}</span>
         </div>
       </div>
       

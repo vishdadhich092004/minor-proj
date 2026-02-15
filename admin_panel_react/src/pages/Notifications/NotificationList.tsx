@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNotifications } from '../../hooks/useNotifications';
 import { Link } from 'react-router-dom';
 import { Send, Trash2 } from 'lucide-react';
 import Button from '../../components/common/Button';
 
 const NotificationList: React.FC = () => {
+    const { t } = useTranslation();
     const { notifications, loading, error, deleteNotification } = useNotifications();
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -13,16 +15,16 @@ const NotificationList: React.FC = () => {
         n.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) return <div className="p-10 text-center">Loading notifications...</div>;
-    if (error) return <div className="p-10 text-center text-red-600">Error: {error}</div>;
+    if (loading) return <div className="p-10 text-center">{t('notifications_page.loading')}</div>;
+    if (error) return <div className="p-10 text-center text-red-600">{t('common.error')}: {error}</div>;
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Notifications</h1>
+                <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{t('notifications_page.title')}</h1>
                 <Link to="/notifications/new">
                     <Button>
-                        <Send className="mr-2 h-4 w-4" /> Send Notification
+                        <Send className="mr-2 h-4 w-4" /> {t('notifications_page.send_new')}
                     </Button>
                 </Link>
             </div>
@@ -31,7 +33,7 @@ const NotificationList: React.FC = () => {
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                     <input 
                         type="text" 
-                        placeholder="Search notifications..." 
+                        placeholder={t('notifications_page.search_placeholder')} 
                         className="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
@@ -41,9 +43,9 @@ const NotificationList: React.FC = () => {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Title</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('notifications_page.table.title')}</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('notifications_page.table.description')}</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('notifications_page.table.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -64,7 +66,7 @@ const NotificationList: React.FC = () => {
                             ))}
                              {filteredNotifications.length === 0 && (
                                 <tr>
-                                    <td colSpan={3} className="px-6 py-4 text-center text-sm text-gray-500">No notifications found</td>
+                                    <td colSpan={3} className="px-6 py-4 text-center text-sm text-gray-500">{t('notifications_page.no_notifications')}</td>
                                 </tr>
                             )}
                         </tbody>

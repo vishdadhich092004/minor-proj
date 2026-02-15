@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Outlet, useNavigate, NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { clsx } from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { LogOut, Menu, X, Bell, User } from 'lucide-react';
 
 const MainLayout: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -48,7 +50,7 @@ const MainLayout: React.FC = () => {
             )}
             onClick={() => setIsSidebarOpen(false)}
           >
-            Dashboard
+            {t('sidebar.dashboard')}
           </NavLink>
           <NavLink 
             to="/products" 
@@ -60,7 +62,7 @@ const MainLayout: React.FC = () => {
             )}
             onClick={() => setIsSidebarOpen(false)}
           >
-            Products
+            {t('sidebar.products')}
           </NavLink>
           <NavLink 
             to="/categories" 
@@ -72,7 +74,7 @@ const MainLayout: React.FC = () => {
             )}
             onClick={() => setIsSidebarOpen(false)}
           >
-            Categories
+            {t('sidebar.categories')}
           </NavLink>
           <NavLink 
             to="/sub-categories" 
@@ -84,7 +86,7 @@ const MainLayout: React.FC = () => {
             )}
             onClick={() => setIsSidebarOpen(false)}
           >
-            Sub Categories
+            {t('sidebar.sub_categories')}
           </NavLink>
           <NavLink 
             to="/brands" 
@@ -96,7 +98,7 @@ const MainLayout: React.FC = () => {
             )}
             onClick={() => setIsSidebarOpen(false)}
           >
-            Brands
+            {t('sidebar.brands')}
           </NavLink>
           <NavLink 
             to="/variant-types" 
@@ -108,7 +110,7 @@ const MainLayout: React.FC = () => {
             )}
             onClick={() => setIsSidebarOpen(false)}
           >
-            Variant Types
+            {t('sidebar.variant_types')}
           </NavLink>
           <NavLink 
             to="/variants" 
@@ -120,7 +122,7 @@ const MainLayout: React.FC = () => {
             )}
             onClick={() => setIsSidebarOpen(false)}
           >
-            Variants
+            {t('sidebar.variants')}
           </NavLink>
           <NavLink 
             to="/coupons" 
@@ -132,7 +134,7 @@ const MainLayout: React.FC = () => {
             )}
             onClick={() => setIsSidebarOpen(false)}
           >
-            Coupons
+            {t('sidebar.coupons')}
           </NavLink>
           <NavLink 
             to="/posters" 
@@ -144,7 +146,7 @@ const MainLayout: React.FC = () => {
             )}
             onClick={() => setIsSidebarOpen(false)}
           >
-            Posters
+            {t('sidebar.posters')}
           </NavLink>
           <NavLink 
             to="/notifications" 
@@ -156,7 +158,7 @@ const MainLayout: React.FC = () => {
             )}
             onClick={() => setIsSidebarOpen(false)}
           >
-            Notifications
+            {t('sidebar.notifications')}
           </NavLink>
           <NavLink 
             to="/users" 
@@ -168,7 +170,7 @@ const MainLayout: React.FC = () => {
             )}
             onClick={() => setIsSidebarOpen(false)}
           >
-            Users
+            {t('sidebar.users')}
           </NavLink>
         </nav>
 
@@ -178,7 +180,7 @@ const MainLayout: React.FC = () => {
                 className="flex items-center gap-2 w-full px-2 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-md"
             >
                 <LogOut size={18} />
-                Logout
+                {t('common.logout')}
             </button>
         </div>
       </aside>
@@ -194,10 +196,19 @@ const MainLayout: React.FC = () => {
                 >
                     <Menu size={20} />
                 </button>
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Dashboard</h2>
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white">{t('sidebar.dashboard')}</h2>
             </div>
             
             <div className="flex items-center gap-4">
+                <select
+                  className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  onChange={(e) => i18n.changeLanguage(e.target.value)}
+                  value={i18n.language}
+                >
+                  <option value="en">English</option>
+                  <option value="hi">हिंदी</option>
+                  <option value="bn">বাংলা</option>
+                </select>
                 <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 relative">
                     <Bell size={20} />
                     <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useOrderStore } from '../store/useOrderStore';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
@@ -8,6 +9,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 const MyOrders = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { user } = useAuth();
     const { orders, fetchMyOrders, isLoading } = useOrderStore();
@@ -73,10 +75,10 @@ const MyOrders = () => {
                     onClick={() => navigate('/profile')} 
                     className="flex items-center text-gray-600 hover:text-primary mb-6"
                 >
-                    <ArrowLeft className="h-5 w-5 mr-1" /> Back to Profile
+                    <ArrowLeft className="h-5 w-5 mr-1" /> {t('orders.back_to_profile')}
                 </button>
                 
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">My Orders</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('orders.title')}</h1>
 
                 {isLoading ? (
                     <div className="flex justify-center p-12">
@@ -85,9 +87,9 @@ const MyOrders = () => {
                 ) : orders.length === 0 ? (
                     <div className="text-center py-12 bg-white rounded-xl shadow-sm">
                         <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900">No orders yet</h3>
-                        <p className="text-gray-500 mb-6">Start shopping to make your first order!</p>
-                        <button onClick={() => navigate('/')} className="px-6 py-2 bg-primary text-white rounded-lg">Browse Products</button>
+                        <h3 className="text-lg font-medium text-gray-900">{t('orders.no_orders')}</h3>
+                        <p className="text-gray-500 mb-6">{t('orders.start_shopping')}</p>
+                        <button onClick={() => navigate('/')} className="px-6 py-2 bg-primary text-white rounded-lg">{t('orders.browse_products')}</button>
                     </div>
                 ) : (
                     <div className="space-y-4">
@@ -100,7 +102,7 @@ const MyOrders = () => {
                                 <div className="p-4 sm:p-6">
                                     <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 gap-4">
                                         <div>
-                                            <p className="text-sm text-gray-500">Order ID: <span className="font-mono text-gray-900">#{order._id.slice(-6).toUpperCase()}</span></p>
+                                            <p className="text-sm text-gray-500">{t('orders.order_id')}: <span className="font-mono text-gray-900">#{order._id.slice(-6).toUpperCase()}</span></p>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <Calendar className="h-4 w-4 text-gray-400" />
                                                 <span className="text-sm text-gray-600">{new Date(order.orderDate || order.createdAt).toLocaleDateString()}</span>
@@ -129,12 +131,12 @@ const MyOrders = () => {
                                             </div>
                                         ))}
                                         {order.items.length > 3 && (
-                                            <p className="text-sm text-gray-500 mt-2 text-center">+ {order.items.length - 3} more items</p>
+                                            <p className="text-sm text-gray-500 mt-2 text-center">{t('orders.more_items', { count: order.items.length - 3 })}</p>
                                         )}
                                     </div>
 
                                     <div className="flex justify-between items-center">
-                                        <p className="text-gray-500">Total Amount</p>
+                                        <p className="text-gray-500">{t('orders.total_amount')}</p>
                                         <p className="text-xl font-bold text-primary">₹{order.orderTotal.total}</p>
                                     </div>
                                     
@@ -145,7 +147,7 @@ const MyOrders = () => {
                                             className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2"
                                         >
                                             <Printer className="h-4 w-4" />
-                                            Invoice
+                                            {t('orders.invoice')}
                                         </button>
                                         
                                         {order.trackingUrl && (
@@ -156,12 +158,12 @@ const MyOrders = () => {
                                                 onClick={(e) => e.stopPropagation()}
                                                 className="px-4 py-2 text-sm font-medium text-primary bg-primary/5 rounded-lg hover:bg-primary/10 transition-colors"
                                             >
-                                                Track Shipment
+                                                {t('orders.track_shipment')}
                                             </a>
                                         )}
 
                                         <div className="flex items-center gap-1 text-primary font-medium text-sm pl-2">
-                                            Details <ChevronRight className="h-4 w-4" />
+                                            {t('orders.details')} <ChevronRight className="h-4 w-4" />
                                         </div>
                                     </div>
                                 </div>

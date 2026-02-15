@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import Input from '../components/common/Input';
@@ -12,6 +13,7 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,14 +27,14 @@ const Login: React.FC = () => {
         login(response.data.data); // No token in response based on review, passing empty string
         navigate('/dashboard');
       } else {
-        setError(response.data.message || 'Login failed');
+        setError(response.data.message || t('login.failed'));
       }
     } catch (err: any) {
         console.error("Login error", err);
         if (err.response && err.response.data && err.response.data.message) {
              setError(err.response.data.message);
         } else {
-             setError('An unexpected error occurred. Please try again.');
+             setError(t('login.unexpected_error'));
         }
     } finally {
       setLoading(false);
@@ -43,8 +45,8 @@ const Login: React.FC = () => {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
-          <p className="text-gray-500 mt-2">Sign in to your admin account</p>
+          <h2 className="text-3xl font-bold text-gray-900">{t('login.welcome')}</h2>
+          <p className="text-gray-500 mt-2">{t('login.subtitle')}</p>
         </div>
 
         {error && (
@@ -55,7 +57,7 @@ const Login: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
-            label="Email Address"
+            label={t('login.email_label')}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -65,7 +67,7 @@ const Login: React.FC = () => {
           />
 
           <Input
-            label="Password"
+            label={t('login.password')}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -79,7 +81,7 @@ const Login: React.FC = () => {
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             disabled={loading}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? t('login.signing_in') : t('login.sign_in')}
           </Button>
         </form>
       </div>

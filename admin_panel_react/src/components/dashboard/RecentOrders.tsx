@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Order } from '../../types/order';
 
 interface RecentOrdersProps {
@@ -6,19 +7,20 @@ interface RecentOrdersProps {
 }
 
 const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
+  const { t } = useTranslation();
   const recentOrders = orders.slice(0, 5); // Show top 5
 
   return (
     <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-      <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4">Recent Orders</h3>
+      <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4">{t('dashboard.recent_orders.title')}</h3>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Order ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Customer</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('dashboard.recent_orders.order_id')}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('dashboard.recent_orders.customer')}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('dashboard.recent_orders.total')}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('dashboard.recent_orders.status')}</th>
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -46,7 +48,7 @@ const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
             ))}
              {recentOrders.length === 0 && (
                 <tr>
-                    <td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-500">No recent orders</td>
+                    <td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-500">{t('dashboard.recent_orders.no_orders')}</td>
                 </tr>
             )}
           </tbody>

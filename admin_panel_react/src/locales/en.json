@@ -1,0 +1,348 @@
+{
+    "common": {
+        "dashboard": "Dashboard",
+        "orders": "Orders",
+        "products": "Products",
+        "users": "Users",
+        "settings": "Settings",
+        "logout": "Logout",
+        "welcome": "Welcome",
+        "language": "Language",
+        "english": "English",
+        "hindi": "Hindi",
+        "bengali": "Bengali",
+        "loading": "Loading...",
+        "error": "Error",
+        "retry": "Retry",
+        "save": "Save",
+        "delete": "Delete",
+        "edit": "Edit",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "back": "Back",
+        "submit": "Submit"
+    },
+    "login": {
+        "welcome": "Welcome Back",
+        "subtitle": "Sign in to your admin account",
+        "email": "Email Address",
+        "password": "Password",
+        "sign_in": "Sign In",
+        "signing_in": "Signing in...",
+        "email_label": "Email Address",
+        "failed": "Login failed",
+        "unexpected_error": "An unexpected error occurred. Please try again."
+    },
+    "products": {
+        "title": "Products",
+        "add_new": "Add Product",
+        "edit_title": "Edit Product",
+        "add_title": "Add New Product",
+        "back_to_list": "Back to Products",
+        "search_placeholder": "Search products...",
+        "loading": "Loading products...",
+        "form_loading": "Loading form data...",
+        "no_products": "No products found",
+        "table": {
+            "product": "Product",
+            "category": "Category",
+            "price": "Price",
+            "qty": "Qty",
+            "actions": "Actions"
+        },
+        "form": {
+            "images_label": "Product Images (Up to 5)",
+            "name": "Product Name",
+            "description": "Description",
+            "price": "Price",
+            "offer_price": "Offer Price",
+            "quantity": "Quantity",
+            "category": "Category",
+            "sub_category": "Sub Category",
+            "brand": "Brand",
+            "variant_type": "Variant Type",
+            "variants": "Variants",
+            "select_variant_hint": "Select a variant type to see options",
+            "update_btn": "Update Product",
+            "create_btn": "Create Product"
+        }
+    },
+    "categories": {
+        "title": "Categories",
+        "add_new": "Add Category",
+        "edit_title": "Edit Category",
+        "add_title": "Add New Category",
+        "back_to_list": "Back to Categories",
+        "search_placeholder": "Search categories...",
+        "loading": "Loading categories...",
+        "no_categories": "No categories found",
+        "table": {
+            "image": "Image",
+            "name": "Name",
+            "actions": "Actions"
+        },
+        "form": {
+            "image_label": "Category Image",
+            "name_label": "Category Name",
+            "change_image": "Change",
+            "remove_image": "Remove",
+            "no_image": "No Image",
+            "update_btn": "Update Category",
+            "create_btn": "Create Category"
+        }
+    },
+    "sub_categories": {
+        "title": "Sub Categories",
+        "add_new": "Add Sub Category",
+        "edit_title": "Edit Sub Category",
+        "add_title": "Add New Sub Category",
+        "back_to_list": "Back to Sub Categories",
+        "search_placeholder": "Search sub-categories...",
+        "loading": "Loading sub-categories...",
+        "no_sub_categories": "No sub-categories found",
+        "table": {
+            "name": "Name",
+            "parent_category": "Parent Category",
+            "actions": "Actions"
+        },
+        "form": {
+            "name_label": "Sub Category Name",
+            "parent_label": "Parent Category",
+            "update_btn": "Update Sub Category",
+            "create_btn": "Create Sub Category"
+        }
+    },
+    "status": {
+        "pending": "Pending",
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled"
+    },
+    "dashboard": {
+        "overview": "Dashboard Overview",
+        "stats": {
+            "all_products": "All Products",
+            "out_of_stock": "Out of Stock",
+            "limited_stock": "Limited Stock",
+            "other_stock": "Other Stock"
+        },
+        "chart": {
+            "orders_overview": "Orders Overview",
+            "total_orders": "Total Orders"
+        },
+        "recent_orders": {
+            "title": "Recent Orders",
+            "order_id": "Order ID",
+            "customer": "Customer",
+            "total": "Total",
+            "status": "Status",
+            "no_orders": "No recent orders"
+        }
+    },
+    "brands": {
+        "title": "Brands",
+        "add_new": "Add Brand",
+        "edit_title": "Edit Brand",
+        "add_title": "Add New Brand",
+        "back_to_list": "Back to Brands",
+        "search_placeholder": "Search brands...",
+        "loading": "Loading brands...",
+        "no_brands": "No brands found",
+        "table": {
+            "name": "Name",
+            "sub_category": "Sub Category",
+            "actions": "Actions"
+        },
+        "form": {
+            "name_label": "Brand Name",
+            "sub_category_label": "Sub Category",
+            "update_btn": "Update Brand",
+            "create_btn": "Create Brand"
+        }
+    },
+    "coupons": {
+        "title": "Coupons",
+        "add_new": "Add Coupon",
+        "edit_title": "Edit Coupon",
+        "add_title": "Add New Coupon",
+        "back_to_list": "Back to Coupons",
+        "search_placeholder": "Search coupons...",
+        "loading": "Loading coupons...",
+        "no_coupons": "No coupons found",
+        "table": {
+            "code": "Code",
+            "type": "Type",
+            "amount": "Amount",
+            "status": "Status",
+            "actions": "Actions"
+        },
+        "form": {
+            "code_label": "Coupon Code",
+            "type_label": "Discount Type",
+            "amount_label": "Discount Amount",
+            "min_purchase_label": "Minimum Purchase Amount",
+            "end_date_label": "End Date",
+            "status_label": "Status",
+            "applicability_title": "Applicability (Optional)",
+            "applicable_category_label": "Applicable Category",
+            "applicable_sub_category_label": "Applicable SubCategory",
+            "applicable_product_label": "Applicable Product",
+            "none_option": "None",
+            "update_btn": "Update Coupon",
+            "create_btn": "Create Coupon"
+        },
+        "type": {
+            "fixed": "Fixed",
+            "percentage": "Percentage"
+        },
+        "status": {
+            "active": "Active",
+            "inactive": "Inactive"
+        }
+    },
+    "orders_page": {
+        "title": "Orders",
+        "search_placeholder": "Search order ID or user...",
+        "filter_status_label": "All Status",
+        "status_all": "All Status",
+        "table": {
+            "order_id": "Order ID",
+            "customer": "Customer",
+            "total": "Total",
+            "status": "Status",
+            "date": "Date",
+            "actions": "Actions"
+        },
+        "details": {
+            "title": "Order Details",
+            "back_to_list": "Back to Orders",
+            "items_title": "Order Items",
+            "total_amount": "Total Amount",
+            "status_title": "Order Status",
+            "update_status_label": "Update Status",
+            "tracking_url_label": "Tracking URL",
+            "update_btn": "Update Order",
+            "customer_title": "Customer",
+            "shipping_address_title": "Shipping Address",
+            "loading": "Loading order details...",
+            "not_found": "Order not found",
+            "success_msg": "Order updated successfully"
+        },
+        "no_orders": "No orders found"
+    },
+    "users_page": {
+        "title": "Users",
+        "search_placeholder": "Search users...",
+        "loading": "Loading users...",
+        "no_users": "No users found",
+        "table": {
+            "name": "Name",
+            "email": "Email",
+            "phone": "Phone",
+            "actions": "Actions"
+        }
+    },
+    "notifications_page": {
+        "title": "Notifications",
+        "send_new": "Send Notification",
+        "search_placeholder": "Search notifications...",
+        "loading": "Loading notifications...",
+        "no_notifications": "No notifications found",
+        "table": {
+            "title": "Title",
+            "description": "Description",
+            "actions": "Actions"
+        },
+        "form": {
+            "title": "Send Notification",
+            "back_to_list": "Back to Notifications",
+            "title_label": "Title",
+            "description_label": "Description",
+            "image_url_label": "Image URL (Optional)",
+            "send_btn": "Send Notification",
+            "success_msg": "Notification sent successfully"
+        }
+    },
+    "variant_types": {
+        "title": "Variant Types",
+        "add_new": "Add Variant Type",
+        "edit_title": "Edit Variant Type",
+        "add_title": "Add New Variant Type",
+        "back_to_list": "Back to Variant Types",
+        "search_placeholder": "Search variant types...",
+        "loading": "Loading variant types...",
+        "no_types": "No variant types found",
+        "table": {
+            "name": "Name",
+            "type": "Type",
+            "actions": "Actions"
+        },
+        "form": {
+            "name_label": "Variant Name (e.g. Color)",
+            "type_label": "Variant Type (e.g. color)",
+            "update_btn": "Update Variant Type",
+            "create_btn": "Create Variant Type"
+        }
+    },
+    "variants": {
+        "title": "Variants",
+        "add_new": "Add Variant",
+        "edit_title": "Edit Variant",
+        "add_title": "Add New Variant",
+        "back_to_list": "Back to Variants",
+        "search_placeholder": "Search variants...",
+        "filter_type_label": "All Types",
+        "loading": "Loading variants...",
+        "no_variants": "No variants found",
+        "table": {
+            "value": "Variant Value",
+            "type": "Variant Type",
+            "actions": "Actions"
+        },
+        "form": {
+            "value_label": "Variant Value (e.g. Red, XL)",
+            "type_label": "Variant Type",
+            "update_btn": "Update Variant",
+            "create_btn": "Create Variant"
+        }
+    },
+    "posters": {
+        "title": "Posters",
+        "add_new": "Add Poster",
+        "edit_title": "Edit Poster",
+        "add_title": "Add New Poster",
+        "back_to_list": "Back to Posters",
+        "search_placeholder": "Search posters...",
+        "loading": "Loading posters...",
+        "no_posters": "No posters found",
+        "table": {
+            "image": "Image",
+            "name": "Name",
+            "actions": "Actions"
+        },
+        "form": {
+            "name_label": "Poster Name",
+            "image_label": "Poster Image",
+            "upload_hint": "Click to upload",
+            "upload_subhint": "PNG, JPG or WEBP",
+            "update_btn": "Update Poster",
+            "create_btn": "Create Poster"
+        }
+    },
+    "sidebar": {
+        "dashboard": "Dashboard",
+        "orders": "Orders",
+        "products": "Products",
+        "categories": "Categories",
+        "sub_categories": "Sub Categories",
+        "brands": "Brands",
+        "variant_types": "Variant Types",
+        "variants": "Variants",
+        "coupons": "Coupons",
+        "posters": "Posters",
+        "notifications": "Notifications",
+        "users": "Users",
+        "settings": "Settings"
+    }
+}

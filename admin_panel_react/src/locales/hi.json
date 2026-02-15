@@ -1,0 +1,348 @@
+{
+    "common": {
+        "dashboard": "डैशबोर्ड",
+        "orders": "ऑर्डर",
+        "products": "उत्पाद",
+        "users": "उपयोगकर्ता",
+        "settings": "सेटिंग्स",
+        "logout": "लॉग आउट",
+        "welcome": "स्वागत है",
+        "language": "भाषा",
+        "english": "अंग्रेज़ी",
+        "hindi": "हिंदी",
+        "bengali": "बंगाली",
+        "loading": "लोड हो रहा है...",
+        "error": "त्रुटि",
+        "retry": "पुनः प्रयास करें",
+        "save": "सहेजें",
+        "delete": "हटाएं",
+        "edit": "संपादित करें",
+        "cancel": "रद्द करें",
+        "confirm": "पुष्टि करें",
+        "back": "वापस",
+        "submit": "प्रस्तुत करें"
+    },
+    "login": {
+        "welcome": "स्वागत है",
+        "subtitle": "अपने एडमिन खाते में साइन इन करें",
+        "email": "ईमेल पता",
+        "password": "पासवर्ड",
+        "sign_in": "साइन इन करें",
+        "signing_in": "साइन इन हो रहा है...",
+        "email_label": "ईमेल पता",
+        "failed": "लॉगिन विफल",
+        "unexpected_error": "एक अप्रत्याशित त्रुटि हुई। कृपया पुन: प्रयास करें।"
+    },
+    "products": {
+        "title": "उत्पाद",
+        "add_new": "उत्पाद जोड़ें",
+        "edit_title": "उत्पाद संपादित करें",
+        "add_title": "नया उत्पाद जोड़ें",
+        "back_to_list": "उत्पादों पर वापस जाएं",
+        "search_placeholder": "उत्पाद खोजें...",
+        "loading": "उत्पाद लोड हो रहे हैं...",
+        "form_loading": "फ़ॉर्म डेटा लोड हो रहा है...",
+        "no_products": "कोई उत्पाद नहीं मिला",
+        "table": {
+            "product": "उत्पाद",
+            "category": "श्रेणी",
+            "price": "कीमत",
+            "qty": "मात्रा",
+            "actions": "क्रियाएं"
+        },
+        "form": {
+            "images_label": "उत्पाद चित्र (5 तक)",
+            "name": "उत्पाद का नाम",
+            "description": "विवरण",
+            "price": "कीमत",
+            "offer_price": "ऑफ़र कीमत",
+            "quantity": "मात्रा",
+            "category": "श्रेणी",
+            "sub_category": "उप श्रेणी",
+            "brand": "ब्रांड",
+            "variant_type": "वेरिएंट प्रकार",
+            "variants": "वेरिएंट",
+            "select_variant_hint": "विकल्प देखने के लिए एक वेरिएंट प्रकार चुनें",
+            "update_btn": "उत्पाद अपडेट करें",
+            "create_btn": "उत्पाद बनाएं"
+        }
+    },
+    "categories": {
+        "title": "श्रेणियाँ",
+        "add_new": "श्रेणी जोड़ें",
+        "edit_title": "श्रेणी संपादित करें",
+        "add_title": "नई श्रेणी जोड़ें",
+        "back_to_list": "श्रेणियों पर वापस जाएं",
+        "search_placeholder": "श्रेणियाँ खोजें...",
+        "loading": "श्रेणियाँ लोड हो रही हैं...",
+        "no_categories": "कोई श्रेणी नहीं मिली",
+        "table": {
+            "image": "छवि",
+            "name": "नाम",
+            "actions": "क्रियाएं"
+        },
+        "form": {
+            "image_label": "श्रेणी छवि",
+            "name_label": "श्रेणी का नाम",
+            "change_image": "बदलें",
+            "remove_image": "हटाएं",
+            "no_image": "कोई छवि नहीं",
+            "update_btn": "श्रेणी अपडेट करें",
+            "create_btn": "श्रेणी बनाएं"
+        }
+    },
+    "sub_categories": {
+        "title": "उप-श्रेणियाँ",
+        "add_new": "उप-श्रेणी जोड़ें",
+        "edit_title": "उप-श्रेणी संपादित करें",
+        "add_title": "नई उप-श्रेणी जोड़ें",
+        "back_to_list": "उप-श्रेणियों पर वापस जाएं",
+        "search_placeholder": "उप-श्रेणियाँ खोजें...",
+        "loading": "उप-श्रेणियाँ लोड हो रही हैं...",
+        "no_sub_categories": "कोई उप-श्रेणी नहीं मिली",
+        "table": {
+            "name": "नाम",
+            "parent_category": "मूल श्रेणी",
+            "actions": "क्रियाएं"
+        },
+        "form": {
+            "name_label": "उप-श्रेणी का नाम",
+            "parent_label": "मूल श्रेणी",
+            "update_btn": "उप-श्रेणी अपडेट करें",
+            "create_btn": "उप-श्रेणी बनाएं"
+        }
+    },
+    "status": {
+        "pending": "लंबित",
+        "processing": "प्रक्रिया",
+        "shipped": "भेज दिया",
+        "delivered": "वितरित",
+        "cancelled": "रद्द"
+    },
+    "dashboard": {
+        "overview": "डैशबोर्ड अवलोकन",
+        "stats": {
+            "all_products": "सभी उत्पाद",
+            "out_of_stock": "आउट ऑफ स्टॉक",
+            "limited_stock": "सीमित स्टॉक",
+            "other_stock": "अन्य स्टॉक"
+        },
+        "chart": {
+            "orders_overview": "ऑर्डर अवलोकन",
+            "total_orders": "कुल ऑर्डर"
+        },
+        "recent_orders": {
+            "title": "हाल के ऑर्डर",
+            "order_id": "ऑर्डर आईडी",
+            "customer": "ग्राहक",
+            "total": "कुल",
+            "status": "स्थिति",
+            "no_orders": "कोई हालिया ऑर्डर नहीं"
+        }
+    },
+    "brands": {
+        "title": "ब्रांड्स",
+        "add_new": "ब्रांड जोड़ें",
+        "edit_title": "ब्रांड संपादित करें",
+        "add_title": "नया ब्रांड जोड़ें",
+        "back_to_list": "ब्रांड्स पर वापस जाएं",
+        "search_placeholder": "ब्रांड्स खोजें...",
+        "loading": "ब्रांड्स लोड हो रहे हैं...",
+        "no_brands": "कोई ब्रांड नहीं मिला",
+        "table": {
+            "name": "नाम",
+            "sub_category": "उप-श्रेणी",
+            "actions": "क्रियाएं"
+        },
+        "form": {
+            "name_label": "ब्रांड का नाम",
+            "sub_category_label": "उप-श्रेणी",
+            "update_btn": "ब्रांड अपडेट करें",
+            "create_btn": "ब्रांड बनाएं"
+        }
+    },
+    "coupons": {
+        "title": "कूपन",
+        "add_new": "कूपन जोड़ें",
+        "edit_title": "कूपन संपादित करें",
+        "add_title": "नया कूपन जोड़ें",
+        "back_to_list": "कूपन पर वापस जाएं",
+        "search_placeholder": "कूपन खोजें...",
+        "loading": "कूपन लोड हो रहे हैं...",
+        "no_coupons": "कोई कूपन नहीं मिला",
+        "table": {
+            "code": "कोड",
+            "type": "प्रकार",
+            "amount": "राशि",
+            "status": "स्थिति",
+            "actions": "क्रियाएं"
+        },
+        "form": {
+            "code_label": "कूपन कोड",
+            "type_label": "छूट का प्रकार",
+            "amount_label": "छूट की राशि",
+            "min_purchase_label": "न्यूनतम खरीद राशि",
+            "end_date_label": "अंतिम तिथि",
+            "status_label": "स्थिति",
+            "applicability_title": "प्रयोज्यता (वैकल्पिक)",
+            "applicable_category_label": "लागू श्रेणी",
+            "applicable_sub_category_label": "लागू उप-श्रेणी",
+            "applicable_product_label": "लागू उत्पाद",
+            "none_option": "कोई नहीं",
+            "update_btn": "कूपन अपडेट करें",
+            "create_btn": "कूपन बनाएं"
+        },
+        "type": {
+            "fixed": "निश्चित",
+            "percentage": "प्रतिशत"
+        },
+        "status": {
+            "active": "सक्रिय",
+            "inactive": "निष्क्रिय"
+        }
+    },
+    "orders_page": {
+        "title": "ऑर्डर",
+        "search_placeholder": "ऑर्डर आईडी या उपयोगकर्ता खोजें...",
+        "filter_status_label": "सभी स्थितियाँ",
+        "status_all": "सभी स्थितियाँ",
+        "table": {
+            "order_id": "ऑर्डर आईडी",
+            "customer": "ग्राहक",
+            "total": "कुल",
+            "status": "स्थिति",
+            "date": "तारीख",
+            "actions": "क्रियाएं"
+        },
+        "details": {
+            "title": "ऑर्डर विवरण",
+            "back_to_list": "ऑर्डर पर वापस जाएं",
+            "items_title": "ऑर्डर आइटम",
+            "total_amount": "कुल राशि",
+            "status_title": "ऑर्डर की स्थिति",
+            "update_status_label": "स्थिति अपडेट करें",
+            "tracking_url_label": "ट्रैकिंग यूआरएल",
+            "update_btn": "ऑर्डर अपडेट करें",
+            "customer_title": "ग्राहक",
+            "shipping_address_title": "शिपिंग पता",
+            "loading": "ऑर्डर विवरण लोड हो रहा है...",
+            "not_found": "ऑर्डर नहीं मिला",
+            "success_msg": "ऑर्डर सफलतापूर्वक अपडेट किया गया"
+        },
+        "no_orders": "कोई ऑर्डर नहीं मिला"
+    },
+    "users_page": {
+        "title": "उपयोगकर्ता",
+        "search_placeholder": "उपयोगकर्ता खोजें...",
+        "loading": "उपयोगकर्ता लोड हो रहे हैं...",
+        "no_users": "कोई उपयोगकर्ता नहीं मिला",
+        "table": {
+            "name": "नाम",
+            "email": "ईमेल",
+            "phone": "फ़ोन",
+            "actions": "क्रियाएं"
+        }
+    },
+    "notifications_page": {
+        "title": "सूचनाएं",
+        "send_new": "सूचना भेजें",
+        "search_placeholder": "सूचनाएं खोजें...",
+        "loading": "सूचनाएं लोड हो रही हैं...",
+        "no_notifications": "कोई सूचना नहीं मिली",
+        "table": {
+            "title": "शीर्षक",
+            "description": "विवरण",
+            "actions": "क्रियाएं"
+        },
+        "form": {
+            "title": "सूचना भेजें",
+            "back_to_list": "सूचनाओं पर वापस जाएं",
+            "title_label": "शीर्षक",
+            "description_label": "विवरण",
+            "image_url_label": "छवि यूआरएल (वैकल्पिक)",
+            "send_btn": "सूचना भेजें",
+            "success_msg": "सूचना सफलतापूर्वक भेजी गई"
+        }
+    },
+    "variant_types": {
+        "title": "वेरिएंट प्रकार",
+        "add_new": "वेरिएंट प्रकार जोड़ें",
+        "edit_title": "वेरिएंट प्रकार संपादित करें",
+        "add_title": "नया वेरिएंट प्रकार जोड़ें",
+        "back_to_list": "वेरिएंट प्रकारों पर वापस जाएं",
+        "search_placeholder": "वेरिएंट प्रकार खोजें...",
+        "loading": "वेरिएंट प्रकार लोड हो रहे हैं...",
+        "no_types": "कोई वेरिएंट प्रकार नहीं मिला",
+        "table": {
+            "name": "नाम",
+            "type": "प्रकार",
+            "actions": "क्रियाएं"
+        },
+        "form": {
+            "name_label": "वेरिएंट नाम (उदा. रंग)",
+            "type_label": "वेरिएंट प्रकार (उदा. color)",
+            "update_btn": "वेरिएंट प्रकार अपडेट करें",
+            "create_btn": "वेरिएंट प्रकार बनाएं"
+        }
+    },
+    "variants": {
+        "title": "वेरिएंट",
+        "add_new": "वेरिएंट जोड़ें",
+        "edit_title": "वेरिएंट संपादित करें",
+        "add_title": "नया वेरिएंट जोड़ें",
+        "back_to_list": "वेरिएंट पर वापस जाएं",
+        "search_placeholder": "वेरिएंट खोजें...",
+        "filter_type_label": "सभी प्रकार",
+        "loading": "वेरिएंट लोड हो रहे हैं...",
+        "no_variants": "कोई वेरिएंट नहीं मिला",
+        "table": {
+            "value": "वेरिएंट मान",
+            "type": "वेरिएंट प्रकार",
+            "actions": "क्रियाएं"
+        },
+        "form": {
+            "value_label": "वेरिएंट मान (उदा. लाल, XL)",
+            "type_label": "वेरिएंट प्रकार",
+            "update_btn": "वेरिएंट अपडेट करें",
+            "create_btn": "वेरिएंट बनाएं"
+        }
+    },
+    "posters": {
+        "title": "पोस्टर",
+        "add_new": "पोस्टर जोड़ें",
+        "edit_title": "पोस्टर संपादित करें",
+        "add_title": "नया पोस्टर जोड़ें",
+        "back_to_list": "पोस्टर पर वापस जाएं",
+        "search_placeholder": "पोस्टर खोजें...",
+        "loading": "पोस्टर लोड हो रहे हैं...",
+        "no_posters": "कोई पोस्टर नहीं मिला",
+        "table": {
+            "image": "छवि",
+            "name": "नाम",
+            "actions": "क्रियाएं"
+        },
+        "form": {
+            "name_label": "पोस्टर का नाम",
+            "image_label": "पोस्टर छवि",
+            "upload_hint": "अपलोड करने के लिए क्लिक करें",
+            "upload_subhint": "PNG, JPG या WEBP",
+            "update_btn": "पोस्टर अपडेट करें",
+            "create_btn": "पोस्टर बनाएं"
+        }
+    },
+    "sidebar": {
+        "dashboard": "डैशबोर्ड",
+        "orders": "ऑर्डर",
+        "products": "उत्पाद",
+        "categories": "श्रेणियाँ",
+        "sub_categories": "उप-श्रेणियाँ",
+        "brands": "ब्रांड",
+        "variant_types": "वेरिएंट प्रकार",
+        "variants": "वेरिएंट",
+        "coupons": "कूपन",
+        "posters": "पोस्टर",
+        "notifications": "सूचनाएं",
+        "users": "उपयोगकर्ता",
+        "settings": "सेटिंग्स"
+    }
+}
