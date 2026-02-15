@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ShoppingBag, User, Search, Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
@@ -13,6 +13,24 @@ const Navbar = () => {
     
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+    // Search functionality
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+
+    useEffect(() => {
+        setSearchQuery(searchParams.get('search') || '');
+    }, [searchParams]);
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`);
+        } else {
+            navigate('/');
+        }
+    };
 
     return (
         <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -32,16 +50,18 @@ const Navbar = () => {
                     </div>
 
                     {/* Search Bar (Hidden on mobile for now or collapsed) */}
-                    <div className="hidden md:flex flex-1 max-w-lg mx-8 relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-lg mx-8 relative">
+                        <button type="submit" className="absolute inset-y-0 left-0 pl-3 flex items-center">
                             <Search className="h-5 w-5 text-gray-400" />
-                        </div>
+                        </button>
                         <input
                             type="text"
                             placeholder={t('common.search')}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm"
                         />
-                    </div>
+                    </form>
 
                     {/* Right Actions */}
                     <div className="flex items-center gap-4">
@@ -126,16 +146,18 @@ const Navbar = () => {
                 
                  {/* Mobile Search Bar */}
                 <div className="md:hidden pb-3">
-                     <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                     <form onSubmit={handleSearch} className="relative">
+                        <button type="submit" className="absolute inset-y-0 left-0 pl-3 flex items-center">
                             <Search className="h-4 w-4 text-gray-400" />
-                        </div>
+                        </button>
                         <input
                             type="text"
                             placeholder={t('common.search')}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary text-sm"
                         />
-                    </div>
+                    </form>
                 </div>
             </div>
 

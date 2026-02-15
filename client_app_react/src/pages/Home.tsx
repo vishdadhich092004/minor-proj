@@ -7,6 +7,7 @@ import PosterSection from '../components/PosterSection';
 import CategorySelector from '../components/CategorySelector';
 import ProductCard from '../components/ProductCard';
 import { Loader2 } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 const Home = () => {
     const { t } = useTranslation();
@@ -21,14 +22,27 @@ const Home = () => {
 
     const { user } = useAuth();
     const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [searchParams] = useSearchParams();
+    const searchQuery = searchParams.get('search') || '';
 
     useEffect(() => {
         fetchAll();
     }, [fetchAll]);
 
-    const filteredProducts = selectedCategory 
-        ? products.filter(p => p.proCategoryId?._id === selectedCategory || p.proSubCategoryId?._id === selectedCategory)
-        : products;
+    const filteredProducts = products.filter(p => {
+        // Filter by category
+        const matchesCategory = selectedCategory 
+            ? (p.proCategoryId?._id === selectedCategory || p.proSubCategoryId?._id === selectedCategory) 
+            : true;
+        
+        // Filter by search query
+        const matchesSearch = searchQuery 
+            ? (p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+               p.description.toLowerCase().includes(searchQuery.toLowerCase()))
+            : true;
+
+        return matchesCategory && matchesSearch;
+    });
 
     if (isLoading && products.length === 0) {
         return (
@@ -80,7 +94,9 @@ const Home = () => {
                 {/* Products Grid */}
                 <section>
                      <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-bold text-gray-800">{t('home.all_products')}</h2>
+                        <h2 className="text-lg font-bold text-gray-800">
+                            {searchQuery ? `${t('home.all_products')} - "${searchQuery}"` : t('home.all_products')}
+                        </h2>
                      </div>
                      
                      {filteredProducts.length > 0 ? (

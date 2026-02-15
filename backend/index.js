@@ -41,8 +41,6 @@ const URL = process.env.MONGO_URL;
 // Debugging: Check if URL is loaded (Masked for security)
 if (!URL) {
   console.error('❌ FATAL ERROR: MONGO_URL is not defined in environment variables.');
-} else {
-  console.log('✅ MONGO_URL loaded:', URL.substring(0, 15) + '...');
 }
 
 // Improved MongoDB connection for serverless with Retry Logic
@@ -57,7 +55,6 @@ const connectDB = async (retries = 5) => {
 
       await mongoose.connect(URL, {
         serverSelectionTimeoutMS: 5000, // Fail faster if no server found
-        socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
       });
       console.log('✅ Connected to Database successfully');
       return; // Success
