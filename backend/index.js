@@ -45,23 +45,31 @@ if (!URL) {
   console.log('✅ MONGO_URL loaded:', URL.substring(0, 15) + '...');
 }
 
-// Improved MongoDB connection for serverless
-const connectDB = async () => {
-  try {
-    // Check if we are already connected
-    if (mongoose.connection.readyState === 1) {
-      console.log('✅ Already connected to Database');
-      return;
-    }
+// Improved MongoDB connection for serverless with Retry Logic
+const connectDB = async (retries = 5) => {
+  while (retries > 0) {
+    try {
+      // Check if we are already connected
+      if (mongoose.connection.readyState === 1) {
+        console.log('✅ Already connected to Database');
+        return;
+      }
 
-    await mongoose.connect(URL, {
-      serverSelectionTimeoutMS: 5000, // Fail faster if no server found
-      socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-    });
-    console.log('✅ Connected to Database successfully');
-  } catch (error) {
-    console.error('❌ Database connection error:', error.message);
-    console.error('Stack trace:', error.stack);
+      await mongoose.connect(URL, {
+        serverSelectionTimeoutMS: 5000, // Fail faster if no server found
+        socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+      });
+      console.log('✅ Connected to Database successfully');
+      return; // Success
+    } catch (error) {
+      console.error(`❌ Database connection error (Attempts left: ${retries - 1}):`, error.message);
+      retries -= 1;
+      if (retries === 0) {
+        console.error('❌ Could not connect to Database after multiple attempts. Exiting...');
+        process.exit(1);
+      }
+      await new Promise(res => setTimeout(res, 5000)); // Wait 5 seconds before retrying
+    }
   }
 };
 
@@ -83,9 +91,6 @@ db.on('reconnected', () => {
 db.once('open', () => {
   console.log('✅ Database connection opened');
 });
-
-// Handle connection
-connectDB();
 
 // Routes
 app.use('/categories', require('./routes/category'));
@@ -116,8 +121,14 @@ app.use((error, req, res, next) => {
 });
 
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
-});
+// Start Server only after DB Connection
+const startServer = async () => {
+  await connectDB();
+  app.listen(process.env.PORT, () => {
+    console.log(`Server running on port ${process.env.PORT}`);
+  });
+};
+
+startServer();
 
 
